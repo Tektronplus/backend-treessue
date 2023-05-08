@@ -1,6 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
 
-
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
