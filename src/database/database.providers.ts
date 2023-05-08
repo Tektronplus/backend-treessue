@@ -12,9 +12,8 @@ export const databaseProviders = [
         username: 'root',
         password: 'password',
         database: 'nest',
-        models: [userCustomer]
       });
-      //sequelize.addModels([Cat]);
+      sequelize.addModels([userCustomer]);
       await sequelize.sync();
       return sequelize;
     },
