@@ -16,6 +16,7 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'mysql',
+        dialectModule: require('mysql2'),
         host: databaseHost,
         username: databaseUsername,
         password: databasePassword,
