@@ -15,6 +15,7 @@ export const databaseProviders = [
     useFactory: async () => {
       const sequelize = new Sequelize({
         dialect: 'mysql',
+<<<<<<< HEAD
         host: databaseHost,
         dialectOptions: {
           ssl: {
@@ -26,6 +27,15 @@ export const databaseProviders = [
         database: databaseName,
       });
       sequelize.addModels([Product]);
+=======
+        host: 'localhost',
+        port: 3306,
+        username: 'root',
+        password: 'password',
+        database: 'nest',
+      });
+      sequelize.addModels([userCustomer]);
+>>>>>>> e70a2bc27e7416a2d7131786de81db853ef1a2b0
       await sequelize.sync();
       return sequelize;
     },
