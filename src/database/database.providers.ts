@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Product } from './ProductEntity/product.entity';
+import { Product } from '../product/product.entity';
 import * as dotenv from 'dotenv';
 
 dotenv.config();

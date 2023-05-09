@@ -5,7 +5,7 @@ import { userCustomer } from './userCustomer.entity';
 export class userCustomerService {
   constructor(
     @Inject('USER_CUSTOMER REPOSITORY')
-    private userCustomer_repository: typeof userCustomer
+    private userCustomer_repository: typeof userCustomer,
   ) {}
 
   async findAll(): Promise<userCustomer[]> {

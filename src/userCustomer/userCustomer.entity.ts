@@ -18,17 +18,17 @@ export class userCustomer extends Model {
   email: string;
 
   @Column
-  country:string;
+  country: string;
 
   @Column
-  province:string;
+  province: string;
 
   @Column
-  city:string;
+  city: string;
 
   @Column
-  zipCode:number;
+  zipCode: number;
 
   @Column
-  address:string;
+  address: string;
 }
