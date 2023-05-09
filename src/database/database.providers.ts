@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Product } from '../product/product.entity';
+import { UserCustomer } from 'src/user-customer/user-customer.entity';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -16,16 +17,19 @@ export const databaseProviders = [
       const sequelize = new Sequelize({
         dialect: 'mysql',
         host: databaseHost,
+        username: databaseUsername,
+        password: databasePassword,
+        database: databaseName,
         dialectOptions: {
           ssl: {
             rejectUnauthorized: true,
           },
         },
-        username: databaseUsername,
-        password: databasePassword,
-        database: databaseName,
       });
+
+      //Add models
       sequelize.addModels([Product]);
+      //sequelize.addModels([UserCustomer]);
       await sequelize.sync();
       return sequelize;
     },
