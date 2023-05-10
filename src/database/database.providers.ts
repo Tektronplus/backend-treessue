@@ -1,26 +1,20 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Product } from '../product/product.entity';
 import { UserCustomer } from 'src/user-customer/user-customer.entity';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
-
-const databaseName = process.env.DATABASE_NAME;
-const databaseUsername = process.env.DATABASE_USERNAME;
-const databaseHost = process.env.DATABASE_HOST;
-const databasePassword = process.env.DATABASE_PASSWORD;
+import { ConfigService } from '@nestjs/config';
 
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
-    useFactory: async () => {
+    inject: [ConfigService],
+    useFactory: async (configService: ConfigService) => {
       const sequelize = new Sequelize({
         dialect: 'mysql',
         dialectModule: require('mysql2'),
-        host: databaseHost,
-        username: databaseUsername,
-        password: databasePassword,
-        database: databaseName,
+        host: configService.get<string>('DATABASE_HOST'),
+        username: configService.get<string>('DATABASE_USERNAME'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
+        database: configService.get<string>('DATABASE_NAME'),
         dialectOptions: {
           ssl: {
             rejectUnauthorized: true,
