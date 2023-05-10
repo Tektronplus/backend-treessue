@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Product } from '../product/product.entity';
-import { UserCustomer } from 'src/user-customer/user-customer.entity';
 import { ConfigService } from '@nestjs/config';
+import { UserLogin } from 'src/user-login/user-login.entity';
 
 export const databaseProviders = [
   {
@@ -23,8 +23,7 @@ export const databaseProviders = [
       });
 
       //Add models
-      sequelize.addModels([Product]);
-      //sequelize.addModels([UserCustomer]);
+      sequelize.addModels([Product, UserLogin]);
       await sequelize.sync();
       return sequelize;
     },
