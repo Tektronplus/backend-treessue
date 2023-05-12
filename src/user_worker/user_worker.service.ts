@@ -5,10 +5,10 @@ import { UserWorker } from './user_worker.entity';
 export class UserWorkerService {
   constructor(
     @Inject('USER_WORKER_REPOSITORY')
-    private userLoginRepository: typeof UserWorker,
+    private userWorkerRepository: typeof UserWorker,
   ) {}
 
   async findAll(): Promise<UserWorker[]> {
-    return this.userLoginRepository.findAll();
+    return this.userWorkerRepository.findAll();
   }
 }
