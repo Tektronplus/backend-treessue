@@ -9,7 +9,7 @@ export class OrderController {
 
   @Get('/')
   async getHello(): Promise<string> {
-    return 'Hello from User Login!';
+    return 'Hello from order!';
   }
 
   @Get('/all')

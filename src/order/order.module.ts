@@ -9,4 +9,4 @@ import { DatabaseModule } from '../database/database.module';
   controllers: [OrderController],
   providers: [OrderService, ...OrderProvider],
 })
-export class UserLoginModule {}
+export class OrderModule {}

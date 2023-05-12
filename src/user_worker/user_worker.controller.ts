@@ -9,7 +9,7 @@ export class UserWorkerController {
 
   @Get('/')
   async getHello(): Promise<string> {
-    return 'Hello from User Login!';
+    return 'Hello from userWorker!';
   }
 
   @Get('/all')
