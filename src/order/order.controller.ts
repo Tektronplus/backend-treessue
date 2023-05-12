@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 
-@UseGuards(ApiKeyAuthGuard)
+//@UseGuards(ApiKeyAuthGuard)
 @Controller('order')
 export class OrderController {
   constructor(private readonly OrderService: OrderService) {}
