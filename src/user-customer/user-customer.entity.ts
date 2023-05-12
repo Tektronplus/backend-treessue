@@ -6,7 +6,7 @@ export class UserCustomer extends Model {
   id_product: number;
 
   @Column({ allowNull: false })
-  first_name: string;
+  first_name: string; 
 
   @Column({ allowNull: false })
   last_name: string;
