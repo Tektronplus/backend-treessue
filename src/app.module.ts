@@ -6,6 +6,8 @@ import { ProductModule } from './product/product.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserLoginModule } from './user-login/user-login.module';
+import { OrderModule } from './order/order.module';
+import { UserWorkerModule } from './user_worker/user_worker.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }), // To use dot env globally
@@ -13,6 +15,8 @@ import { UserLoginModule } from './user-login/user-login.module';
     ProductModule,
     AuthModule,
     UserLoginModule,
+    OrderModule,
+    UserWorkerModule
   ],
   controllers: [AppController],
   providers: [AppService],
