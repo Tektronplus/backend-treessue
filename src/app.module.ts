@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserLoginModule } from './user-login/user-login.module';
 import { OrderModule } from './order/order.module';
 import { UserWorkerModule } from './user_worker/user_worker.module';
+import { TowerModule } from './tower/tower.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }), // To use dot env globally
@@ -16,7 +17,8 @@ import { UserWorkerModule } from './user_worker/user_worker.module';
     AuthModule,
     UserLoginModule,
     OrderModule,
-    UserWorkerModule
+    UserWorkerModule,
+    TowerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
