@@ -1,4 +1,4 @@
-import { UserWorker } from "./user_worker.entity";
+import { UserWorker } from './user_worker.entity';
 
 export const userWorkerProvider = [
   {

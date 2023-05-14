@@ -1,7 +1,6 @@
 import { Table, Column, Model } from 'sequelize-typescript';
 
-
-@Table({ tableName: 'user_Worker', updatedAt: false, createdAt: false })
+@Table({ tableName: 'user_worker', updatedAt: false, createdAt: false })
 export class UserWorker extends Model {
   @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
   id_order: number;

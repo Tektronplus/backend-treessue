@@ -2,18 +2,18 @@ import { Controller, Get, UseGuards } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 
-//@UseGuards(ApiKeyAuthGuard)
+@UseGuards(ApiKeyAuthGuard)
 @Controller('order')
 export class OrderController {
-  constructor(private readonly OrderService: OrderService) {}
+  constructor(private readonly orderService: OrderService) {}
 
   @Get('/')
   async getHello(): Promise<string> {
-    return 'Hello from order!';
+    return 'Hello from Order!';
   }
 
   @Get('/all')
   async getListOrders(): Promise<Array<any>> {
-    return this.OrderService.findAll();
+    return this.orderService.findAll();
   }
 }

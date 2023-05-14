@@ -9,7 +9,7 @@ import {
 import { UserCustomer } from '../user-customer/user-customer.entity';
 import { UserWorker } from '../user_worker/user_worker.entity';
 
-@Table({ tableName: 'user_login', updatedAt: false, createdAt: false })
+@Table({ tableName: 'order', updatedAt: false, createdAt: false })
 export class Order extends Model {
   @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
   id_order: number;
