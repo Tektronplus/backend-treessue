@@ -5,6 +5,7 @@ import { UserLogin } from '../user-login/user-login.entity';
 import { Tower } from '../tower/tower.entity';
 import { Discount } from 'src/discount/discount.entity';
 import { CartDetail } from 'src/cart-detail/cart-detail.entity';
+import { OrderDetail } from 'src/order-detail/order-detail.entity';
 
 export const databaseProviders = [
   {
@@ -26,7 +27,14 @@ export const databaseProviders = [
       });
 
       //Add models
-      sequelize.addModels([Product, UserLogin, Tower, Discount, CartDetail]);
+      sequelize.addModels([
+        Product,
+        UserLogin,
+        Tower,
+        Discount,
+        CartDetail,
+        OrderDetail,
+      ]);
       await sequelize.sync();
       return sequelize;
     },
