@@ -10,6 +10,7 @@ import { OrderModule } from './order/order.module';
 import { UserWorkerModule } from './user_worker/user_worker.module';
 import { TowerModule } from './tower/tower.module';
 import { DiscountModule } from './discount/discount.module';
+import { CartDetailModule } from './cart-detail/cart-detail.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }), // To use dot env globally
@@ -21,6 +22,7 @@ import { DiscountModule } from './discount/discount.module';
     UserWorkerModule,
     TowerModule,
     DiscountModule,
+    CartDetailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
