@@ -3,11 +3,11 @@ import { ConfigService } from '@nestjs/config';
 import { Product } from '../product/product.entity';
 import { UserLogin } from '../user-login/user-login.entity';
 import { Tower } from '../tower/tower.entity';
-import { Discount } from 'src/discount/discount.entity';
-import { CartDetail } from 'src/cart-detail/cart-detail.entity';
-import { OrderDetail } from 'src/order-detail/order-detail.entity';
-import { UserCustomer } from 'src/user-customer/user-customer.entity';
-import { Order } from 'src/order/order.entity';
+import { Discount } from '../discount/discount.entity';
+import { CartDetail } from '../cart-detail/cart-detail.entity';
+import { OrderDetail } from '../order-detail/order-detail.entity';
+import { UserCustomer } from '../user-customer/user-customer.entity';
+import { Order } from '../order/order.entity';
 
 export const databaseProviders = [
   {

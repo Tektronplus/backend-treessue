@@ -8,7 +8,7 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import { UserCustomer } from '../user-customer/user-customer.entity';
-import { OrderDetail } from 'src/order-detail/order-detail.entity';
+import { OrderDetail } from '../order-detail/order-detail.entity';
 
 @Table({ tableName: 'order', updatedAt: false, createdAt: false })
 export class Order extends Model {

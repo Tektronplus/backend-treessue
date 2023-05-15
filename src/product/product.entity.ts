@@ -7,9 +7,9 @@ import {
   BelongsTo,
   HasMany,
 } from 'sequelize-typescript';
-import { CartDetail } from 'src/cart-detail/cart-detail.entity';
-import { Discount } from 'src/discount/discount.entity';
-import { OrderDetail } from 'src/order-detail/order-detail.entity';
+import { CartDetail } from '../cart-detail/cart-detail.entity';
+import { Discount } from '../discount/discount.entity';
+import { OrderDetail } from '../order-detail/order-detail.entity';
 
 @Table({ tableName: 'products', updatedAt: false, createdAt: false })
 export class Product extends Model {

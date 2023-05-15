@@ -5,7 +5,7 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { UserCustomer } from 'src/user-customer/user-customer.entity';
+import { UserCustomer } from '../user-customer/user-customer.entity';
 
 @Table({ tableName: 'tower', updatedAt: false, createdAt: false })
 export class Tower extends Model {

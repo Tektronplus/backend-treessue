@@ -1,5 +1,5 @@
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
-import { Product } from 'src/product/product.entity';
+import { Product } from '../product/product.entity';
 
 @Table({ tableName: 'discount', updatedAt: false, createdAt: false })
 export class Discount extends Model {

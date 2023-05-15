@@ -5,8 +5,8 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { Order } from 'src/order/order.entity';
-import { Product } from 'src/product/product.entity';
+import { Order } from '../order/order.entity';
+import { Product } from '../product/product.entity';
 
 @Table({ tableName: 'order_detail', updatedAt: false, createdAt: false })
 export class OrderDetail extends Model {

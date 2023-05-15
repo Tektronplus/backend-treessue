@@ -5,8 +5,8 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { Product } from 'src/product/product.entity';
-import { UserCustomer } from 'src/user-customer/user-customer.entity';
+import { Product } from '../product/product.entity';
+import { UserCustomer } from '../user-customer/user-customer.entity';
 
 @Table({ tableName: 'cart_detail', updatedAt: false, createdAt: false })
 export class CartDetail extends Model {

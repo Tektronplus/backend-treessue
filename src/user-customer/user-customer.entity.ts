@@ -6,10 +6,10 @@ import {
   HasOne,
   HasMany,
 } from 'sequelize-typescript';
-import { CartDetail } from 'src/cart-detail/cart-detail.entity';
-import { Order } from 'src/order/order.entity';
-import { Tower } from 'src/tower/tower.entity';
-import { UserLogin } from 'src/user-login/user-login.entity';
+import { CartDetail } from '../cart-detail/cart-detail.entity';
+import { Order } from '../order/order.entity';
+import { Tower } from '../tower/tower.entity';
+import { UserLogin } from '../user-login/user-login.entity';
 
 @Table({ tableName: 'user_customer', updatedAt: false, createdAt: false })
 export class UserCustomer extends Model {
@@ -28,7 +28,7 @@ export class UserCustomer extends Model {
   @Column
   phone_number: string;
 
-  @Column({ allowNull: false })  
+  @Column({ allowNull: false })
   email: string;
 
   @Column
