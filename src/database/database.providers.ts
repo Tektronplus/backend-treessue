@@ -6,6 +6,8 @@ import { Tower } from '../tower/tower.entity';
 import { Discount } from 'src/discount/discount.entity';
 import { CartDetail } from 'src/cart-detail/cart-detail.entity';
 import { OrderDetail } from 'src/order-detail/order-detail.entity';
+import { UserCustomer } from 'src/user-customer/user-customer.entity';
+import { UserWorker } from 'src/user_worker/user_worker.entity';
 
 export const databaseProviders = [
   {
@@ -34,6 +36,8 @@ export const databaseProviders = [
         Discount,
         CartDetail,
         OrderDetail,
+        UserWorker,
+        UserCustomer
       ]);
       await sequelize.sync();
       return sequelize;

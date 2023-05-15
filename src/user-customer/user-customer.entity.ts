@@ -17,7 +17,7 @@ export class UserCustomer extends Model {
   @Column
   phone_number: string;
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: false })  
   email: string;
 
   @Column
