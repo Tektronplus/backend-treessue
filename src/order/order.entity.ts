@@ -2,24 +2,28 @@ import {
   Table,
   Column,
   Model,
-  BelongsTo,
   ForeignKey,
   DataType,
+  BelongsTo,
+  HasMany,
 } from 'sequelize-typescript';
 import { UserCustomer } from '../user-customer/user-customer.entity';
-import { UserWorker } from '../user_worker/user_worker.entity';
+import { OrderDetail } from 'src/order-detail/order-detail.entity';
 
 @Table({ tableName: 'order', updatedAt: false, createdAt: false })
 export class Order extends Model {
   @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
   id_order: number;
 
-  @BelongsTo(() => UserCustomer)
+  @ForeignKey(() => UserCustomer)
+  @Column({ allowNull: false })
   id_user_customer: number;
 
-  @ForeignKey(() => UserWorker)
+  @BelongsTo(() => UserCustomer)
+  user_customer: UserCustomer;
+
   @Column({ allowNull: false })
-  user_worker_id: number;
+  id_user_worker: string;
 
   @Column({ type: DataType.DATE, allowNull: false })
   order_date: number;
@@ -50,4 +54,8 @@ export class Order extends Model {
 
   @Column({ allowNull: false })
   price: number;
+
+  //Relationships
+  @HasMany(() => OrderDetail)
+  orders_detail: OrderDetail[];
 }

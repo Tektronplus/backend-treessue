@@ -1,9 +1,31 @@
-import { Table, Column, Model } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
+import { Order } from 'src/order/order.entity';
+import { Product } from 'src/product/product.entity';
 
 @Table({ tableName: 'order_detail', updatedAt: false, createdAt: false })
 export class OrderDetail extends Model {
   @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
   id_order_detail: number;
+
+  @ForeignKey(() => Order)
+  @Column({ allowNull: false })
+  id_order: number;
+
+  @BelongsTo(() => Order)
+  order: Order;
+
+  @ForeignKey(() => Product)
+  @Column({ allowNull: false })
+  id_product: number;
+
+  @BelongsTo(() => Product)
+  product: Product;
 
   @Column({ allowNull: false })
   discount: number;

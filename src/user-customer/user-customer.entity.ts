@@ -1,9 +1,20 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  HasOne,
+  HasMany,
+} from 'sequelize-typescript';
+import { CartDetail } from 'src/cart-detail/cart-detail.entity';
+import { Order } from 'src/order/order.entity';
+import { Tower } from 'src/tower/tower.entity';
+import { UserLogin } from 'src/user-login/user-login.entity';
 
 @Table({ tableName: 'user_customer', updatedAt: false, createdAt: false })
 export class UserCustomer extends Model {
-  @Column({ type: DataType.INTEGER, primaryKey: true, autoIncrement: true })
-  id_product: number;
+  @Column({ primaryKey: true, autoIncrement: true, allowNull: false })
+  id_user_customer: number;
 
   @Column({ allowNull: false })
   first_name: string;
@@ -11,7 +22,7 @@ export class UserCustomer extends Model {
   @Column({ allowNull: false })
   last_name: string;
 
-  @Column({ type: DataType.DATE, allowNull: false })
+  @Column({ type: DataType.DATE })
   bith_date: any;
 
   @Column
@@ -34,4 +45,18 @@ export class UserCustomer extends Model {
 
   @Column
   address: string;
+
+  //Relationships
+
+  @HasOne(() => CartDetail)
+  cart_detail: CartDetail;
+
+  @HasOne(() => UserLogin)
+  user_login: UserLogin;
+
+  @HasMany(() => Order)
+  orders: Order[];
+
+  @HasMany(() => Tower)
+  towers: Tower[];
 }

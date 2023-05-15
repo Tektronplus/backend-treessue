@@ -1,9 +1,13 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { Product } from 'src/product/product.entity';
 
 @Table({ tableName: 'discount', updatedAt: false, createdAt: false })
 export class Discount extends Model {
   @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
   id_discount: number;
+
+  @HasMany(() => Product)
+  products: Product[];
 
   @Column({ allowNull: false })
   type_discount: string;

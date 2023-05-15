@@ -6,6 +6,8 @@ import { Tower } from '../tower/tower.entity';
 import { Discount } from 'src/discount/discount.entity';
 import { CartDetail } from 'src/cart-detail/cart-detail.entity';
 import { OrderDetail } from 'src/order-detail/order-detail.entity';
+import { UserCustomer } from 'src/user-customer/user-customer.entity';
+import { Order } from 'src/order/order.entity';
 
 export const databaseProviders = [
   {
@@ -20,20 +22,20 @@ export const databaseProviders = [
         password: configService.get<string>('DATABASE_PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
         dialectOptions: {
-          ssl: {
-            rejectUnauthorized: true,
-          },
+          ssl: 'Amazon RDS',
         },
       });
 
       //Add models
       sequelize.addModels([
-        Product,
-        UserLogin,
-        Tower,
         Discount,
+        Product,
+        UserCustomer,
         CartDetail,
+        Tower,
         OrderDetail,
+        UserLogin,
+        Order,
       ]);
       await sequelize.sync();
       return sequelize;
