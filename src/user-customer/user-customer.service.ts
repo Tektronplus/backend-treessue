@@ -12,7 +12,7 @@ export class UserCustomerService {
     return this.userCustomerRepository.findAll();
   }
 
-  async createUser(user): Promise<string> {
+  async createUser(user): Promise<any> {
     console.log({ user });
     try {
       const newUserCustomer = await this.userCustomerRepository.create({
@@ -27,8 +27,8 @@ export class UserCustomerService {
         zip_code: user.zip_code,
         address: user.address,
       });
-      console.log({ newUserCustomer });
-      return 'ciao';
+      //console.log({ newUserCustomer });
+      return newUserCustomer;
     } catch (err) {
       throw new Error(err);
     }

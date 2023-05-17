@@ -23,7 +23,7 @@ export class UserCustomer extends Model {
   last_name: string;
 
   @Column({ type: DataType.DATE })
-  bith_date: any;
+  birth_date: any;
 
   @Column
   phone_number: string;
