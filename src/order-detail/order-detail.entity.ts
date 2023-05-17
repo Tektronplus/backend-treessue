@@ -10,7 +10,12 @@ import { Product } from '../product/product.entity';
 
 @Table({ tableName: 'order_detail', updatedAt: false, createdAt: false })
 export class OrderDetail extends Model {
-  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
+  @Column({
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: true,
+    unique: true,
+  })
   id_order_detail: number;
 
   @ForeignKey(() => Order)

@@ -3,7 +3,12 @@ import { Product } from '../product/product.entity';
 
 @Table({ tableName: 'discount', updatedAt: false, createdAt: false })
 export class Discount extends Model {
-  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
+  @Column({
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: true,
+    unique: true,
+  })
   id_discount: number;
 
   @HasMany(() => Product)

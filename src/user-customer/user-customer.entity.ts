@@ -13,7 +13,12 @@ import { UserLogin } from '../user-login/user-login.entity';
 
 @Table({ tableName: 'user_customer', updatedAt: false, createdAt: false })
 export class UserCustomer extends Model {
-  @Column({ primaryKey: true, autoIncrement: true, allowNull: false })
+  @Column({
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+    unique: true,
+  })
   id_user_customer: number;
 
   @Column({ allowNull: false })
@@ -25,10 +30,10 @@ export class UserCustomer extends Model {
   @Column({ type: DataType.DATE })
   birth_date: any;
 
-  @Column
+  @Column({ unique: true })
   phone_number: string;
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: false, unique: true })
   email: string;
 
   @Column

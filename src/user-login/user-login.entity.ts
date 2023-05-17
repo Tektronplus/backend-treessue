@@ -9,7 +9,12 @@ import { UserCustomer } from '../user-customer/user-customer.entity';
 
 @Table({ tableName: 'user_login', updatedAt: false, createdAt: false })
 export class UserLogin extends Model {
-  @Column({ primaryKey: true, autoIncrement: true, allowNull: false })
+  @Column({
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+    unique: true,
+  })
   id_user_login: number;
 
   @ForeignKey(() => UserCustomer)
@@ -19,7 +24,7 @@ export class UserLogin extends Model {
   @BelongsTo(() => UserCustomer)
   user_customer: UserCustomer;
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: false, unique: true })
   username: string;
 
   @Column({ allowNull: false })

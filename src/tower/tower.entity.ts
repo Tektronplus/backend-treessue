@@ -9,7 +9,12 @@ import { UserCustomer } from '../user-customer/user-customer.entity';
 
 @Table({ tableName: 'tower', updatedAt: false, createdAt: false })
 export class Tower extends Model {
-  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
+  @Column({
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: true,
+    unique: true,
+  })
   id_tower: number;
 
   @ForeignKey(() => UserCustomer)
