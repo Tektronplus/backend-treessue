@@ -13,7 +13,12 @@ import { OrderDetail } from '../order-detail/order-detail.entity';
 
 @Table({ tableName: 'products', updatedAt: false, createdAt: false })
 export class Product extends Model {
-  @Column({ primaryKey: true, autoIncrement: true })
+  @Column({
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: true,
+    unique: true,
+  })
   id_product: number;
 
   @ForeignKey(() => Discount)

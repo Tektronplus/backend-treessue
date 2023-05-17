@@ -12,7 +12,12 @@ import { OrderDetail } from '../order-detail/order-detail.entity';
 
 @Table({ tableName: 'order', updatedAt: false, createdAt: false })
 export class Order extends Model {
-  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
+  @Column({
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: true,
+    unique: true,
+  })
   id_order: number;
 
   @ForeignKey(() => UserCustomer)
@@ -34,7 +39,7 @@ export class Order extends Model {
   @Column({ allowNull: true })
   courier_name: string;
 
-  @Column({ allowNull: true })
+  @Column({ allowNull: true, unique: true })
   tracking_code: string;
 
   @Column({ type: DataType.DATE, allowNull: true })

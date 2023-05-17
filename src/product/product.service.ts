@@ -10,4 +10,8 @@ export class ProductService {
   async findAll(): Promise<Product[]> {
     return this.productRepository.findAll();
   }
+
+  async findById(id_product): Promise<Product> {
+    return this.productRepository.findByPk(id_product);
+  }
 }

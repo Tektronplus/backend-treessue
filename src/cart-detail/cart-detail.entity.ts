@@ -10,7 +10,12 @@ import { UserCustomer } from '../user-customer/user-customer.entity';
 
 @Table({ tableName: 'cart_detail', updatedAt: false, createdAt: false })
 export class CartDetail extends Model {
-  @Column({ primaryKey: true, allowNull: false, autoIncrement: true })
+  @Column({
+    primaryKey: true,
+    allowNull: false,
+    autoIncrement: true,
+    unique: true,
+  })
   id_cart_detail: number;
 
   @ForeignKey(() => UserCustomer)
