@@ -6,7 +6,7 @@ async function bootstrap() {
 
   app.enableCors({
     allowedHeaders: ['content-type'],
-    origin: 'https://backend-treessue.vercel.app',
+    origin: '*',
     credentials: true,
   });
   await app.listen(3000);
