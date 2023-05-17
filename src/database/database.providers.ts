@@ -8,7 +8,7 @@ import { CartDetail } from '../cart-detail/cart-detail.entity';
 import { OrderDetail } from '../order-detail/order-detail.entity';
 import { UserCustomer } from '../user-customer/user-customer.entity';
 import { Order } from '../order/order.entity';
-import { UserWorker } from 'src/user_worker/user_worker.entity';
+import { UserWorker } from '../user_worker/user_worker.entity';
 
 export const databaseProviders = [
   {
