@@ -13,7 +13,7 @@ import { OrderDetail } from '../order-detail/order-detail.entity';
 
 @Table({ tableName: 'products', updatedAt: false, createdAt: false })
 export class Product extends Model {
-  @Column({ primaryKey: true })
+  @Column({ primaryKey: true, autoIncrement: true })
   id_product: number;
 
   @ForeignKey(() => Discount)
@@ -32,11 +32,14 @@ export class Product extends Model {
   @Column(DataType.TEXT)
   description: string;
 
-  @Column
+  @Column(DataType.FLOAT)
   unit_price: number;
 
-  @Column
-  is_active: boolean;
+  @Column(DataType.TEXT('long'))
+  image: any;
+
+  @Column(DataType.BOOLEAN)
+  is_available: boolean;
 
   @HasMany(() => OrderDetail)
   order_details: OrderDetail[];
