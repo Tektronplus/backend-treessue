@@ -28,6 +28,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
+    "js-base64": "^3.7.5",
     "moment": "^2.29.4",
     "mysql2": "^3.3.0",
     "passport": "^0.6.0",

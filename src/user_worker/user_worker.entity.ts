@@ -10,4 +10,7 @@ export class UserWorker extends Model {
 
   @Column({ allowNull: false })
   last_name: string;
+
+  @Column({allowNull:false})
+  role:string;
 }

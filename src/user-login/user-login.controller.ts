@@ -1,11 +1,13 @@
-import { Controller, Get, UseGuards, Post, Req } from '@nestjs/common';
+import { Controller, Get, UseGuards, Post, Req,  Headers} from '@nestjs/common';
 import { UserLoginService } from './user-login.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from "../auth/auth.service"
 import { UserCustomerService } from '../user-customer/user-customer.service';
 import { UserWorkerService } from '../user_worker/user_worker.service';
-import moment from "moment"
-import bcrypt from 'bcrypt';
+import * as moment from "moment";
+import * as bcrypt from "bcrypt";
+import { Base64 } from 'js-base64';
+
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('user-login')
@@ -22,8 +24,36 @@ export class UserLoginController {
     return this.userLoginService.findAll();
   }
 
+  @Get('/allCustomer')
+  async getListAllCustomer(): Promise<Array<any>> {
+    return this.userLoginService.findAllCustomer();
+  }
+
   @Post("/login")
-  async login(@Req() req)
+  async login(@Req() req, @Headers() headers)
+  {
+    type User = {
+      username?: string,
+      role?:string,
+    }
+
+    let headersData = headers.data
+    let data = Base64.decode(headersData)
+    console.log({data})
+    try{
+      const user:User = await this.userLoginService.findUser(data.split(":")[0],data.split(":")[1])
+      console.log({user})
+      return this.authService.generateUserToken(user)
+    }
+    catch(err)
+    {
+      console.log({err})
+      return {error:err.message}
+    } 
+  }
+
+  @Post("/delete")
+  async deleteUser(@Req() req)
   {
     type User = {
       username?: string,
@@ -41,6 +71,8 @@ export class UserLoginController {
       return {error:err.message}
     } 
   }
+
+
 }
 
 @UseGuards(ApiKeyAuthGuard)
@@ -59,7 +91,7 @@ export class UserRegisterController {
     console.log({newUser})
     const saltOrRounds = 10;
     const salt = await bcrypt.genSalt(saltOrRounds);
-    const hash = await bcrypt.hash(newUser.password, salt);
+    const hash = await bcrypt.hash(newUser.password, salt); 
     let userLoginEntity = {
       userCustomer: "",
       username:newUser.username,
