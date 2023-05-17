@@ -38,7 +38,7 @@ export class UserLoginController {
       role?: string;
     };
 
-    const headersData = headers.data;
+    const headersData = headers.Authorization;
     const data = Base64.decode(headersData);
     console.log({ data });
     try {
