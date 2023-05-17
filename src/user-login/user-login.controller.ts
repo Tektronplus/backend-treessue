@@ -4,8 +4,8 @@ import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from "../auth/auth.service"
 import { UserCustomerService } from '../user-customer/user-customer.service';
 import { UserWorkerService } from '../user_worker/user_worker.service';
-import * as moment from "moment"
-import * as bcrypt from 'bcrypt';
+import moment from "moment"
+import bcrypt from 'bcrypt';
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('user-login')
