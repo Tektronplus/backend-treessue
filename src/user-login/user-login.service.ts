@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { UserLogin } from './user-login.entity';
 import * as bcrypt from 'bcrypt';
+import { UserCustomer } from '../user-customer/user-customer.entity';
 @Injectable()
 export class UserLoginService {
   constructor(
@@ -10,6 +11,17 @@ export class UserLoginService {
 
   async findAll(): Promise<UserLogin[]> {
     return this.userLoginRepository.findAll();
+  }
+
+  async findAllCustomer(): Promise<UserLogin[]> {
+    return this.userLoginRepository.findAll({
+      include:[
+       {
+        model:UserCustomer,
+        required:true
+       }
+      ]
+    });
   }
 
   async findUser(username,password): Promise<object>{
