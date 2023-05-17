@@ -1,9 +1,10 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
+import { Product } from './product.entity';
 
 @UseGuards(ApiKeyAuthGuard)
-@Controller('products')
+@Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -15,5 +16,10 @@ export class ProductController {
   @Get('/all')
   async getListProducts(): Promise<Array<any>> {
     return this.productService.findAll();
+  }
+
+  @Get('/id/:idProduct')
+  async getProductById(@Param() param): Promise<Product> {
+    return this.productService.findById(param.idProduct);
   }
 }
