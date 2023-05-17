@@ -4,7 +4,6 @@ import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { UserCustomerService } from '../user-customer/user-customer.service';
 import { UserWorkerService } from '../user_worker/user_worker.service';
-import * as moment from 'moment';
 import * as bcrypt from 'bcrypt';
 import moment from 'moment';
 import { Base64 } from 'js-base64';
@@ -39,7 +38,8 @@ export class UserLoginController {
       role?: string;
     };
     console.log({req}) 
-    const headersData = headers.authorization; 
+    const headersData = headers.authorization.split("Basic ")[1]; 
+    console.log({headersData})
     const data = Base64.decode(headersData);
     console.log({ data });
     try {
