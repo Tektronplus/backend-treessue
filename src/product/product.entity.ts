@@ -35,7 +35,7 @@ export class Product extends Model {
   @Column(DataType.FLOAT)
   unit_price: number;
 
-  @Column(DataType.BLOB('medium'))
+  @Column(DataType.TEXT('long'))
   image: any;
 
   @Column(DataType.BOOLEAN)
