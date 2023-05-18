@@ -45,7 +45,7 @@ export class UserLoginController {
     const data = Base64.decode(headersData); 
     console.log({ data });
     try {
-      const user: User = await this.userLoginService.findUser(
+      const user: User = await this.userLoginService.findUserLogin(
         data.split(':')[0],
         data.split(':')[1],
       );
@@ -79,18 +79,9 @@ export class UserLoginController {
 
   @Post('/delete')
   async deleteUser(@Req() req) {
-    type User = {
-      username?: string;
-      role?: string;
-    };
-
     try {
-      const user: User = await this.userLoginService.findUser(
-        req.body.username,
-        req.body.password,
-      );
-      console.log({ user });
-      return this.authService.generateUserToken(user);
+      const result = await this.userLoginService.deleteUser(req.body.username);
+      return result
     } catch (err) {
       console.log({ err });
       return { error: err.message };
