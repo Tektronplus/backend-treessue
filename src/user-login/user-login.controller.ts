@@ -27,7 +27,7 @@ export class UserLoginController {
   }
 
   @Get('/allCustomer')
-  async getListAllCustomer(): Promise<Array<any>> { 
+  async getListAllCustomer(): Promise<Array<any>> {
     return this.userLoginService.findAllCustomer();
   }
 
@@ -37,9 +37,9 @@ export class UserLoginController {
       username?: string;
       role?: string;
     };
-    console.log({req}) 
-    const headersData = headers.authorization.split("Basic ")[1]; 
-    console.log({headersData})
+    console.log({ req });
+    const headersData = headers.authorization.split('Basic ')[1];
+    console.log({ headersData });
     const data = Base64.decode(headersData);
     console.log({ data });
     try {
@@ -121,10 +121,10 @@ export class UserRegisterController {
         userLoginEntity,
       );
       console.log({ newCreatedUserLogin });
-      return {status:201,messagge:"user created successufuly"};
+      return { status: 201, messagge: 'user created successufuly' };
     } catch (err) {
       console.log(err);
-      return { status:400,messagge:"email" };
+      return { status: 400, messagge: 'email' };
     }
     //console.log({userLoginEntity},{userCustomerEntity})
   }
