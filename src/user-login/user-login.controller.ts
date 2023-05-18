@@ -28,7 +28,7 @@ export class UserLoginController {
   }
 
   @Get('/allCustomer')
-  async getListAllCustomer(): Promise<Array<any>> { 
+  async getListAllCustomer(): Promise<Array<any>> {
     return this.userLoginService.findAllCustomer();
   }
 
@@ -38,9 +38,9 @@ export class UserLoginController {
       username?: string;
       role?: string;
     };
-    console.log({req}) 
-    const headersData = headers.authorization.split("Basic ")[1]; 
-    console.log({headersData})
+    console.log({ req });
+    const headersData = headers.authorization.split('Basic ')[1];
+    console.log({ headersData });
     const data = Base64.decode(headersData);
     console.log({ data });
     try {
@@ -122,10 +122,10 @@ export class UserRegisterController {
         userLoginEntity,
       );
       console.log({ newCreatedUserLogin });
-      return {status:201,message:"user created successufuly"};
+      return { status: 201, message: 'user created successufuly' };
     } catch (err) {
-      console.log({err});
-      return { status:400,message:"email or phone number already exist" };
+      console.log(err);
+      return { status:400,message:"email already in use" };
     }
     //console.log({userLoginEntity},{userCustomerEntity})
   }
