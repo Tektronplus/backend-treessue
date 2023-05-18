@@ -61,6 +61,6 @@ export class Order extends Model {
   price: number;
 
   //Relationships
-  @HasMany(() => OrderDetail)
+  @HasMany(() => OrderDetail,{onDelete:'cascade'})
   orders_detail: OrderDetail[];
 }
