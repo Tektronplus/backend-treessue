@@ -24,12 +24,13 @@ export class UserLoginService {
     });
   }
 
-  async findUser(email,password): Promise<object>{
+  async findUserLogin(email,password): Promise<object>{
     console.log({email},{password})
     let userList = await this.userLoginRepository.findAll()
-    let user = await userList.find((user)=>{if(bcrypt.compare(password,user.dataValues.password)&&user.dataValues.email==email){
+    let user = await userList.find((user)=>{if(bcrypt.compareSync(password,user.dataValues.password)&&user.dataValues.email==email){
       return user
     }})
+    console.log({user})
     if(user != null)
     {
       return user.dataValues
@@ -57,18 +58,13 @@ export class UserLoginService {
     }
   }
 
-  async deleteUser(user): Promise<any> {
-    console.log({ user });
+  async deleteUser(email): Promise<any> {
+    console.log({ email });
     try {
-      const newUserCustomer = await this.userLoginRepository.create({
-        id_user_customer: user.userCustomer,
-        username: user.username,
-        password: user.password,
-        role:user.role
-      });
+      const destroyUser= await this.userLoginRepository.destroy({where:{email:email}});
       //console.log({ newUserCustomer });
-      return newUserCustomer;
-    } catch (err) {
+      return destroyUser;
+    } catch (err) { 
       throw new Error(err);
     }
   }

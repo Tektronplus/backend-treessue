@@ -16,7 +16,7 @@ export class AuthService {
   async generateUserToken(user: object) {
     console.log({ user });
     return {
-      access_token: await this.jwtService.signAsync(user),
+      access_token: await this.jwtService.signAsync({userDetail:user}),
     };
   }
 }

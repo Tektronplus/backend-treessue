@@ -1,4 +1,12 @@
-import { Controller, Get, UseGuards, Post, Req, Headers } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Post,
+  Req,
+  Headers,
+  Res,
+} from '@nestjs/common';
 import { UserLoginService } from './user-login.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
@@ -34,9 +42,9 @@ export class UserLoginController {
   }
 
   @Post('/login')
-  async login(@Req() req, @Headers() headers) {
+  async login(@Req() req, @Headers() headers, @Res() res) {
     type User = {
-      username?: string;
+      email?: string;
       role?: string;
     };
     console.log({ req });
@@ -45,32 +53,46 @@ export class UserLoginController {
     const data = Base64.decode(headersData);
     console.log({ data });
     try {
-      const user: User = await this.userLoginService.findUser(
+      const user: User = await this.userLoginService.findUserLogin(
         data.split(':')[0],
         data.split(':')[1],
       );
       console.log({ user });
-      return this.authService.generateUserToken(user);
+      let allUserList = await this.getListAllCustomer();
+      //console.log({allUserList})
+      let userInfo = await allUserList.filter((data) => {
+        if (data.email == user.email) {
+          return data;
+        }
+      });
+      let userDetaild = {
+        firstName: userInfo[0].dataValues.user_customer.first_name,
+        lastName: userInfo[0].dataValues.user_customer.last_name,
+        email: userInfo[0].dataValues.email,
+        birthDate: userInfo[0].dataValues.user_customer.birth_date,
+        phoneNumber: userInfo[0].dataValues.user_customer.phone_number,
+        country: userInfo[0].dataValues.user_customer.country,
+        province: userInfo[0].dataValues.user_customer.province,
+        city: userInfo[0].dataValues.user_customer.city,
+        zipCode: userInfo[0].dataValues.user_customer.zip_code,
+        address: userInfo[0].dataValues.user_customer.address,
+      };
+      res
+        .status(200)
+        .json({
+          result: await this.authService.generateUserToken(userDetaild),
+        });
     } catch (err) {
       console.log({ err });
-      return { error: err.message };
+      res.status(403).json({ result: 'user not found' });
     }
   }
 
   @Post('/delete')
   async deleteUser(@Req() req) {
-    type User = {
-      username?: string;
-      role?: string;
-    };
-
     try {
-      const user: User = await this.userLoginService.findUser(
-        req.body.username,
-        req.body.password,
-      );
-      console.log({ user });
-      return this.authService.generateUserToken(user);
+      const result = await this.userLoginService.deleteUser(req.body.username);
+      return result;
     } catch (err) {
       console.log({ err });
       return { error: err.message };
@@ -88,7 +110,7 @@ export class UserRegisterController {
   ) {}
 
   @Post('/registerCustomer')
-  async registerUser(@Req() req) {
+  async registerUser(@Req() req, @Res() res) {
     const newUser = req.body;
     console.log({ newUser });
     const saltOrRounds = 10;
@@ -123,10 +145,10 @@ export class UserRegisterController {
         userLoginEntity,
       );
       console.log({ newCreatedUserLogin });
-      return { status: 201, message: 'user created successufuly' };
+      res.status(201).json({ result: 'user created successufuly' });
     } catch (err) {
       console.log(err);
-      return { status: 400, message: 'email or phonenumber already in use' };
+      res.status(409).json({ result: 'email or phonenumber already in use' });
     }
     //console.log({userLoginEntity},{userCustomerEntity})
   }
