@@ -25,7 +25,7 @@ export class UserLogin extends Model {
   user_customer: UserCustomer;
 
   @Column({ allowNull: false, unique: true })
-  username: string;
+  email: string;
 
   @Column({ allowNull: false })
   password: string;

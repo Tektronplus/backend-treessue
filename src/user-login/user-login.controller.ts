@@ -94,7 +94,7 @@ export class UserRegisterController {
     const hash = await bcrypt.hash(newUser.password, salt);
     const userLoginEntity = {
       userCustomer: '',
-      username: newUser.username,
+      email: newUser.email,
       password: hash,
       role: 'user',
     };
@@ -103,7 +103,6 @@ export class UserRegisterController {
       last_name: newUser.lastName,
       birth_date: moment(newUser.birthDate, 'DD-MM-YYYY').toDate(),
       phone_number: newUser.phoneNumber,
-      email: newUser.email,
       country: newUser.country,
       province: newUser.province,
       city: newUser.city,
@@ -122,10 +121,10 @@ export class UserRegisterController {
         userLoginEntity,
       );
       console.log({ newCreatedUserLogin });
-      return 'utente creato con successo';
+      return {status:201,messagge:"user created successufuly"};
     } catch (err) {
       console.log(err);
-      return { error: err.message };
+      return { status:400,messagge:"email" };
     }
     //console.log({userLoginEntity},{userCustomerEntity})
   }

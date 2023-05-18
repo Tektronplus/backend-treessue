@@ -20,7 +20,6 @@ export class UserCustomerService {
         last_name: user.last_name,
         birth_date: user.birth_date,
         phone_number: user.phone_number,
-        email: user.email,
         country: user.country,
         province: user.province,
         city: user.city,

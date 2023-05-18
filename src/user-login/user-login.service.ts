@@ -45,6 +45,22 @@ export class UserLoginService {
     try {
       const newUserCustomer = await this.userLoginRepository.create({
         id_user_customer: user.userCustomer,
+        email: user.email,
+        password: user.password,
+        role:user.role
+      });
+      //console.log({ newUserCustomer });
+      return newUserCustomer;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async deleteUser(user): Promise<any> {
+    console.log({ user });
+    try {
+      const newUserCustomer = await this.userLoginRepository.create({
+        id_user_customer: user.userCustomer,
         username: user.username,
         password: user.password,
         role:user.role
