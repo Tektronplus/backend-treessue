@@ -24,10 +24,10 @@ export class UserLoginService {
     });
   }
 
-  async findUser(username,password): Promise<object>{
-    console.log({username},{password})
+  async findUser(email,password): Promise<object>{
+    console.log({email},{password})
     let userList = await this.userLoginRepository.findAll()
-    let user = await userList.find((user)=>{if(bcrypt.compare(password,user.dataValues.password)&&user.dataValues.username==username){
+    let user = await userList.find((user)=>{if(bcrypt.compare(password,user.dataValues.password)&&user.dataValues.email==email){
       return user
     }})
     if(user != null)
