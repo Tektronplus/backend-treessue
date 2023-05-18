@@ -125,7 +125,7 @@ export class UserRegisterController {
       return { status: 201, message: 'user created successufuly' };
     } catch (err) {
       console.log(err);
-      return { status:400,message:"email already in use" };
+      return { status:400,message:"email or phonenumber already in use" };
     }
     //console.log({userLoginEntity},{userCustomerEntity})
   }
