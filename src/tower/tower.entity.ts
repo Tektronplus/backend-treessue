@@ -25,13 +25,16 @@ export class Tower extends Model {
   user_customer: UserCustomer;
 
   @Column({ allowNull: false })
-  type: string;
+  is_public: boolean;
 
   @Column
   tissue_quantity: number;
 
+  @Column({ allowNull: false })
+  title: string;
+
   @Column
-  tower_name: string;
+  description: string;
 
   @Column
   address: string;
