@@ -26,7 +26,7 @@ export class UserCustomerService {
         zip_code: user.zip_code,
         address: user.address,
       });
-      //console.log({ newUserCustomer });
+      console.log({ newUserCustomer });
       return newUserCustomer;
     } catch (err) {
       throw new Error(err);
