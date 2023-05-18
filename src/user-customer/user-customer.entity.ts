@@ -33,9 +33,6 @@ export class UserCustomer extends Model {
   @Column({ unique: true })
   phone_number: string;
 
-  @Column({ allowNull: false, unique: true })
-  email: string;
-
   @Column
   country: string;
 
