@@ -6,6 +6,7 @@ import { UserCustomerService } from '../user-customer/user-customer.service';
 import { UserWorkerService } from '../user_worker/user_worker.service';
 import * as bcrypt from 'bcrypt';
 import moment from 'moment';
+//import * as moment from 'moment';
 import { Base64 } from 'js-base64';
 
 @UseGuards(ApiKeyAuthGuard)
@@ -123,8 +124,8 @@ export class UserRegisterController {
       console.log({ newCreatedUserLogin });
       return {status:201,message:"user created successufuly"};
     } catch (err) {
-      console.log(err);
-      return { status:400,message:"email already in use" };
+      console.log({err});
+      return { status:400,message:"email or phone number already exist" };
     }
     //console.log({userLoginEntity},{userCustomerEntity})
   }

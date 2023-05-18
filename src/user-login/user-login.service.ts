@@ -52,6 +52,7 @@ export class UserLoginService {
       //console.log({ newUserCustomer });
       return newUserCustomer;
     } catch (err) {
+      console.log({err})
       throw new Error(err);
     }
   }
