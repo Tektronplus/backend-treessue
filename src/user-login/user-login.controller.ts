@@ -121,10 +121,10 @@ export class UserRegisterController {
         userLoginEntity,
       );
       console.log({ newCreatedUserLogin });
-      return { status: 201, messagge: 'user created successufuly' };
+      return { status: 201, message: 'user created successufuly' };
     } catch (err) {
       console.log(err);
-      return { status: 400, messagge: 'email' };
+      return { status: 400, message: 'email already in use' };
     }
     //console.log({userLoginEntity},{userCustomerEntity})
   }
