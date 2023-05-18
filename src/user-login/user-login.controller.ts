@@ -137,7 +137,7 @@ export class UserRegisterController {
       res.status(201).json({result:'user created successufuly'})
     } catch (err) {
       console.log(err);
-      res.status(400).json({result:"email or phonenumber already in use"})
+      res.status(409).json({result:"email or phonenumber already in use"})
     }
     //console.log({userLoginEntity},{userCustomerEntity})
   }
