@@ -13,8 +13,8 @@ import { AuthService } from '../auth/auth.service';
 import { UserCustomerService } from '../user-customer/user-customer.service';
 import { UserWorkerService } from '../user_worker/user_worker.service';
 import * as bcrypt from 'bcrypt';
-//import moment from 'moment';
-import * as moment from 'moment';
+import moment from 'moment';
+//import * as moment from 'moment';
 import { Base64 } from 'js-base64';
 
 @UseGuards(ApiKeyAuthGuard)
@@ -57,14 +57,14 @@ export class UserLoginController {
         data.split(':')[1],
       );
       console.log({ user });
-      let allUserList = await this.getListAllCustomer();
+      const allUserList = await this.getListAllCustomer();
       //console.log({allUserList})
-      let userInfo = await allUserList.filter((data) => {
+      const userInfo = await allUserList.filter((data) => {
         if (data.email == user.email) {
           return data;
         }
       });
-      let userDetaild = {
+      const userDetaild = {
         id: userInfo[0].dataValues.user_customer.id_user_customer,
         firstName: userInfo[0].dataValues.user_customer.first_name,
         lastName: userInfo[0].dataValues.user_customer.last_name,
@@ -77,11 +77,9 @@ export class UserLoginController {
         zipCode: userInfo[0].dataValues.user_customer.zip_code,
         address: userInfo[0].dataValues.user_customer.address,
       };
-      res
-        .status(200)
-        .json({
-          result: await this.authService.generateUserToken(userDetaild),
-        });
+      res.status(200).json({
+        result: await this.authService.generateUserToken(userDetaild),
+      });
     } catch (err) {
       console.log({ err });
       res.status(403).json({ result: 'user not found' });
