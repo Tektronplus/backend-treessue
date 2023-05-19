@@ -22,7 +22,7 @@ export class Product extends Model {
   id_product: number;
 
   @ForeignKey(() => Discount)
-  @Column({ allowNull: false })
+  @Column
   id_discount: number;
 
   @BelongsTo(() => Discount)
@@ -40,7 +40,7 @@ export class Product extends Model {
   @Column(DataType.FLOAT)
   unit_price: number;
 
-  @Column(DataType.TEXT('long'))
+  @Column(DataType.TEXT('medium'))
   image: any;
 
   @Column(DataType.BOOLEAN)

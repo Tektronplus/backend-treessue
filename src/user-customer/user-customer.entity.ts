@@ -50,15 +50,15 @@ export class UserCustomer extends Model {
 
   //Relationships
 
-  @HasOne(() => CartDetail,{onDelete:'cascade'})
+  @HasOne(() => CartDetail, { onDelete: 'cascade' })
   cart_detail: CartDetail;
 
-  @HasOne(() => UserLogin,{onDelete:'cascade'})
+  @HasOne(() => UserLogin, { onDelete: 'cascade' })
   user_login: UserLogin;
 
-  @HasMany(() => Order,{onDelete:'cascade'})
+  @HasMany(() => Order, { onDelete: 'cascade' })
   orders: Order[];
 
-  @HasMany(() => Tower,{onDelete:'cascade'})
+  @HasMany(() => Tower, { onDelete: 'cascade' })
   towers: Tower[];
 }
