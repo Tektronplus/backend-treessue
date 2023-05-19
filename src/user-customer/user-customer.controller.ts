@@ -1,12 +1,23 @@
-import { Controller, Get, Req, Headers, Res, Post, Put, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Req,
+  Headers,
+  Res,
+  Delete,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { UserCustomerService } from './user-customer.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from 'src/auth/auth.service';
-import { type } from 'os';
 @UseGuards(ApiKeyAuthGuard)
 @Controller('user-customer')
 export class UserCustomerController {
-  constructor(private readonly userCustomerService: UserCustomerService, private readonly authService:AuthService) {}
+  constructor(
+    private readonly userCustomerService: UserCustomerService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get('/')
   async getHello(): Promise<string> {
