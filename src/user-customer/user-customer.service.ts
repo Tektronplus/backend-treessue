@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@nestjs/common';
 import { UserCustomer } from './user-customer.entity';
 import { where } from 'sequelize';
 
-
 @Injectable()
 export class UserCustomerService {
   constructor(
@@ -27,6 +26,7 @@ export class UserCustomerService {
         city: user.city,
         zip_code: user.zip_code,
         address: user.address,
+        is_active: user.is_active,
       });
       console.log({ newUserCustomer });
       return newUserCustomer;
@@ -38,10 +38,13 @@ export class UserCustomerService {
   async DeleteUser(user): Promise<any> {
     console.log({ user });
     try {
-      let foundUser = await this.userCustomerRepository.update({isActive:false},{where:{id_user_customer:user.id,isActive:true}})
+      let foundUser = await this.userCustomerRepository.update(
+        { isActive: false },
+        { where: { id_user_customer: user.id, isActive: true } },
+      );
       console.log({ foundUser });
       return foundUser;
-    } catch (err) { 
+    } catch (err) {
       throw new Error(err);
     }
   }
