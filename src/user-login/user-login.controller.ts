@@ -13,9 +13,8 @@ import { AuthService } from '../auth/auth.service';
 import { UserCustomerService } from '../user-customer/user-customer.service';
 import { UserWorkerService } from '../user_worker/user_worker.service';
 import * as bcrypt from 'bcrypt';
-//import * as moment from 'moment';
-import moment from 'moment';
-//import * as moment from 'moment';
+//import moment from 'moment';
+import * as moment from 'moment';
 import { Base64 } from 'js-base64';
 
 @UseGuards(ApiKeyAuthGuard)
@@ -66,6 +65,7 @@ export class UserLoginController {
         }
       });
       let userDetaild = {
+        id: userInfo[0].dataValues.user_customer.id_user_customer,
         firstName: userInfo[0].dataValues.user_customer.first_name,
         lastName: userInfo[0].dataValues.user_customer.last_name,
         email: userInfo[0].dataValues.email,
@@ -85,17 +85,6 @@ export class UserLoginController {
     } catch (err) {
       console.log({ err });
       res.status(403).json({ result: 'user not found' });
-    }
-  }
-
-  @Post('/delete')
-  async deleteUser(@Req() req) {
-    try {
-      const result = await this.userLoginService.deleteUser(req.body.username);
-      return result;
-    } catch (err) {
-      console.log({ err });
-      return { error: err.message };
     }
   }
 }

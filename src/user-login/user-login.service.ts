@@ -57,15 +57,4 @@ export class UserLoginService {
       throw new Error(err);
     }
   }
-
-  async deleteUser(email): Promise<any> {
-    console.log({ email });
-    try {
-      const destroyUser= await this.userLoginRepository.destroy({where:{email:email}});
-      //console.log({ newUserCustomer });
-      return destroyUser;
-    } catch (err) { 
-      throw new Error(err);
-    }
-  }
 }
