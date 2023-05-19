@@ -119,6 +119,7 @@ export class UserRegisterController {
       city: newUser.city,
       zip_code: newUser.zipCode,
       address: newUser.address,
+      is_active: 1,
     };
 
     try {
