@@ -14,7 +14,6 @@ import { UserCustomerService } from '../user-customer/user-customer.service';
 import { UserWorkerService } from '../user_worker/user_worker.service';
 import * as bcrypt from 'bcrypt';
 import moment from 'moment';
-//import * as moment from 'moment';
 import { Base64 } from 'js-base64';
 
 @UseGuards(ApiKeyAuthGuard)
