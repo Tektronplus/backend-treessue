@@ -36,10 +36,12 @@ export class UserCustomerService {
   async DeleteUser(user): Promise<any> {
     console.log({ user });
     try {
-      const destroyUser= await this.userCustomerRepository.destroy({where:{id_user_customer:user.id}});
+      const destroyUser = await this.userCustomerRepository.destroy({
+        where: { id_user_customer: user.id },
+      });
       //console.log({ newUserCustomer });
       return destroyUser;
-    } catch (err) { 
+    } catch (err) {
       throw new Error(err);
     }
   }

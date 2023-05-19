@@ -46,6 +46,10 @@ export class Product extends Model {
   @Column(DataType.BOOLEAN)
   is_available: boolean;
 
+  @Column({ allowNull: true })
+  available_quantity: number;
+
+  // RELATIONSHIPS
   @HasMany(() => OrderDetail)
   order_details: OrderDetail[];
 
