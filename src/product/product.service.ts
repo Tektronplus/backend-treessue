@@ -1,4 +1,9 @@
-import { Injectable, Inject, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Product } from './product.entity';
 
 @Injectable()
@@ -28,7 +33,7 @@ export class ProductService {
 class CustomException {
   checkFindById(id_product, arrayIdProducts) {
     if (!arrayIdProducts.includes(Number(id_product))) {
-      throw new BadRequestException('Something bad happened', {
+      throw new NotFoundException('Something bad happened', {
         cause: new Error(),
         description: "This id_product doesn't exist in the DB.",
       });
