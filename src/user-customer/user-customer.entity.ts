@@ -56,7 +56,7 @@ export class UserCustomer extends Model {
   @HasOne(() => UserLogin,{onDelete:'cascade'})
   user_login: UserLogin;
 
-  @HasMany(() => Order,{onDelete:'cascade'})
+  @HasMany(() => Order)
   orders: Order[];
 
   @HasMany(() => Tower,{onDelete:'cascade'})

@@ -1,5 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { UserCustomer } from './user-customer.entity';
+import { where } from 'sequelize';
+
 
 @Injectable()
 export class UserCustomerService {
@@ -36,9 +38,9 @@ export class UserCustomerService {
   async DeleteUser(user): Promise<any> {
     console.log({ user });
     try {
-      const destroyUser= await this.userCustomerRepository.destroy({where:{id_user_customer:user.id}});
-      //console.log({ newUserCustomer });
-      return destroyUser;
+      let foundUser = await this.userCustomerRepository.update({isActive:false},{where:{id_user_customer:user.id,isActive:true}})
+      console.log({ foundUser });
+      return foundUser;
     } catch (err) { 
       throw new Error(err);
     }

@@ -28,15 +28,29 @@ export class UserCustomerController {
     console.log("============== DELETE REQUEST =================")
     let isTokenValid = await this.authService.validateToken(headers.authorization)
     console.log({isTokenValid})
-    const decodedInfo: decodedToken = await this.authService.dechiperUserToken(headers.authorization) 
+    if(isTokenValid)
+    {
+      const decodedInfo: decodedToken = await this.authService.dechiperUserToken(headers.authorization) 
     const user = decodedInfo.userDetail
     //console.log("user in controller: ",{user})
-    /*try {
+    try {
       const result = await this.userCustomerService.DeleteUser(user)
-      return result;
+      if(result == 1)
+      {
+        res.status(200).json({ result: 'delete successful' });
+      }
+      else
+      {
+        res.status(403).json({ result: 'user not found' });
+      }
     } catch (err) {
       console.log({ err }); 
-      return { error: err.message };
-    }*/
+      res.status(500).json({ result: 'internal error' });
+    }
+    }
+    else
+    {
+      res.status(403).json({ result: 'not authorized' });
+    }
   }
 }

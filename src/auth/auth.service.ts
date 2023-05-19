@@ -28,8 +28,15 @@ export class AuthService {
 
   async validateToken(token:string): Promise<any>{
     console.log("token in verify: ",token)
-    let isTokenValid = await this.jwtService.verifyAsync(token)
-    console.log("is token valid auth: ",{isTokenValid})
-    return true
+    try{
+      let isTokenValid = await this.jwtService.verifyAsync(token,{secret:await this.configService.get<string>('JWT_SECRET')})
+      if(isTokenValid!=undefined)
+      {
+        return true
+      }
+    }catch(err)
+    {
+      return false
+    }
   }
 }
