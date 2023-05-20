@@ -26,11 +26,7 @@ export class UserCustomerService {
         city: user.city,
         zip_code: user.zip_code,
         address: user.address,
-<<<<<<< HEAD
-        is_active:true
-=======
-        is_active: user.is_active,
->>>>>>> 20bb83f188306f75c491bab431876d4988ae38aa
+        is_active:1
       });
       console.log({ newUserCustomer });
       return newUserCustomer;
