@@ -27,7 +27,7 @@ export class UserLoginService {
   async findUserLogin(email,password): Promise<object>{
     console.log({email},{password})
     let userList = await this.userLoginRepository.findAll()
-    let user = await userList.find((user)=>{if(bcrypt.compareSync(password,user.dataValues.password)&&user.dataValues.email==email){
+    let user = await userList.find((user)=>{if(bcrypt.compareSync(password,user.dataValues.password)&&user.dataValues.email==email&&user.dataValues.is_active==1){
       return user
     }})
     console.log({user})

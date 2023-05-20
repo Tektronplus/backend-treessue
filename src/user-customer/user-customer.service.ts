@@ -27,6 +27,7 @@ export class UserCustomerService {
         city: user.city,
         zip_code: user.zip_code,
         address: user.address,
+        is_active:true
       });
       console.log({ newUserCustomer });
       return newUserCustomer;
@@ -38,7 +39,7 @@ export class UserCustomerService {
   async DeleteUser(user): Promise<any> {
     console.log({ user });
     try {
-      let foundUser = await this.userCustomerRepository.update({isActive:false},{where:{id_user_customer:user.id,isActive:true}})
+      let foundUser = await this.userCustomerRepository.update({is_active:0},{where:{id_user_customer:user.id,is_active:1}})
       console.log({ foundUser });
       return foundUser;
     } catch (err) { 
