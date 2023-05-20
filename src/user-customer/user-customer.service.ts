@@ -2,7 +2,6 @@ import { Injectable, Inject } from '@nestjs/common';
 import { UserCustomer } from './user-customer.entity';
 import { where } from 'sequelize';
 
-
 @Injectable()
 export class UserCustomerService {
   constructor(
@@ -27,7 +26,11 @@ export class UserCustomerService {
         city: user.city,
         zip_code: user.zip_code,
         address: user.address,
+<<<<<<< HEAD
         is_active:true
+=======
+        is_active: user.is_active,
+>>>>>>> 20bb83f188306f75c491bab431876d4988ae38aa
       });
       console.log({ newUserCustomer });
       return newUserCustomer;
@@ -42,7 +45,7 @@ export class UserCustomerService {
       let foundUser = await this.userCustomerRepository.update({is_active:0},{where:{id_user_customer:user.id,is_active:1}})
       console.log({ foundUser });
       return foundUser;
-    } catch (err) { 
+    } catch (err) {
       throw new Error(err);
     }
   }
