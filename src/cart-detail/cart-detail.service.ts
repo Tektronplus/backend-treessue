@@ -12,6 +12,19 @@ export class CartDetailService {
     return this.cartDetailRepository.findAll();
   }
 
+  async findCartDetailByUserCustomer(idUserCustomer): Promise<Array<any>> {
+    return this.cartDetailRepository
+      .findAll({
+        where: { id_user_customer: idUserCustomer },
+      })
+      .then((res) =>
+        res.map((cartItem) => {
+          delete cartItem.id_user_customer;
+          return cartItem;
+        }),
+      );
+  }
+
   async addItemToCart(idUserCustomer, idProduct, quantity) {
     const newCartItem = {
       id_user_customer: idUserCustomer,
