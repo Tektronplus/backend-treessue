@@ -1,11 +1,22 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Headers,
+  Post,
+  Body,
+} from '@nestjs/common';
 import { CartDetailService } from './cart-detail.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
+import { AuthService } from '../auth/auth.service';
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('cart-detail')
 export class CartDetailController {
-  constructor(private readonly cartDetailService: CartDetailService) {}
+  constructor(
+    private readonly cartDetailService: CartDetailService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get('/')
   async getHello(): Promise<string> {
@@ -15,5 +26,31 @@ export class CartDetailController {
   @Get('/all')
   async getListCartDetail(): Promise<Array<any>> {
     return this.cartDetailService.findAll();
+  }
+
+  @Post('/add')
+  async getToken(@Body() body, @Headers() headers): Promise<any> {
+    type decodedToken = {
+      userDetail?: any;
+      exp?: number;
+      iat?: number;
+    };
+
+    const isTokenValid = await this.authService.validateToken(
+      headers.authorization,
+    );
+
+    console.log({ isTokenValid });
+    const decodedInfo: decodedToken = await this.authService.dechiperUserToken(
+      headers.authorization,
+    );
+    const userInfo = decodedInfo.userDetail;
+
+    console.log(userInfo.id);
+    return this.cartDetailService.addItemToCart(
+      userInfo.id,
+      body.idProduct,
+      body.quantity,
+    );
   }
 }

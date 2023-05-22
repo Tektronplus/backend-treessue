@@ -15,28 +15,31 @@ export class AuthService {
 
   async generateUserToken(user: object) {
     console.log({ user });
-    console.log("SECRET: ",this.configService.get<string>('JWT_SECRET'))
+    console.log('SECRET: ', this.configService.get<string>('JWT_SECRET'));
     return {
-      access_token: await this.jwtService.signAsync({userDetail:user},{secret:await this.configService.get<string>('JWT_SECRET')}),
+      access_token: await this.jwtService.signAsync(
+        { userDetail: user },
+        { secret: await this.configService.get<string>('JWT_SECRET') },
+      ),
     };
   }
 
-  async dechiperUserToken(token:string): Promise<any> {
-    console.log({ token })
-    return await this.jwtService.decode(token)
+  async dechiperUserToken(token: string): Promise<any> {
+    console.log({ token });
+    return await this.jwtService.decode(token);
   }
 
-  async validateToken(token:string): Promise<any>{
-    console.log("token in verify: ",token)
-    try{
-      let isTokenValid = await this.jwtService.verifyAsync(token,{secret:await this.configService.get<string>('JWT_SECRET')})
-      if(isTokenValid!=undefined)
-      {
-        return true
+  async validateToken(token: string): Promise<any> {
+    console.log('token in verify: ', token);
+    try {
+      const isTokenValid = await this.jwtService.verifyAsync(token, {
+        secret: await this.configService.get<string>('JWT_SECRET'),
+      });
+      if (isTokenValid != undefined) {
+        return true;
       }
-    }catch(err)
-    {
-      return false
+    } catch (err) {
+      return false;
     }
   }
 }
