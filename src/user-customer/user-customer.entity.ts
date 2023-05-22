@@ -48,9 +48,6 @@ export class UserCustomer extends Model {
   @Column
   address: string;
 
-  @Column({ type: DataType.BOOLEAN, allowNull: false })
-  is_active: any;
-
   //Relationships
 
   @HasOne(() => CartDetail)

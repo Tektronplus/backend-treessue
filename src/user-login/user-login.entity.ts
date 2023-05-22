@@ -4,6 +4,7 @@ import {
   Model,
   ForeignKey,
   BelongsTo,
+  DataType,
 } from 'sequelize-typescript';
 import { UserCustomer } from '../user-customer/user-customer.entity';
 
@@ -32,4 +33,7 @@ export class UserLogin extends Model {
 
   @Column({ allowNull: false })
   role: string;
+
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  is_active: any;
 }

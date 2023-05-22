@@ -6,7 +6,6 @@ import {
   Res,
   Delete,
   UseGuards,
-  Param,
 } from '@nestjs/common';
 import { UserCustomerService } from './user-customer.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
@@ -32,35 +31,32 @@ export class UserCustomerController {
   @Delete('/delete')
   async deleteUser(@Req() req, @Headers() headers, @Res() res) {
     type decodedToken = {
-      userDetail?: Object,
-      exp?:number,
-      iat?:number
-    }
-    console.log("============== DELETE REQUEST =================")
-    let isTokenValid = await this.authService.validateToken(headers.authorization)
-    console.log({isTokenValid})
-    if(isTokenValid)
-    {
-      const decodedInfo: decodedToken = await this.authService.dechiperUserToken(headers.authorization) 
-    const user = decodedInfo.userDetail
-    //console.log("user in controller: ",{user})
-    try {
-      const result = await this.userCustomerService.DeleteUser(user)
-      if(result == 1)
-      {
-        res.status(200).json({ result: 'delete successful' });
+      userDetail?: object;
+      exp?: number;
+      iat?: number;
+    };
+    console.log('============== DELETE REQUEST =================');
+    const isTokenValid = await this.authService.validateToken(
+      headers.authorization,
+    );
+    console.log({ isTokenValid });
+    if (isTokenValid) {
+      const decodedInfo: decodedToken =
+        await this.authService.dechiperUserToken(headers.authorization);
+      const user = decodedInfo.userDetail;
+      //console.log("user in controller: ",{user})
+      try {
+        const result = await this.userCustomerService.DeleteUser(user);
+        if (result == 1) {
+          res.status(200).json({ result: 'delete successful' });
+        } else {
+          res.status(403).json({ result: 'user not found' });
+        }
+      } catch (err) {
+        console.log({ err });
+        res.status(500).json({ result: 'internal error' });
       }
-      else
-      {
-        res.status(403).json({ result: 'user not found' });
-      }
-    } catch (err) {
-      console.log({ err }); 
-      res.status(500).json({ result: 'internal error' });
-    }
-    }
-    else
-    {
+    } else {
       res.status(403).json({ result: 'not authorized' });
     }
   }

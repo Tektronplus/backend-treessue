@@ -18,5 +18,4 @@ export class UserWorker extends Model {
 
   @Column({ allowNull: false })
   role: string;
-  
 }
