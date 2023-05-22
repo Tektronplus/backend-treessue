@@ -35,26 +35,8 @@ export class CartDetailController {
 
   @Post('/add')
   async getToken(@Body() body, @Headers() headers): Promise<any> {
-    type decodedToken = {
-      userDetail?: any;
-      exp?: number;
-      iat?: number;
-    };
-
-    const authorizationToker = headers.authorization.split('Bearer ')[1];
-    const isTokenValid = await this.authService.validateToken(
-      authorizationToker,
-    );
-
-    console.log({ isTokenValid });
-    const decodedInfo: decodedToken = await this.authService.dechiperUserToken(
-      authorizationToker,
-    );
-    const userInfo = decodedInfo.userDetail;
-
-    console.log(userInfo.id);
     return this.cartDetailService.addItemToCart(
-      userInfo.id,
+      headers,
       body.idProduct,
       body.quantity,
     );
