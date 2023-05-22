@@ -29,8 +29,8 @@ export class CartDetailController {
   }
 
   @Get('/customer')
-  async getCartdetailOfUserCustomer(): Promise<Array<any>> {
-    return this.cartDetailService.findCartDetailByUserCustomer(4);
+  async getCartdetailOfUserCustomer(@Headers() headers): Promise<Array<any>> {
+    return this.cartDetailService.findCartDetailByUserCustomer(headers);
   }
 
   @Post('/add')

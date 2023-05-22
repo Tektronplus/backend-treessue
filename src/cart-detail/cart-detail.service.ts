@@ -10,15 +10,17 @@ export class CartDetailService {
     private authService: AuthService,
   ) {}
 
+  //Custom classes
   customMethods = new CustomMethods(this.authService);
 
   async findAll(): Promise<CartDetail[]> {
     return this.cartDetailRepository.findAll();
   }
 
-  async findCartDetailByUserCustomer(idUserCustomer): Promise<Array<any>> {
+  async findCartDetailByUserCustomer(headers): Promise<Array<any>> {
+    const userInfo = await this.customMethods.checkAuthentication(headers);
     const customerCart = await this.cartDetailRepository.findAll({
-      where: { id_user_customer: idUserCustomer },
+      where: { id_user_customer: userInfo.id },
     });
     return customerCart.map((cartItem) => {
       return {
