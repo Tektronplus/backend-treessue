@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { UserCustomerService } from './user-customer.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
-import { AuthService } from 'src/auth/auth.service';
-import { check } from 'prettier';
+import { AuthService } from '../auth/auth.service';
+
 @UseGuards(ApiKeyAuthGuard)
 @Controller('user-customer')
 export class UserCustomerController {
