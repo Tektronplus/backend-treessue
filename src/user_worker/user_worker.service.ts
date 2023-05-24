@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { UserWorker } from './user_worker.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserWorkerService {
@@ -31,7 +32,7 @@ export class UserWorkerService {
   }
 
   async findUserDetail(user): Promise<any> {
-    console.log("USER CUSTOMER SERVICE: ",{user})
+    console.log({user})
     const usersDetail = await this.userWorkerRepository.findOne({where:{id_user_Worker:user.id_user_customer},
 
     });
@@ -48,5 +49,23 @@ export class UserWorkerService {
     return userDetailData
   }
 
-
+  async findUserWorkerLogin(email, password): Promise<object> {
+    console.log({ email }, { password });
+    const userList = await this.userWorkerRepository.findAll();
+    console.log(userList);
+    const user = await userList.find((user) => {
+      if ( bcrypt.compareSync(password, user.dataValues.password) && user.dataValues.email == email && user.dataValues.is_active == 1 ) 
+      {
+        return user;
+      }
+    });
+    console.log("============================================")
+    console.log(user.dataValues)
+    console.log("=================================================")
+    if (user != null) {
+      return user.dataValues;
+    } else {
+      throw new Error('no user found');
+    }
+  }
 }

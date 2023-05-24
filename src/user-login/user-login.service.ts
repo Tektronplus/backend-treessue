@@ -35,21 +35,13 @@ export class UserLoginService {
         },
       ],
     });
+    console.log({usersList})
     const userInfotmation = await usersList.map((data)=>{
       //console.log({data})
       let userDetail = {
-        id:data.user_customer.id_user_customer,
         email:data.email,
         firstName:data.user_customer.first_name,
         lastName: data.user_customer.last_name,
-        birthDate: data.user_customer.birth_date,
-        phoneNumber: data.user_customer.phone_number,
-        country:data.user_customer.country,
-        province:data.user_customer.province,
-        city:data.user_customer.city,
-        zipCode:data.user_customer.zip_code,
-        address:data.user_customer.address,
-        role:data.role
       }
       return userDetail
     })

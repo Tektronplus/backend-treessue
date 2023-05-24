@@ -14,7 +14,6 @@ import { UserLoginService } from './user-login.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { UserCustomerService } from '../user-customer/user-customer.service';
-import { UserWorkerService } from 'src/user_worker/user_worker.service';
 
 import * as bcrypt from 'bcrypt';
 import moment from 'moment';
@@ -26,7 +25,6 @@ export class UserLoginController {
   constructor(
     private readonly userLoginService: UserLoginService,
     private authService: AuthService,
-    private userWorkerService:UserWorkerService,
     private userCustomerService:UserCustomerService
   ) {}
 
@@ -51,7 +49,6 @@ export class UserLoginController {
       email?: string;
       role?: string;
     };
-    let userDetail = {}
     console.log({ req });
     const headersData = headers.authorization.split('Basic ')[1];
     console.log({ headersData });
@@ -62,16 +59,9 @@ export class UserLoginController {
         data.split(':')[0],
         data.split(':')[1],
       );
+
+      const userDetail = await this.userCustomerService.findUserDetail(user);
       //console.log({ user });
-      if(user.role == "user")
-      {
-        userDetail = await this.userCustomerService.findUserDetail(user);
-      }
-      else
-      {
-        console.log("LAVORATORE")
-        userDetail = await this.userWorkerService.findUserDetail(user)
-      }
       res.status(200).json({
         result: await this.authService.generateUserToken(userDetail),
       });
