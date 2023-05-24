@@ -52,7 +52,8 @@ export class UserLoginController {
         province:data.user_customer.province,
         city:data.user_customer.city,
         zipCode:data.user_customer.zip_code,
-        address:data.user_customer.address
+        address:data.user_customer.address,
+        role:data.role
       }
       return userDetail
     })
@@ -80,7 +81,6 @@ export class UserLoginController {
       const allUserList = await this.getListAllCustomer();
       console.log({allUserList})
       const userInfo = await allUserList.filter((data) => {
-        console.log({data})
         if (data.email == user.email) {
           return data;
         }
@@ -100,6 +100,7 @@ export class UserLoginController {
         address: userInfo[0].address,
         role:userInfo[0].role
       };
+      console.log({userDetaild})
       res.status(200).json({
         result: await this.authService.generateUserToken(userDetaild),
       });
