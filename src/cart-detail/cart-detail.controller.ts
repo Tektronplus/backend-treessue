@@ -5,18 +5,15 @@ import {
   Headers,
   Post,
   Body,
+  Delete,
 } from '@nestjs/common';
 import { CartDetailService } from './cart-detail.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
-import { AuthService } from '../auth/auth.service';
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('cart-detail')
 export class CartDetailController {
-  constructor(
-    private readonly cartDetailService: CartDetailService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly cartDetailService: CartDetailService) {}
 
   @Get('/')
   async getHello(): Promise<string> {
@@ -40,5 +37,10 @@ export class CartDetailController {
       body.idProduct,
       body.quantity,
     );
+  }
+
+  @Delete('/delete-item')
+  async deleteItemFromCart(@Headers() headers, @Body() body): Promise<any> {
+    return this.cartDetailService.deleteCartDetailItemById(headers, body);
   }
 }

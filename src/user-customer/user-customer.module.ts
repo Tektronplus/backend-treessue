@@ -3,7 +3,7 @@ import { UserCustomerController } from './user-customer.controller';
 import { UserCustomerService } from './user-customer.service';
 import { userCustomerProvider } from './user-customer.providers';
 import { DatabaseModule } from '../database/database.module';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [DatabaseModule, AuthModule],
