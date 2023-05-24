@@ -71,16 +71,25 @@ export class CartDetailService {
       where: { id_user_customer: userInfo.id },
     });
 
-    this.customExceptions.checkDeleteCartDetailItemById(
-      customerCart,
-      body.idCartDetail,
-    );
+    this.customExceptions.checkCustomerHasItem(customerCart, body.idCartDetail);
 
-    if (userInfo) {
-      return this.cartDetailRepository.destroy({
-        where: { id_cart_detail: body.idCartDetail },
-      });
-    }
+    return this.cartDetailRepository.destroy({
+      where: { id_cart_detail: body.idCartDetail },
+    });
+  }
+
+  async changeQuantityById(headers, body): Promise<any> {
+    const userInfo = await this.customMethods.checkAuthentication(headers);
+    const customerCart = await this.cartDetailRepository.findAll({
+      where: { id_user_customer: userInfo.id },
+    });
+
+    this.customExceptions.checkCustomerHasItem(customerCart, body.idCartDetail);
+
+    return this.cartDetailRepository.update(
+      { quantity: body.newQuantity },
+      { where: { id_cart_detail: body.idCartDetail } },
+    );
   }
 }
 
@@ -115,18 +124,18 @@ class CustomMethods {
 }
 
 class CustomExceptions {
-  checkDeleteCartDetailItemById(customerCart, idCartDetailToDelete) {
+  checkCustomerHasItem(customerCart, idCartDetail) {
     const arrayOfCartDetailId = customerCart.flatMap(
       (item) => item.dataValues.id_cart_detail,
     );
 
-    if (arrayOfCartDetailId.includes(idCartDetailToDelete)) {
+    if (arrayOfCartDetailId.includes(idCartDetail)) {
       return true;
     } else {
       throw new ForbiddenException('Unauthorized request', {
         cause: new Error(),
         description:
-          'The user cannot delete this item, because it does not exist or because it is not in his cart',
+          'The user cannot delete/update this item, because it does not exist or because it is not in his cart',
       });
     }
   }
