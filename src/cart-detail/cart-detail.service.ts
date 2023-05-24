@@ -1,6 +1,6 @@
 import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
 import { CartDetail } from './cart-detail.entity';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class CartDetailService {
@@ -19,6 +19,7 @@ export class CartDetailService {
 
   async findCartDetailByUserCustomer(headers): Promise<Array<any>> {
     const userInfo = await this.customMethods.checkAuthentication(headers);
+
     const customerCart = await this.cartDetailRepository.findAll({
       where: { id_user_customer: userInfo.id },
     });
@@ -33,17 +34,20 @@ export class CartDetailService {
 
   async addItemToCart(headers, idProduct, quantity) {
     const userInfo = await this.customMethods.checkAuthentication(headers);
-    const customerCart = await this.findCartDetailByUserCustomer(userInfo.id);
+
+    const customerCart = await this.cartDetailRepository.findAll({
+      where: { id_user_customer: userInfo.id },
+    });
 
     //Check if the product already exists in the cart
     const existingProductCart = customerCart.find(
-      (product) => product.idProduct == idProduct,
+      (product) => product.id_product == idProduct,
     );
 
     if (existingProductCart) {
       return this.cartDetailRepository.update(
         { quantity: existingProductCart.quantity + quantity },
-        { where: { id_cart_detail: existingProductCart.idCartDetail } },
+        { where: { id_cart_detail: existingProductCart.id_cart_detail } },
       );
     } else {
       const newCartItem = {
@@ -66,14 +70,14 @@ class CustomMethods {
       iat?: number;
     };
 
-    const authorizationToker = headers.authorization.split('Bearer ')[1];
+    const authorizationToken = headers.authorization.split('Bearer ')[1];
 
     const isTokenValid = await this.authService.validateToken(
-      authorizationToker,
+      authorizationToken,
     );
     if (isTokenValid) {
       const decodedInfo: decodedToken =
-        await this.authService.dechiperUserToken(authorizationToker);
+        await this.authService.dechiperUserToken(authorizationToken);
 
       const userInfo = decodedInfo.userDetail;
       return userInfo;
