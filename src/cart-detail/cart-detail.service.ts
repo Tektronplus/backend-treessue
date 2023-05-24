@@ -1,4 +1,9 @@
-import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { CartDetail } from './cart-detail.entity';
 import { AuthService } from '../auth/auth.service';
 
@@ -12,6 +17,7 @@ export class CartDetailService {
 
   //Custom classes
   customMethods = new CustomMethods(this.authService);
+  customExceptions = new CustomExceptions();
 
   async findAll(): Promise<CartDetail[]> {
     return this.cartDetailRepository.findAll();
@@ -58,6 +64,24 @@ export class CartDetailService {
       return this.cartDetailRepository.create(newCartItem);
     }
   }
+
+  async deleteCartDetailItemById(headers, body): Promise<any> {
+    const userInfo = await this.customMethods.checkAuthentication(headers);
+    const customerCart = await this.cartDetailRepository.findAll({
+      where: { id_user_customer: userInfo.id },
+    });
+
+    this.customExceptions.checkDeleteCartDetailItemById(
+      customerCart,
+      body.idCartDetail,
+    );
+
+    if (userInfo) {
+      return this.cartDetailRepository.destroy({
+        where: { id_cart_detail: body.idCartDetail },
+      });
+    }
+  }
 }
 
 class CustomMethods {
@@ -85,6 +109,24 @@ class CustomMethods {
       throw new UnauthorizedException('Unauthorized request', {
         cause: new Error(),
         description: 'Token is not valid',
+      });
+    }
+  }
+}
+
+class CustomExceptions {
+  checkDeleteCartDetailItemById(customerCart, idCartDetailToDelete) {
+    const arrayOfCartDetailId = customerCart.flatMap(
+      (item) => item.dataValues.id_cart_detail,
+    );
+
+    if (arrayOfCartDetailId.includes(idCartDetailToDelete)) {
+      return true;
+    } else {
+      throw new ForbiddenException('Unauthorized request', {
+        cause: new Error(),
+        description:
+          'The user cannot delete this item, because it does not exist or because it is not in his cart',
       });
     }
   }
