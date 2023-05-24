@@ -42,6 +42,7 @@ export class UserLoginController {
     const userInfotmation = usersList.map((data)=>{
       //console.log({data})
       let userDetail = {
+        id:data.user_customer.id_user_customer,
         email:data.email,
         firstName:data.user_customer.first_name,
         lastName: data.user_customer.last_name,
@@ -77,26 +78,27 @@ export class UserLoginController {
       );
       console.log({ user });
       const allUserList = await this.getListAllCustomer();
-      //console.log({allUserList})
+      console.log({allUserList})
       const userInfo = await allUserList.filter((data) => {
-        if (data.email == user.email && data.is_active == true) {
+        console.log({data})
+        if (data.email == user.email) {
           return data;
         }
       });
       console.log({userInfo})
       const userDetaild = {
-        id: userInfo[0].dataValues.user_customer.id_user_customer,
-        firstName: userInfo[0].dataValues.user_customer.first_name,
-        lastName: userInfo[0].dataValues.user_customer.last_name,
-        email: userInfo[0].dataValues.email,
-        birthDate: userInfo[0].dataValues.user_customer.birth_date,
-        phoneNumber: userInfo[0].dataValues.user_customer.phone_number,
-        country: userInfo[0].dataValues.user_customer.country,
-        province: userInfo[0].dataValues.user_customer.province,
-        city: userInfo[0].dataValues.user_customer.city,
-        zipCode: userInfo[0].dataValues.user_customer.zip_code,
-        address: userInfo[0].dataValues.user_customer.address,
-        role:userInfo[0].dataValues.role
+        id: userInfo[0].id,
+        firstName: userInfo[0].first_name,
+        lastName: userInfo[0].last_name,
+        email: userInfo[0].email,
+        birthDate: userInfo[0].birth_date,
+        phoneNumber: userInfo[0].phone_number,
+        country: userInfo[0].country,
+        province: userInfo[0].province,
+        city: userInfo[0].city,
+        zipCode: userInfo[0].zip_code,
+        address: userInfo[0].address,
+        role:userInfo[0].role
       };
       res.status(200).json({
         result: await this.authService.generateUserToken(userDetaild),

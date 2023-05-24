@@ -60,8 +60,9 @@ export class BackOfficeController{
         if(userLoginData == null)
         {
           //NON ESISTONO INFORMAZIONI DELLA LOGIN 
-          console.log("USER CUSTOMER ESISTE, NON ESISTE L'ENTITA LOGIN")
+          console.log("USER WORKER ESISTE, NON ESISTE L'ENTITA LOGIN")
           console.log({ userLoginEntity });
+          userLoginEntity.userCustomer = userWorkerData.id_user_worker
           try
           {
             const newCreatedUserLogin = await this.userLoginService.createUser(userLoginEntity);
@@ -78,12 +79,12 @@ export class BackOfficeController{
         {
           if(userLoginData.is_active == 1)
           {
-            console.log("USER CUSTOMER ESISTE, ESISTE L'ENTITA LOGIN ATTIVA")
-            res.status(409).json({ result: 'email or phonenumber already in use' });
+            console.log("USER WORKER ESISTE, ESISTE L'ENTITA LOGIN ATTIVA")
+            res.status(409).json({ result: 'email already in use for another user' });
           }
           else
           {
-            console.log("USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA")
+            console.log("USER WORKER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA")
             try
             {
               const newCreatedUserLogin = await this.userLoginService.createUser(
@@ -123,12 +124,12 @@ export class BackOfficeController{
         let userLoginData = await this.userLoginService.verifyUserLogin(userLoginEntity)
         if(userLoginData == null)
         {
-          console.log("USER CUSTOMER NON ESISTE, NON ESISTE L'ENTITA LOGIN")
+          console.log("USER WORKER NON ESISTE, NON ESISTE L'ENTITA LOGIN")
           //NON ESISTE ENITITA USER LOGIN
           let newCreateduserWorker = await this.userWorkerService.createUserWorker(userWorkerEntity);
           console.log({ newCreateduserWorker });
           userLoginEntity.userCustomer = newCreateduserWorker.id_user_worker;
-          console.log({ userLoginEntity });
+          console.log({userLoginEntity})
           try
           {
             const newCreatedUserLogin = await this.userLoginService.createUser(
@@ -145,8 +146,8 @@ export class BackOfficeController{
         }
         else
         {
-          console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ")
-          res.status(409).json({ result: 'email or phonenumber already in use' });
+          console.log("USER WORKER NON ESISTE, ESISTE L'ENTITA LOGIN ")
+          res.status(409).json({ result: 'email already in use for another user' });
         }
       }
     }

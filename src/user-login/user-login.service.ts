@@ -46,7 +46,10 @@ export class UserLoginService {
         return user;
       }
     });
-    console.log({ user });
+    console.log("IN SERVICE: ",{ user });
+    console.log("============================================")
+    console.log(user.dataValues)
+    console.log("=================================================")
     if (user != null) {
       return user.dataValues;
     } else {

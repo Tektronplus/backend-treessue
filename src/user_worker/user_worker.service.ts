@@ -14,6 +14,7 @@ export class UserWorkerService {
 
   async createUserWorker(user): Promise<any>
   {
+    console.log({user})
     let newWorker = await this.userWorkerRepository.create(user)
     return newWorker
   }
