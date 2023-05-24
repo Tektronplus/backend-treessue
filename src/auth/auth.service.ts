@@ -35,8 +35,14 @@ export class AuthService {
       const isTokenValid = await this.jwtService.verifyAsync(token, {
         secret: await this.configService.get<string>('JWT_SECRET'),
       });
-      if (isTokenValid != undefined) {
+      console.log({isTokenValid})
+      if (isTokenValid != undefined) 
+      {
         return true;
+      }
+      else
+      {
+        return false
       }
     } catch (err) {
       return false;

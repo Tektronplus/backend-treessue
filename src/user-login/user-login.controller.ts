@@ -6,12 +6,14 @@ import {
   Req,
   Headers,
   Res,
+  Put,
+  Delete,
+  Body
 } from '@nestjs/common';
 import { UserLoginService } from './user-login.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { UserCustomerService } from '../user-customer/user-customer.service';
-import { UserWorkerService } from '../user_worker/user_worker.service';
 import * as bcrypt from 'bcrypt';
 import moment from 'moment';
 import { Base64 } from 'js-base64';
@@ -59,10 +61,11 @@ export class UserLoginController {
       const allUserList = await this.getListAllCustomer();
       //console.log({allUserList})
       const userInfo = await allUserList.filter((data) => {
-        if (data.email == user.email) {
+        if (data.email == user.email && data.is_active == true) {
           return data;
         }
       });
+      console.log({userInfo})
       const userDetaild = {
         id: userInfo[0].dataValues.user_customer.id_user_customer,
         firstName: userInfo[0].dataValues.user_customer.first_name,
@@ -84,6 +87,82 @@ export class UserLoginController {
       res.status(403).json({ result: 'user not found' });
     }
   }
+
+  @Put("/updateCredentials")
+  async updateCredentials(@Body() body,@Headers() headers, @Res() res)
+  {
+    type decodedToken = {
+      userDetail?: object;
+      exp?: number;
+      iat?: number;
+    };
+
+    console.log({body},{headers})
+    const isTokenValid = await this.authService.validateToken(
+      headers.authorization,
+    );
+    if(isTokenValid)
+    {
+      const decodedInfo: decodedToken = await this.authService.dechiperUserToken(headers.authorization);
+      console.log({decodedInfo})
+      const saltOrRounds = 10;
+      const salt = await bcrypt.genSalt(saltOrRounds);
+      const newPassword = await bcrypt.hash(body.newPassword, salt);
+      try
+      {
+        await this.userLoginService.updateUser(decodedInfo.userDetail,newPassword)
+        res.status(200).json({ result: 'succesful request' });
+      }
+      catch(err)
+      {
+        res.status(500).json({ result: 'internal server error' });
+      }
+    }
+    else
+    {
+      res.status(403).json({ result: 'not authorized' });
+    }
+  }
+
+  @Delete('/delete')
+  async deleteUser(@Req() req, @Headers() headers, @Res() res) {
+    console.log({req})
+    type decodedToken = {
+      userDetail?: object;
+      exp?: number;
+      iat?: number;
+    };
+    console.log('============== DELETE REQUEST =================');
+    const isTokenValid = await this.authService.validateToken(
+      headers.authorization,
+    );
+    console.log({ isTokenValid });
+    if (isTokenValid) {
+      const decodedInfo: decodedToken = await this.authService.dechiperUserToken(headers.authorization);
+      const user = decodedInfo.userDetail;
+      //console.log("user in controller: ",{user})
+      try {
+        const result = await this.userLoginService.deleteUser(user);
+        if (result == 1) 
+        {
+          res.status(200).json({ result: 'delete successful' });
+        } 
+        else 
+        {
+          res.status(403).json({ result: 'user not found' });
+        }
+      } 
+      catch (err) 
+      {
+        console.log({ err });
+        res.status(500).json({ result: 'internal server error' });
+      }
+    } 
+    else 
+    {
+      res.status(403).json({ result: 'not authorized' });
+    }
+  }
 }
 
 @UseGuards(ApiKeyAuthGuard)
@@ -91,12 +170,12 @@ export class UserLoginController {
 export class UserRegisterController {
   constructor(
     private readonly userCustomerService: UserCustomerService,
-    private userWorker: UserWorkerService,
     private userLoginService: UserLoginService,
   ) {}
 
   @Post('/registerCustomer')
-  async registerUser(@Req() req, @Res() res) {
+  async registerUser(@Req() req, @Res() res) 
+  {
     const newUser = req.body;
     console.log({ newUser });
     const saltOrRounds = 10;
@@ -107,6 +186,7 @@ export class UserRegisterController {
       email: newUser.email,
       password: hash,
       role: 'user',
+      is_active: true,
     };
     const userCustomerEntity = {
       first_name: newUser.firstName,
@@ -118,25 +198,109 @@ export class UserRegisterController {
       city: newUser.city,
       zip_code: newUser.zipCode,
       address: newUser.address,
-      is_active: true,
     };
-
-    try {
-      const newCreatedUserCustomer = await this.userCustomerService.createUser(
-        userCustomerEntity,
-      );
-      console.log({ newCreatedUserCustomer });
-      userLoginEntity.userCustomer = newCreatedUserCustomer.id_user_customer;
-      console.log({ userLoginEntity });
-      const newCreatedUserLogin = await this.userLoginService.createUser(
-        userLoginEntity,
-      );
-      console.log({ newCreatedUserLogin });
-      res.status(201).json({ result: 'user created successufuly' });
-    } catch (err) {
-      console.log(err);
-      res.status(409).json({ result: 'email or phonenumber already in use' });
+    const userCustomerData = await this.userCustomerService.verifyUserData(userCustomerEntity)
+    if(userCustomerData != null)
+    {
+      //USER CUSTOMER ESISTE
+      let result = await this.userCustomerService.updateInfoLogin(userCustomerData.dataValues,userCustomerEntity)
+      console.log({result})
+      userLoginEntity.userCustomer = result
+      let userLoginData = await this.userLoginService.verifyUserLogin(userLoginEntity)
+      if(userLoginData == null)
+      {
+        //NON ESISTONO INFORMAZIONI DELLA LOGIN 
+        console.log("USER CUSTOMER ESISTE, NON ESISTE L'ENTITA LOGIN")
+        console.log({ userLoginEntity });
+        try
+        {
+          const newCreatedUserLogin = await this.userLoginService.createUser(
+            userLoginEntity,
+          );
+          console.log({ newCreatedUserLogin });
+          res.status(201).json({ result: 'user created successufuly' });
+        }
+        catch(err)
+        {
+          console.log("================================ ERRORE  ===============================")
+          console.log({err})
+        }
+      }
+      else
+      {
+        if(userLoginData.is_active == 1)
+        {
+          console.log("USER CUSTOMER ESISTE, ESISTE L'ENTITA LOGIN ATTIVA")
+          res.status(409).json({ result: 'email or phonenumber already in use' });
+        }
+        else
+        {
+          console.log("USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA")
+          try
+          {
+            const newCreatedUserLogin = await this.userLoginService.createUser(
+              userLoginEntity,
+            );
+            console.log({ newCreatedUserLogin });
+            res.status(201).json({ result: 'user created successufuly' });
+          }
+          catch(err)
+          {
+            console.log("================================ ERRORE  ===============================")
+            console.log(err)
+            if(err = "ER_DUP_ENTRY")
+            {
+              console.log("ciao")
+              try
+              {
+                await this.userLoginService.updateUserStatus(userLoginEntity.email)
+                res.status(201).json({ result: 'user created successufuly' });
+              }
+              catch(err)
+              {
+                res.status(500).json({ result: 'internal server error' });
+              }
+            }
+            else
+            {
+              res.status(500).json({ result: 'internal server error' });
+            }
+          }
+        }
+      }  
     }
-    //console.log({userLoginEntity},{userCustomerEntity})
+    else
+    {
+      //NON ESISTE ENTITA USER CUSTOMER
+      let userLoginData = await this.userLoginService.verifyUserLogin(userLoginEntity)
+      if(userLoginData == null)
+      {
+        console.log("USER CUSTOMER NON ESISTE, NON ESISTE L'ENTITA LOGIN")
+        //NON ESISTE ENITITA USER LOGIN
+        let newCreatedUserCustomer = await this.userCustomerService.createUser(userCustomerEntity);
+        console.log({ newCreatedUserCustomer });
+        userLoginEntity.userCustomer = newCreatedUserCustomer.id_user_customer;
+        console.log({ userLoginEntity });
+        try
+        {
+          const newCreatedUserLogin = await this.userLoginService.createUser(
+            userLoginEntity,
+          );
+          console.log({ newCreatedUserLogin });
+          res.status(201).json({ result: 'user created successufuly' });
+        }
+        catch(err)
+        {
+          console.log("================================ ERRORE  ===============================")
+          console.log({err})
+        }
+      }
+      else
+      {
+        console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ")
+        res.status(409).json({ result: 'email or phonenumber already in use' });
+      }
+    }
   }
+
 }

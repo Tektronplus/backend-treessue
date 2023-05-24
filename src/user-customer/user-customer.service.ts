@@ -13,6 +13,22 @@ export class UserCustomerService {
     return this.userCustomerRepository.findAll();
   }
 
+  async verifyUserData(user): Promise<any> {
+    console.log({ user });
+    try {
+      const foundUser = await this.userCustomerRepository.findOne({where:{
+          first_name: user.first_name,
+          last_name: user.last_name,
+          birth_date: user.birth_date,
+        }
+      });
+      console.log({ foundUser });
+      return foundUser;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
   async createUser(user): Promise<any> {
     console.log({ user });
     try {
@@ -35,13 +51,51 @@ export class UserCustomerService {
     }
   }
 
-  async DeleteUser(user): Promise<any> {
-    console.log({ user });
-    try {
-      let foundUser = await this.userCustomerRepository.update({is_active:0},{where:{id_user_customer:user.id,is_active:1}})
-      console.log({ foundUser });
-      return foundUser;
-    } catch (err) {
+  async updateInfoLogin(existingValue,user)
+  {
+    try
+    {
+      let updateUser = await this.userCustomerRepository.update(
+        {
+          first_name: existingValue.first_name != user.first_name ? user.first_name : existingValue.first_name,
+          last_name: existingValue.last_name != user.last_name ? user.last_name : existingValue.last_name,
+          birth_date: existingValue.birth_date != user.birth_date ? user.birth_date : existingValue.birth_date,
+          phone_number: existingValue.phone_number != user.phone_number ? user.phone_number : existingValue.phone_number,
+          country: existingValue.country != user.country ? user.country : existingValue.country,
+          province: existingValue.province != user.province ? user.province : existingValue.province,
+          city: existingValue.city != user.city ? user.city : existingValue.city,
+          zip_code: existingValue.zip_code != user.zip_code ? user.zip_code : existingValue.zip_code,
+          address: existingValue.address != user.address ? user.address : existingValue.address,
+        },{where:{id_user_customer:existingValue.id_user_customer}
+      })
+      return existingValue.id_user_customer
+    }
+    catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async updateDetail(existingValue,user)
+  {
+    try
+    {
+      let updateUser = await this.userCustomerRepository.update(
+        {
+          first_name: existingValue.first_name != user.first_name ? user.first_name : existingValue.first_name,
+          last_name: existingValue.last_name != user.last_name ? user.last_name : existingValue.last_name,
+          birth_date: existingValue.birth_date != user.birth_date ? user.birth_date : existingValue.birth_date,
+          phone_number: existingValue.phone_number != user.phone_number ? user.phone_number : existingValue.phone_number,
+          country: existingValue.country != user.country ? user.country : existingValue.country,
+          province: existingValue.province != user.province ? user.province : existingValue.province,
+          city: existingValue.city != user.city ? user.city : existingValue.city,
+          zip_code: existingValue.zip_code != user.zip_code ? user.zip_code : existingValue.zip_code,
+          address: existingValue.address != user.address ? user.address : existingValue.address,
+        },{where:{id_user_customer:existingValue.id}
+      })
+
+      return existingValue.id_user_customer
+    }
+    catch (err) {
       throw new Error(err);
     }
   }

@@ -12,9 +12,21 @@ export class UserLoginService {
   async findAll(): Promise<UserLogin[]> {
     return this.userLoginRepository.findAll();
   }
+  //VERIFICA ESISTENZA UTENTE
+  async verifyUserLogin(user): Promise<any> {
+    console.log({ user });
+    try {
+      const foundUser = await this.userLoginRepository.findOne({where:{email: user.email}});
+      console.log({ foundUser });
+      return foundUser;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 
+  //BACKOFFICE PER TUTTI I CLIENTI
   async findAllCustomer(): Promise<UserLogin[]> {
-    return this.userLoginRepository.findAll({
+    return this.userLoginRepository.findAll({where:{is_active:1},
       include: [
         {
           model: UserCustomer,
@@ -23,13 +35,13 @@ export class UserLoginService {
       ],
     });
   }
-
+  //FUNZIONE USATA PER IL LOGIN
   async findUserLogin(email, password): Promise<object> {
     console.log({ email }, { password });
     const userList = await this.userLoginRepository.findAll();
     console.log(userList);
     const user = await userList.find((user) => {
-      if ( bcrypt.compareSync(password, user.dataValues.password) && user.dataValues.email == email ) 
+      if ( bcrypt.compareSync(password, user.dataValues.password) && user.dataValues.email == email && user.dataValues.is_active == 1 ) 
       {
         return user;
       }
@@ -41,21 +53,58 @@ export class UserLoginService {
       throw new Error('no user found');
     }
   }
-
+  //FUNZIONE USATA PER LA REGISTRAZIONE
   async createUser(user): Promise<any> {
     console.log({ user });
     try {
-      const newUserCustomer = await this.userLoginRepository.create({
+      const newUserLogin = await this.userLoginRepository.create({
         id_user_customer: user.userCustomer,
         email: user.email,
         password: user.password,
         role: user.role,
+        is_active:user.is_active
       });
       //console.log({ newUserCustomer });
-      return newUserCustomer;
+      return newUserLogin;
     } catch (err) {
-      console.log({ err });
+      console.log( err.parent.code );
+      throw new Error(err.parent.code);
+    }
+  }
+
+  async updateUser(user,newPassword): Promise<any> {
+    console.log({ user });
+    try {
+      let foundUser = await this.userLoginRepository.update({password:newPassword},{where:{email:user.email}})
+      console.log({ foundUser });
+      return foundUser;
+    } catch (err) {
       throw new Error(err);
     }
   }
+
+  //FUNZIONE USATA PER LA DELETE DELL'UTENTE
+  async deleteUser(user): Promise<any> {
+    console.log({ user });
+    try {
+      let foundUser = await this.userLoginRepository.update({is_active:0},{where:{email:user.email}})
+      console.log({ foundUser });
+      return foundUser;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  //FUNZIONE USATA PER LA RIATTIVAZIONE DELL'UTENTE
+  async updateUserStatus(email): Promise<any> {
+    console.log({ email });
+    try {
+      let foundUser = await this.userLoginRepository.update({is_active:1},{where:{email:email}})
+      console.log({ foundUser });
+      return foundUser;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
 }
