@@ -93,7 +93,7 @@ export class UserCustomerService {
         },{where:{id_user_customer:existingValue.id}
       })
 
-      return existingValue.id_user_customer
+      return updateUser
     }
     catch (err) {
       throw new Error(err);

@@ -8,7 +8,7 @@ export class UserWorker extends Model {
     autoIncrement: true,
     unique: true,
   })
-  id_order: number;
+  id_user_worker: number;
 
   @Column({ allowNull: false })
   first_name: string;

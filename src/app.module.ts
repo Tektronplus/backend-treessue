@@ -10,6 +10,7 @@ import { TowerModule } from './tower/tower.module';
 import { DiscountModule } from './discount/discount.module';
 import { CartDetailModule } from './cart-detail/cart-detail.module';
 import { OrderDetailModule } from './order-detail/order-detail.module';
+import { BackOfficeModule } from './backOffice/backOffice.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }), // To use dot env globally
@@ -21,6 +22,7 @@ import { OrderDetailModule } from './order-detail/order-detail.module';
     DiscountModule,
     CartDetailModule,
     OrderDetailModule,
+    BackOfficeModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -38,7 +38,25 @@ export class UserLoginController {
 
   @Get('/allCustomer')
   async getListAllCustomer(): Promise<Array<any>> {
-    return this.userLoginService.findAllCustomer();
+    const usersList = await this.userLoginService.findAllCustomer();
+    const userInfotmation = usersList.map((data)=>{
+      //console.log({data})
+      let userDetail = {
+        email:data.email,
+        firstName:data.user_customer.first_name,
+        lastName: data.user_customer.last_name,
+        birthDate: data.user_customer.birth_date,
+        phoneNumber: data.user_customer.phone_number,
+        country:data.user_customer.country,
+        province:data.user_customer.province,
+        city:data.user_customer.city,
+        zipCode:data.user_customer.zip_code,
+        address:data.user_customer.address
+      }
+      return userDetail
+    })
+    console.log({userInfotmation})
+    return userInfotmation
   }
 
   @Post('/login')
@@ -78,6 +96,7 @@ export class UserLoginController {
         city: userInfo[0].dataValues.user_customer.city,
         zipCode: userInfo[0].dataValues.user_customer.zip_code,
         address: userInfo[0].dataValues.user_customer.address,
+        role:userInfo[0].dataValues.role
       };
       res.status(200).json({
         result: await this.authService.generateUserToken(userDetaild),
