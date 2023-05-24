@@ -30,4 +30,23 @@ export class UserWorkerService {
     }
   }
 
+  async findUserDetail(user): Promise<any> {
+    console.log("USER CUSTOMER SERVICE: ",{user})
+    const usersDetail = await this.userWorkerRepository.findOne({where:{id_user_Worker:user.id_user_customer},
+
+    });
+    console.log({usersDetail})
+    let userDetailData = {
+      id:usersDetail.dataValues.id_user_customer,
+      email:user.email,
+      firstName:usersDetail.dataValues.first_name,
+      lastName: usersDetail.dataValues.last_name,
+      role:user.role,
+      type:usersDetail.dataValues.role
+    }
+    console.log({userDetailData})
+    return userDetailData
+  }
+
+
 }

@@ -14,6 +14,8 @@ import { UserLoginService } from './user-login.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { UserCustomerService } from '../user-customer/user-customer.service';
+import { UserWorkerService } from 'src/user_worker/user_worker.service';
+
 import * as bcrypt from 'bcrypt';
 import moment from 'moment';
 import { Base64 } from 'js-base64';
@@ -24,6 +26,8 @@ export class UserLoginController {
   constructor(
     private readonly userLoginService: UserLoginService,
     private authService: AuthService,
+    private userWorkerService:UserWorkerService,
+    private userCustomerService:UserCustomerService
   ) {}
 
   @Get('/')
@@ -38,27 +42,7 @@ export class UserLoginController {
 
   @Get('/allCustomer')
   async getListAllCustomer(): Promise<Array<any>> {
-    const usersList = await this.userLoginService.findAllCustomer();
-    const userInfotmation = usersList.map((data)=>{
-      //console.log({data})
-      let userDetail = {
-        id:data.user_customer.id_user_customer,
-        email:data.email,
-        firstName:data.user_customer.first_name,
-        lastName: data.user_customer.last_name,
-        birthDate: data.user_customer.birth_date,
-        phoneNumber: data.user_customer.phone_number,
-        country:data.user_customer.country,
-        province:data.user_customer.province,
-        city:data.user_customer.city,
-        zipCode:data.user_customer.zip_code,
-        address:data.user_customer.address,
-        role:data.role
-      }
-      return userDetail
-    })
-    console.log({userInfotmation})
-    return userInfotmation
+    return await this.userLoginService.findAllCustomer();
   }
 
   @Post('/login')
@@ -67,6 +51,7 @@ export class UserLoginController {
       email?: string;
       role?: string;
     };
+    let userDetail = {}
     console.log({ req });
     const headersData = headers.authorization.split('Basic ')[1];
     console.log({ headersData });
@@ -77,32 +62,18 @@ export class UserLoginController {
         data.split(':')[0],
         data.split(':')[1],
       );
-      console.log({ user });
-      const allUserList = await this.getListAllCustomer();
-      console.log({allUserList})
-      const userInfo = await allUserList.filter((data) => {
-        if (data.email == user.email) {
-          return data;
-        }
-      });
-      console.log({userInfo})
-      const userDetaild = {
-        id: userInfo[0].id,
-        firstName: userInfo[0].first_name,
-        lastName: userInfo[0].last_name,
-        email: userInfo[0].email,
-        birthDate: userInfo[0].birth_date,
-        phoneNumber: userInfo[0].phone_number,
-        country: userInfo[0].country,
-        province: userInfo[0].province,
-        city: userInfo[0].city,
-        zipCode: userInfo[0].zip_code,
-        address: userInfo[0].address,
-        role:userInfo[0].role
-      };
-      console.log({userDetaild})
+      //console.log({ user });
+      if(user.role == "user")
+      {
+        userDetail = await this.userCustomerService.findUserDetail(user);
+      }
+      else
+      {
+        console.log("LAVORATORE")
+        userDetail = await this.userWorkerService.findUserDetail(user)
+      }
       res.status(200).json({
-        result: await this.authService.generateUserToken(userDetaild),
+        result: await this.authService.generateUserToken(userDetail),
       });
     } catch (err) {
       console.log({ err });

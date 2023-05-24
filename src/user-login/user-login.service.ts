@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { UserLogin } from './user-login.entity';
 import * as bcrypt from 'bcrypt';
 import { UserCustomer } from '../user-customer/user-customer.entity';
+import { UserWorker } from 'src/user_worker/user_worker.entity';
 @Injectable()
 export class UserLoginService {
   constructor(
@@ -25,8 +26,8 @@ export class UserLoginService {
   }
 
   //BACKOFFICE PER TUTTI I CLIENTI
-  async findAllCustomer(): Promise<UserLogin[]> {
-    return this.userLoginRepository.findAll({where:{is_active:1},
+  async findAllCustomer(): Promise<any> {
+    const usersList = await this.userLoginRepository.findAll({where:{is_active:1,role:"user"},
       include: [
         {
           model: UserCustomer,
@@ -34,6 +35,26 @@ export class UserLoginService {
         },
       ],
     });
+    const userInfotmation = await usersList.map((data)=>{
+      //console.log({data})
+      let userDetail = {
+        id:data.user_customer.id_user_customer,
+        email:data.email,
+        firstName:data.user_customer.first_name,
+        lastName: data.user_customer.last_name,
+        birthDate: data.user_customer.birth_date,
+        phoneNumber: data.user_customer.phone_number,
+        country:data.user_customer.country,
+        province:data.user_customer.province,
+        city:data.user_customer.city,
+        zipCode:data.user_customer.zip_code,
+        address:data.user_customer.address,
+        role:data.role
+      }
+      return userDetail
+    })
+    console.log({userInfotmation})
+    return userInfotmation
   }
   //FUNZIONE USATA PER IL LOGIN
   async findUserLogin(email, password): Promise<object> {

@@ -51,6 +51,31 @@ export class UserCustomerService {
     }
   }
 
+  
+  async findUserDetail(user): Promise<any> {
+    console.log("USER CUSTOMER SERVICE: ",{user})
+    const usersDetail = await this.userCustomerRepository.findOne({where:{id_user_customer:user.id_user_customer},
+
+    });
+    console.log({usersDetail})
+    let userDetailData = {
+      id:usersDetail.dataValues.id_user_customer,
+      email:user.email,
+      firstName:usersDetail.dataValues.first_name,
+      lastName: usersDetail.dataValues.last_name,
+      birthDate: usersDetail.dataValues.birth_date,
+      phoneNumber: usersDetail.dataValues.phone_number,
+      country:usersDetail.dataValues.country,
+      province:usersDetail.dataValues.province,
+      city:usersDetail.dataValues.city,
+      zipCode:usersDetail.dataValues.zip_code,
+      address:usersDetail.dataValues.address,
+      role:user.role
+    }
+    console.log({userDetailData})
+    return userDetailData
+  }
+
   async updateInfoLogin(existingValue,user)
   {
     try
