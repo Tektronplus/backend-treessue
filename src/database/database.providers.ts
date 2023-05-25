@@ -8,7 +8,9 @@ import { CartDetail } from '../cart-detail/cart-detail.entity';
 import { OrderDetail } from '../order-detail/order-detail.entity';
 import { UserCustomer } from '../user-customer/user-customer.entity';
 import { Order } from '../order/order.entity';
-import { UserWorker } from '../user_worker/user_worker.entity';
+import { UserWorker } from '../user-worker/user-worker.entity';
+import { UserWorkerLogin } from 'src/user-worker-login/user-worker-login.entity';
+import { UserWorkerRole } from 'src/user-worker-role/user-worker-role.entity';
 
 export const databaseProviders = [
   {
@@ -37,7 +39,9 @@ export const databaseProviders = [
         OrderDetail,
         UserLogin,
         Order,
-        UserWorker
+        UserWorker,
+        UserWorkerLogin,
+        UserWorkerRole,
       ]);
       await sequelize.sync();
       return sequelize;

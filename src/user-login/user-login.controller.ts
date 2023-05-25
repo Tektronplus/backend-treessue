@@ -8,13 +8,13 @@ import {
   Res,
   Put,
   Delete,
-  Body
+  Body,
 } from '@nestjs/common';
 import { UserLoginService } from './user-login.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { UserCustomerService } from '../user-customer/user-customer.service';
-import { UserWorkerService } from 'src/user_worker/user_worker.service';
+import { UserWorkerService } from 'src/user-worker/user-worker.service';
 
 import * as bcrypt from 'bcrypt';
 import moment from 'moment';
@@ -26,8 +26,8 @@ export class UserLoginController {
   constructor(
     private readonly userLoginService: UserLoginService,
     private authService: AuthService,
-    private userWorkerService:UserWorkerService,
-    private userCustomerService:UserCustomerService
+    private userWorkerService: UserWorkerService,
+    private userCustomerService: UserCustomerService,
   ) {}
 
   @Get('/')
@@ -51,7 +51,7 @@ export class UserLoginController {
       email?: string;
       role?: string;
     };
-    let userDetail = {}
+    let userDetail = {};
     console.log({ req });
     const headersData = headers.authorization.split('Basic ')[1];
     console.log({ headersData });
@@ -63,14 +63,11 @@ export class UserLoginController {
         data.split(':')[1],
       );
       //console.log({ user });
-      if(user.role == "user")
-      {
+      if (user.role == 'user') {
         userDetail = await this.userCustomerService.findUserDetail(user);
-      }
-      else
-      {
-        console.log("LAVORATORE")
-        userDetail = await this.userWorkerService.findUserDetail(user)
+      } else {
+        console.log('LAVORATORE');
+        userDetail = await this.userWorkerService.findUserDetail(user);
       }
       res.status(200).json({
         result: await this.authService.generateUserToken(userDetail),
@@ -81,45 +78,42 @@ export class UserLoginController {
     }
   }
 
-  @Put("/updateCredentials")
-  async updateCredentials(@Body() body,@Headers() headers, @Res() res)
-  {
+  @Put('/updateCredentials')
+  async updateCredentials(@Body() body, @Headers() headers, @Res() res) {
     type decodedToken = {
       userDetail?: object;
       exp?: number;
       iat?: number;
     };
 
-    console.log({body},{headers})
+    console.log({ body }, { headers });
     const isTokenValid = await this.authService.validateToken(
       headers.authorization,
     );
-    if(isTokenValid)
-    {
-      const decodedInfo: decodedToken = await this.authService.dechiperUserToken(headers.authorization);
-      console.log({decodedInfo})
+    if (isTokenValid) {
+      const decodedInfo: decodedToken =
+        await this.authService.dechiperUserToken(headers.authorization);
+      console.log({ decodedInfo });
       const saltOrRounds = 10;
       const salt = await bcrypt.genSalt(saltOrRounds);
       const newPassword = await bcrypt.hash(body.newPassword, salt);
-      try
-      {
-        await this.userLoginService.updateUser(decodedInfo.userDetail,newPassword)
+      try {
+        await this.userLoginService.updateUser(
+          decodedInfo.userDetail,
+          newPassword,
+        );
         res.status(200).json({ result: 'succesful request' });
-      }
-      catch(err)
-      {
+      } catch (err) {
         res.status(500).json({ result: 'internal server error' });
       }
-    }
-    else
-    {
+    } else {
       res.status(403).json({ result: 'not authorized' });
     }
   }
 
   @Delete('/delete')
   async deleteUser(@Req() req, @Headers() headers, @Res() res) {
-    console.log({req})
+    console.log({ req });
     type decodedToken = {
       userDetail?: object;
       exp?: number;
@@ -131,28 +125,22 @@ export class UserLoginController {
     );
     console.log({ isTokenValid });
     if (isTokenValid) {
-      const decodedInfo: decodedToken = await this.authService.dechiperUserToken(headers.authorization);
+      const decodedInfo: decodedToken =
+        await this.authService.dechiperUserToken(headers.authorization);
       const user = decodedInfo.userDetail;
       //console.log("user in controller: ",{user})
       try {
         const result = await this.userLoginService.deleteUser(user);
-        if (result == 1) 
-        {
+        if (result == 1) {
           res.status(200).json({ result: 'delete successful' });
-        } 
-        else 
-        {
+        } else {
           res.status(403).json({ result: 'user not found' });
         }
-      } 
-      catch (err) 
-      {
+      } catch (err) {
         console.log({ err });
         res.status(500).json({ result: 'internal server error' });
       }
-    } 
-    else 
-    {
+    } else {
       res.status(403).json({ result: 'not authorized' });
     }
   }
@@ -167,8 +155,7 @@ export class UserRegisterController {
   ) {}
 
   @Post('/registerCustomer')
-  async registerUser(@Req() req, @Res() res) 
-  {
+  async registerUser(@Req() req, @Res() res) {
     const newUser = req.body;
     console.log({ newUser });
     const saltOrRounds = 10;
@@ -192,108 +179,101 @@ export class UserRegisterController {
       zip_code: newUser.zipCode,
       address: newUser.address,
     };
-    const userCustomerData = await this.userCustomerService.verifyUserData(userCustomerEntity)
-    if(userCustomerData != null)
-    {
+    const userCustomerData = await this.userCustomerService.verifyUserData(
+      userCustomerEntity,
+    );
+    if (userCustomerData != null) {
       //USER CUSTOMER ESISTE
-      let result = await this.userCustomerService.updateInfoLogin(userCustomerData.dataValues,userCustomerEntity)
-      console.log({result})
-      userLoginEntity.userCustomer = result
-      let userLoginData = await this.userLoginService.verifyUserLogin(userLoginEntity)
-      if(userLoginData == null)
-      {
-        //NON ESISTONO INFORMAZIONI DELLA LOGIN 
-        console.log("USER CUSTOMER ESISTE, NON ESISTE L'ENTITA LOGIN")
+      let result = await this.userCustomerService.updateInfoLogin(
+        userCustomerData.dataValues,
+        userCustomerEntity,
+      );
+      console.log({ result });
+      userLoginEntity.userCustomer = result;
+      let userLoginData = await this.userLoginService.verifyUserLogin(
+        userLoginEntity,
+      );
+      if (userLoginData == null) {
+        //NON ESISTONO INFORMAZIONI DELLA LOGIN
+        console.log("USER CUSTOMER ESISTE, NON ESISTE L'ENTITA LOGIN");
         console.log({ userLoginEntity });
-        try
-        {
+        try {
           const newCreatedUserLogin = await this.userLoginService.createUser(
             userLoginEntity,
           );
           console.log({ newCreatedUserLogin });
           res.status(201).json({ result: 'user created successufuly' });
+        } catch (err) {
+          console.log(
+            '================================ ERRORE  ===============================',
+          );
+          console.log({ err });
         }
-        catch(err)
-        {
-          console.log("================================ ERRORE  ===============================")
-          console.log({err})
-        }
-      }
-      else
-      {
-        if(userLoginData.is_active == 1)
-        {
-          console.log("USER CUSTOMER ESISTE, ESISTE L'ENTITA LOGIN ATTIVA")
-          res.status(409).json({ result: 'email or phonenumber already in use' });
-        }
-        else
-        {
-          console.log("USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA")
-          try
-          {
+      } else {
+        if (userLoginData.is_active == 1) {
+          console.log("USER CUSTOMER ESISTE, ESISTE L'ENTITA LOGIN ATTIVA");
+          res
+            .status(409)
+            .json({ result: 'email or phonenumber already in use' });
+        } else {
+          console.log('USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA');
+          try {
             const newCreatedUserLogin = await this.userLoginService.createUser(
               userLoginEntity,
             );
             console.log({ newCreatedUserLogin });
             res.status(201).json({ result: 'user created successufuly' });
-          }
-          catch(err)
-          {
-            console.log("================================ ERRORE  ===============================")
-            console.log(err)
-            if(err = "ER_DUP_ENTRY")
-            {
-              console.log("ciao")
-              try
-              {
-                await this.userLoginService.updateUserStatus(userLoginEntity.email)
+          } catch (err) {
+            console.log(
+              '================================ ERRORE  ===============================',
+            );
+            console.log(err);
+            if ((err = 'ER_DUP_ENTRY')) {
+              console.log('ciao');
+              try {
+                await this.userLoginService.updateUserStatus(
+                  userLoginEntity.email,
+                );
                 res.status(201).json({ result: 'user created successufuly' });
-              }
-              catch(err)
-              {
+              } catch (err) {
                 res.status(500).json({ result: 'internal server error' });
               }
-            }
-            else
-            {
+            } else {
               res.status(500).json({ result: 'internal server error' });
             }
           }
         }
-      }  
-    }
-    else
-    {
+      }
+    } else {
       //NON ESISTE ENTITA USER CUSTOMER
-      let userLoginData = await this.userLoginService.verifyUserLogin(userLoginEntity)
-      if(userLoginData == null)
-      {
-        console.log("USER CUSTOMER NON ESISTE, NON ESISTE L'ENTITA LOGIN")
+      let userLoginData = await this.userLoginService.verifyUserLogin(
+        userLoginEntity,
+      );
+      if (userLoginData == null) {
+        console.log("USER CUSTOMER NON ESISTE, NON ESISTE L'ENTITA LOGIN");
         //NON ESISTE ENITITA USER LOGIN
-        let newCreatedUserCustomer = await this.userCustomerService.createUser(userCustomerEntity);
+        let newCreatedUserCustomer = await this.userCustomerService.createUser(
+          userCustomerEntity,
+        );
         console.log({ newCreatedUserCustomer });
         userLoginEntity.userCustomer = newCreatedUserCustomer.id_user_customer;
         console.log({ userLoginEntity });
-        try
-        {
+        try {
           const newCreatedUserLogin = await this.userLoginService.createUser(
             userLoginEntity,
           );
           console.log({ newCreatedUserLogin });
           res.status(201).json({ result: 'user created successufuly' });
+        } catch (err) {
+          console.log(
+            '================================ ERRORE  ===============================',
+          );
+          console.log({ err });
         }
-        catch(err)
-        {
-          console.log("================================ ERRORE  ===============================")
-          console.log({err})
-        }
-      }
-      else
-      {
-        console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ")
+      } else {
+        console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ");
         res.status(409).json({ result: 'email or phonenumber already in use' });
       }
     }
   }
-
 }

@@ -7,6 +7,11 @@ import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 export class TowerController {
   constructor(private readonly towerService: TowerService) {}
 
+  @Post('/add')
+  async addTower(@Body() body): Promise<any> {
+    return this.towerService.addTower(body);
+  }
+
   @Get('/')
   async getHello(): Promise<string> {
     return 'Hello from Tower!';
@@ -25,10 +30,5 @@ export class TowerController {
   @Get('/all/private')
   async getListPrivateTower(): Promise<Array<any>> {
     return this.towerService.findAllTowersByType(false); // private tower = false
-  }
-
-  @Post('/add')
-  async addTower(@Body() body): Promise<any> {
-    return this.towerService.addTower(body);
   }
 }

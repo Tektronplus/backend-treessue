@@ -11,6 +11,8 @@ import { DiscountModule } from './discount/discount.module';
 import { CartDetailModule } from './cart-detail/cart-detail.module';
 import { OrderDetailModule } from './order-detail/order-detail.module';
 import { BackOfficeModule } from './backOffice/backOffice.module';
+import { UserWorkerLoginModule } from './user-worker-login/user-worker-login.module';
+import { UserWorkerRoleModule } from './user-worker-role/user-worker-role.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }), // To use dot env globally
@@ -22,7 +24,9 @@ import { BackOfficeModule } from './backOffice/backOffice.module';
     DiscountModule,
     CartDetailModule,
     OrderDetailModule,
-    BackOfficeModule
+    BackOfficeModule,
+    UserWorkerLoginModule,
+    UserWorkerRoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -31,9 +31,6 @@ export class UserLogin extends Model {
   @Column({ allowNull: false })
   password: string;
 
-  @Column({ allowNull: false })
-  role: string;
-
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   is_active: any;
 }

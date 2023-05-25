@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { UserLogin } from './user-login.entity';
 import * as bcrypt from 'bcrypt';
 import { UserCustomer } from '../user-customer/user-customer.entity';
-import { UserWorker } from 'src/user_worker/user_worker.entity';
+
 @Injectable()
 export class UserLoginService {
   constructor(
@@ -17,7 +17,9 @@ export class UserLoginService {
   async verifyUserLogin(user): Promise<any> {
     console.log({ user });
     try {
-      const foundUser = await this.userLoginRepository.findOne({where:{email: user.email}});
+      const foundUser = await this.userLoginRepository.findOne({
+        where: { email: user.email },
+      });
       console.log({ foundUser });
       return foundUser;
     } catch (err) {
@@ -27,7 +29,8 @@ export class UserLoginService {
 
   //BACKOFFICE PER TUTTI I CLIENTI
   async findAllCustomer(): Promise<any> {
-    const usersList = await this.userLoginRepository.findAll({where:{is_active:1,role:"user"},
+    const usersList = await this.userLoginRepository.findAll({
+      where: { is_active: 1, role: 'user' },
       include: [
         {
           model: UserCustomer,
@@ -35,26 +38,25 @@ export class UserLoginService {
         },
       ],
     });
-    const userInfotmation = await usersList.map((data)=>{
+    const userInfotmation = await usersList.map((data) => {
       //console.log({data})
-      let userDetail = {
-        id:data.user_customer.id_user_customer,
-        email:data.email,
-        firstName:data.user_customer.first_name,
+      const userDetail = {
+        id: data.user_customer.id_user_customer,
+        email: data.email,
+        firstName: data.user_customer.first_name,
         lastName: data.user_customer.last_name,
         birthDate: data.user_customer.birth_date,
         phoneNumber: data.user_customer.phone_number,
-        country:data.user_customer.country,
-        province:data.user_customer.province,
-        city:data.user_customer.city,
-        zipCode:data.user_customer.zip_code,
-        address:data.user_customer.address,
-        role:data.role
-      }
-      return userDetail
-    })
-    console.log({userInfotmation})
-    return userInfotmation
+        country: data.user_customer.country,
+        province: data.user_customer.province,
+        city: data.user_customer.city,
+        zipCode: data.user_customer.zip_code,
+        address: data.user_customer.address,
+      };
+      return userDetail;
+    });
+    console.log({ userInfotmation });
+    return userInfotmation;
   }
   //FUNZIONE USATA PER IL LOGIN
   async findUserLogin(email, password): Promise<object> {
@@ -62,15 +64,18 @@ export class UserLoginService {
     const userList = await this.userLoginRepository.findAll();
     console.log(userList);
     const user = await userList.find((user) => {
-      if ( bcrypt.compareSync(password, user.dataValues.password) && user.dataValues.email == email && user.dataValues.is_active == 1 ) 
-      {
+      if (
+        bcrypt.compareSync(password, user.dataValues.password) &&
+        user.dataValues.email == email &&
+        user.dataValues.is_active == 1
+      ) {
         return user;
       }
     });
-    console.log("IN SERVICE: ",{ user });
-    console.log("============================================")
-    console.log(user.dataValues)
-    console.log("=================================================")
+    console.log('IN SERVICE: ', { user });
+    console.log('============================================');
+    console.log(user.dataValues);
+    console.log('=================================================');
     if (user != null) {
       return user.dataValues;
     } else {
@@ -86,20 +91,23 @@ export class UserLoginService {
         email: user.email,
         password: user.password,
         role: user.role,
-        is_active:user.is_active
+        is_active: user.is_active,
       });
       //console.log({ newUserCustomer });
       return newUserLogin;
     } catch (err) {
-      console.log( err.parent.code );
+      console.log(err.parent.code);
       throw new Error(err.parent.code);
     }
   }
 
-  async updateUser(user,newPassword): Promise<any> {
+  async updateUser(user, newPassword): Promise<any> {
     console.log({ user });
     try {
-      let foundUser = await this.userLoginRepository.update({password:newPassword},{where:{email:user.email}})
+      const foundUser = await this.userLoginRepository.update(
+        { password: newPassword },
+        { where: { email: user.email } },
+      );
       console.log({ foundUser });
       return foundUser;
     } catch (err) {
@@ -111,7 +119,10 @@ export class UserLoginService {
   async deleteUser(user): Promise<any> {
     console.log({ user });
     try {
-      let foundUser = await this.userLoginRepository.update({is_active:0},{where:{email:user.email}})
+      const foundUser = await this.userLoginRepository.update(
+        { is_active: 0 },
+        { where: { email: user.email } },
+      );
       console.log({ foundUser });
       return foundUser;
     } catch (err) {
@@ -123,12 +134,14 @@ export class UserLoginService {
   async updateUserStatus(email): Promise<any> {
     console.log({ email });
     try {
-      let foundUser = await this.userLoginRepository.update({is_active:1},{where:{email:email}})
+      const foundUser = await this.userLoginRepository.update(
+        { is_active: 1 },
+        { where: { email: email } },
+      );
       console.log({ foundUser });
       return foundUser;
     } catch (err) {
       throw new Error(err);
     }
   }
-
 }
