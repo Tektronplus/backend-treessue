@@ -10,7 +10,6 @@ import { TowerModule } from 'src/tower/tower.module';
 import { ProductModule } from 'src/product/product.module';
 import { OrderDetailModule } from 'src/order-detail/order-detail.module';
 import { OrderModule } from 'src/order/order.module';
-import { DiscountModule } from 'src/discount/discount.module';
 import { CartDetailModule } from 'src/cart-detail/cart-detail.module';
 
 @Module({
@@ -24,7 +23,6 @@ import { CartDetailModule } from 'src/cart-detail/cart-detail.module';
     ProductModule,
     OrderDetailModule,
     OrderModule,
-    DiscountModule,
     CartDetailModule,
   ],
   controllers: [BackOfficeController],

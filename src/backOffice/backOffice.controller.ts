@@ -22,51 +22,37 @@ import { TowerService } from 'src/tower/tower.service';
 import { ProductService } from 'src/product/product.service';
 import { OrderDetailService } from 'src/order-detail/order-detail.service';
 import { OrderService } from 'src/order/order.service';
-import { DiscountService } from 'src/discount/discount.service';
 import { CartDetailService } from 'src/cart-detail/cart-detail.service';
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('backOffice')
 export class BackOfficeController {
   constructor(
-<<<<<<< HEAD
     private userWorkerService: UserWorkerService,
     private userLoginService: UserLoginService,
+    private userCustomerService: UserCustomerService,
+    private authService: AuthService,
   ) {}
+
+  @Get('/getAllCustomer')
+  async getAllCustomer() {
+    return await this.userLoginService.findAllCustomer();
+  }
+
+  @Get('/customerDetail')
+  async getCustomerDetail(@Body() body) {
+    const user = body;
+    const foundUser = await this.userLoginService.verifyUserLogin(user);
+    console.log({ foundUser });
+    const detail = await this.userCustomerService.findUserDetail(
+      foundUser.dataValues,
+    );
+    console.log({ detail });
+    return detail;
+  }
 
   @Post('/createWorker')
   async createWorker(@Req() req, @Res() res) {
-=======
-    private userWorkerService:UserWorkerService,
-    private userLoginService:UserLoginService,
-    private userCustomerService:UserCustomerService,
-    private authService:AuthService
-  ) {}
-
-  @Get("/getAllCustomer")
-  async getAllCustomer()
-  {
-    return await this.userLoginService.findAllCustomer()
-  }
-
-  @Get("/customerDetail")
-  async getCustomerDetail(@Body() body)
-  {
-    const user = body
-    const foundUser = await this.userLoginService.verifyUserLogin(user)
-    console.log({foundUser})
-    const detail = await this.userCustomerService.findUserDetail(foundUser.dataValues)
-    console.log({detail})
-    return detail
-  }
-
-
-
-  
-  @Post("/createWorker")
-  async createWorker(@Req() req, @Res() res) 
-  {
->>>>>>> a9176de38270342b27f6a2bd4e08786053483333
     const newUser = req.body;
     console.log({ newUser });
     const saltOrRounds = 10;
@@ -178,8 +164,6 @@ export class BackOfficeController {
       }
     }
   }
-<<<<<<< HEAD
-=======
 
   @Post('/login')
   async login(@Req() req, @Headers() headers, @Res() res) {
@@ -193,7 +177,7 @@ export class BackOfficeController {
     const data = Base64.decode(headersData);
     console.log({ data });
     try {
-      const user: User = await this.userWorkerService.findUserWorkerLogin( 
+      const user: User = await this.userWorkerService.findUserWorkerLogin(
         data.split(':')[0],
         data.split(':')[1],
       );
@@ -208,6 +192,4 @@ export class BackOfficeController {
       res.status(403).json({ result: 'user not found' });
     }
   }
-
->>>>>>> a9176de38270342b27f6a2bd4e08786053483333
 }

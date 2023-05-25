@@ -7,7 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { UserLoginModule } from './user-login/user-login.module';
 import { OrderModule } from './order/order.module';
 import { TowerModule } from './tower/tower.module';
-import { DiscountModule } from './discount/discount.module';
 import { CartDetailModule } from './cart-detail/cart-detail.module';
 import { OrderDetailModule } from './order-detail/order-detail.module';
 import { BackOfficeModule } from './backOffice/backOffice.module';
@@ -21,7 +20,6 @@ import { UserWorkerRoleModule } from './user-worker-role/user-worker-role.module
     UserLoginModule,
     OrderModule,
     TowerModule,
-    DiscountModule,
     CartDetailModule,
     OrderDetailModule,
     BackOfficeModule,

@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { Product } from '../product/product.entity';
 import { UserLogin } from '../user-login/user-login.entity';
 import { Tower } from '../tower/tower.entity';
-import { Discount } from '../discount/discount.entity';
 import { CartDetail } from '../cart-detail/cart-detail.entity';
 import { OrderDetail } from '../order-detail/order-detail.entity';
 import { UserCustomer } from '../user-customer/user-customer.entity';
@@ -31,7 +30,6 @@ export const databaseProviders = [
 
       //Add models
       sequelize.addModels([
-        Discount,
         Product,
         UserCustomer,
         CartDetail,
