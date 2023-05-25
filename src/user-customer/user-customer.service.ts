@@ -12,6 +12,11 @@ export class UserCustomerService {
     return this.userCustomerRepository.findAll();
   }
 
+  async findOneById(id): Promise<any>
+  {
+    return await this.userCustomerRepository.findOne({where:{id_user_customer:id}})
+  }
+
   async verifyUserData(user): Promise<any> {
     console.log({ user });
     try {
@@ -69,7 +74,6 @@ export class UserCustomerService {
       city: usersDetail.dataValues.city,
       zipCode: usersDetail.dataValues.zip_code,
       address: usersDetail.dataValues.address,
-      role: user.role,
     };
     console.log({ userDetailData });
     return userDetailData;
@@ -123,6 +127,9 @@ export class UserCustomerService {
   }
 
   async updateDetail(existingValue, user) {
+    console.log("=========================== USER CUSTOMER SERVICE ==================================")
+    console.log({existingValue})
+    console.log({user}) 
     try {
       const updateUser = await this.userCustomerRepository.update(
         {
@@ -165,7 +172,9 @@ export class UserCustomerService {
       );
 
       return updateUser;
-    } catch (err) {
+    } 
+    catch (err) 
+    {
       throw new Error(err);
     }
   }

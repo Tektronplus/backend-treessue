@@ -51,7 +51,7 @@ export class UserWorkerLoginService {
     console.log({ id });
     try {
       const foundUser = await this.userWorkerLoginRepository.findOne({
-        where: { id_user_worker: id },
+        where: { id_user_login_worker: id },
       });
       console.log({ foundUser });
       return foundUser;
@@ -61,7 +61,7 @@ export class UserWorkerLoginService {
   }
 
   //BACKOFFICE PER TUTTI I CLIENTI
-  async findAllCustomer(): Promise<any> {
+  async findAllWoker(): Promise<any> {
     const usersList = await this.userWorkerLoginRepository.findAll({
       include: [
         {
@@ -70,9 +70,9 @@ export class UserWorkerLoginService {
         },
       ],
     });
-    console.log({ usersList });
+    //console.log({ usersList });
     const userInformation = await usersList.map((data) => {
-      //console.log({data})
+      console.log({data})
       let userDetail = {
         email:data.email,
         id:data.id_user_login_worker,
@@ -82,7 +82,7 @@ export class UserWorkerLoginService {
       };
       return userDetail;
     });
-    console.log({ userInformation });
+    //console.log({ userInformation });
     return userInformation;
   }
   //FUNZIONE USATA PER IL LOGIN
@@ -123,12 +123,11 @@ export class UserWorkerLoginService {
   }
 
   //FUNZIONE USATA PER LA DELETE DELL'UTENTE
-  async deleteUser(user): Promise<any> {
-    console.log({ user });
+  async deleteWorker(id): Promise<any> {
     try {
       const foundUser = await this.userWorkerLoginRepository.update(
         { is_active: 0 },
-        { where: { email: user.email } },
+        { where: { id_user_login_worker:id } },
       );
       console.log({ foundUser });
       return foundUser;

@@ -87,17 +87,14 @@ export class UserWorkerLoginController {
       headers.authorization,
     );
     if (isTokenValid) {
-      const decodedInfo: decodedToken =
-        await this.authService.dechiperUserToken(headers.authorization);
+      const decodedInfo: decodedToken = await this.authService.dechiperUserToken(headers.authorization);
       console.log({ decodedInfo });
-      const saltOrRounds = 10;
-      const salt = await bcrypt.genSalt(saltOrRounds);
-      const newPassword = await bcrypt.hash(body.newPassword, salt);
+      let saltOrRounds = 10;
+      let salt = await bcrypt.genSalt(saltOrRounds);
+      let newPassword = await bcrypt.hash(body.newPassword, salt);
+      console.log({newPassword})
       try {
-        await this.userWorkerLoginService.updateUser(
-          decodedInfo.userDetail,
-          newPassword,
-        );
+        await this.userWorkerLoginService.updateUser(decodedInfo.userDetail,newPassword);
         res.status(200).json({ result: 'succesful request' });
       } catch (err) {
         res.status(500).json({ result: 'internal server error' });

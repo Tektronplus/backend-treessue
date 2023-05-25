@@ -54,15 +54,24 @@ export class UserLoginController {
         data.split(':')[0],
         data.split(':')[1],
       );
+      console.log({user})
+      if(user != undefined)
+      {
+        const userDetail = await this.userCustomerService.findUserDetail(user);
+        //console.log({ user });
+        res.status(200).json({
+          result: await this.authService.generateUserToken(userDetail),
+        });
+      }
+      else
+      {
+        res.status(403).json({ result: 'user not found' });
+      }
+    } catch (err) 
+    {
+      console.log( err );
+      res.status(500).json({ result: 'internal server error' });
 
-      const userDetail = await this.userCustomerService.findUserDetail(user);
-      //console.log({ user });
-      res.status(200).json({
-        result: await this.authService.generateUserToken(userDetail),
-      });
-    } catch (err) {
-      console.log({ err });
-      res.status(403).json({ result: 'user not found' });
     }
   }
 
@@ -153,7 +162,6 @@ export class UserRegisterController {
       userCustomer: '',
       email: newUser.email,
       password: hash,
-      role: 'user',
       is_active: true,
     };
     const userCustomerEntity = {

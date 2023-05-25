@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { UserWorkerRole } from './user-worker-role.entity';
-import { where } from 'sequelize';
 
 @Injectable()
 export class UserWorkerRoleService {
@@ -10,15 +9,68 @@ export class UserWorkerRoleService {
   ) {}
 
   async findAll(): Promise<UserWorkerRole[]> {
-    return this.userWorkerRoleRepository.findAll();
+    return await this.userWorkerRoleRepository.findAll();
+  }
+
+  async getListRole(): Promise<any>
+  {
+    try{
+      let roleList = await this.userWorkerRoleRepository.findAll();
+      let roleArray = await roleList.map((data)=>{
+        return data.role
+      })
+      return roleArray
+    }
+    catch(err)
+    {
+      throw new Error(err);
+    }
   }
 
   async findRoleId(role): Promise<any> {
-    return await this.userWorkerRoleRepository.findOne({where: { role: role }});
+    console.log({role})
+    try
+    {
+      let foundRole = await this.userWorkerRoleRepository.findOne({where: { role: role }});
+      console.log({foundRole})
+      if(foundRole == null)
+      {
+        return undefined
+      }
+      else
+      {
+        return foundRole
+      }
+    }
+    catch(err)
+    {
+      throw new Error(err);
+    }
+    
   }
   
   async findRoleById(id): Promise<any>
   {
-    return await this.userWorkerRoleRepository.findOne({where:{id_user_worker_role:id}})
+    try{
+      return await this.userWorkerRoleRepository.findOne({where:{id_user_worker_role:id}})
+    }
+    catch(err)
+    {
+      throw new Error(err);
+    }
+  }
+
+  async createRole(role): Promise<any>
+  {
+    console.log({role})
+    try
+    {
+      await this.userWorkerRoleRepository.create({role:role})
+    }
+    catch(err)
+    {
+      console.log({err})
+      throw new Error(err);
+    }
   }
 }

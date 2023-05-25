@@ -29,7 +29,35 @@ export class UserCustomerController {
     return this.userCustomerService.findAll();
   }
 
-  @Put('/modifyUserInfo')
+  @Get('/getUserDetail')
+  async getUserDetail(@Headers() headers, @Body() body, @Res() res) {
+    type decodedToken = {
+      userDetail?: {id?:number};
+      exp?: number;
+      iat?: number;
+    };
+
+    console.log({ body }, { headers });
+    const isTokenValid = await this.authService.validateToken(
+      headers.authorization,
+    );
+    if (isTokenValid) {
+      const decodedInfo: decodedToken =
+        await this.authService.dechiperUserToken(headers.authorization);
+      console.log({ decodedInfo });
+      try {
+        let detail = {id_user_customer:decodedInfo.userDetail.id}
+        let data = await this.userCustomerService.findUserDetail(detail);
+        res.status(200).json(data);
+      } catch (err) {
+        res.status(500).json({ result: 'internal server error' });
+      }
+    } else {
+      res.status(403).json({ result: 'not authorized' });
+    }
+  }
+
+  @Put('/modifyUserDetail')
   async modifyUserInfo(@Headers() headers, @Body() body, @Res() res) {
     type decodedToken = {
       userDetail?: object;

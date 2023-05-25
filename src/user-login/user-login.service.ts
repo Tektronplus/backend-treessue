@@ -45,7 +45,6 @@ export class UserLoginService {
   async findAllCustomer(): Promise<any> {
     try{
       const usersList = await this.userLoginRepository.findAll({
-        where: { role: 'user' },
         include: [
           {
             model: UserCustomer,
@@ -53,21 +52,21 @@ export class UserLoginService {
           },
         ],
       });
-      console.log({ usersList });
+      //console.log({ usersList });
       const userInformation = await usersList.map((data) => {
         //console.log({data})
         let userDetail = {
-          email:data.email,
-          id:data.id_user_login,
-          phone_number:data.user_customer.phone_number,
-          address:data.user_customer.address,
-          first_name:data.user_customer.first_name,
-          last_name: data.user_customer.last_name,
-          is_active: data.is_active,
+          email:data.dataValues.email,
+          id_user_customer:data.dataValues.id_user_login,
+          phone_number:data.dataValues.user_customer.phone_number,
+          address:data.dataValues.user_customer.address,
+          first_name:data.dataValues.user_customer.first_name,
+          last_name: data.dataValues.user_customer.last_name,
+          is_active: data.dataValues.is_active,
         };
         return userDetail;
       });
-      console.log({ userInformation });
+      //console.log({ userInformation });
       return userInformation;
     }
     catch(err)
@@ -77,27 +76,28 @@ export class UserLoginService {
   }
   //FUNZIONE USATA PER IL LOGIN
   async findUserLogin(email, password): Promise<object> {
-    console.log({ email }, { password });
-    const userList = await this.userLoginRepository.findAll();
-    console.log(userList);
-    const user = await userList.find((user) => {
-      if (
-        bcrypt.compareSync(password, user.dataValues.password) &&
-        user.dataValues.email == email &&
-        user.dataValues.is_active == 1
-      ) {
-        return user;
-      }
-    });
-    console.log('IN SERVICE: ', { user });
-    console.log('============================================');
-    console.log(user.dataValues);
-    console.log('=================================================');
-    if (user != null) {
-      return user.dataValues;
-    } else {
-      throw new Error('no user found');
+    try
+    {
+      console.log({ email }, { password });
+      const userList = await this.userLoginRepository.findAll();
+      console.log(userList);
+      const user = await userList.find((user) => {
+        if (
+          bcrypt.compareSync(password, user.dataValues.password) &&
+          user.dataValues.email == email &&
+          user.dataValues.is_active == 1
+        ) {
+          return user;
+        }
+      });
+      return user
     }
+    catch(err)
+    {
+      throw new Error(err);
+    }
+
+
   }
   //FUNZIONE USATA PER LA REGISTRAZIONE
   async createUser(user): Promise<any> {
