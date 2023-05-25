@@ -38,11 +38,6 @@ export class UserLoginController {
     return this.userLoginService.findAll();
   }
 
-  @Get('/allCustomer')
-  async getListAllCustomer(): Promise<Array<any>> {
-    return await this.userLoginService.findAllCustomer();
-  }
-
   @Post('/login')
   async login(@Req() req, @Headers() headers, @Res() res) {
     type User = {

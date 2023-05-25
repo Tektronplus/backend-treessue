@@ -11,6 +11,8 @@ import { ProductModule } from 'src/product/product.module';
 import { OrderDetailModule } from 'src/order-detail/order-detail.module';
 import { OrderModule } from 'src/order/order.module';
 import { CartDetailModule } from 'src/cart-detail/cart-detail.module';
+import { UserWorkerLoginModule } from 'src/user-worker-login/user-worker-login.module';
+import { UserWorkerRoleModule } from 'src/user-worker-role/user-worker-role.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { CartDetailModule } from 'src/cart-detail/cart-detail.module';
     OrderDetailModule,
     OrderModule,
     CartDetailModule,
+    UserWorkerLoginModule,
+    UserWorkerRoleModule
   ],
   controllers: [BackOfficeController],
   providers: [],

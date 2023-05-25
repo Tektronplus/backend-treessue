@@ -12,7 +12,22 @@ export class UserLoginService {
   async findAll(): Promise<UserLogin[]> {
     return this.userLoginRepository.findAll();
   }
-  //VERIFICA ESISTENZA UTENTE
+
+  //USATA DA BACK OFFICE
+  async findUserById(id): Promise<any> {
+    console.log({ id });
+    try {
+      const foundUser = await this.userLoginRepository.findOne({
+        where: { id_user_login: id },
+      });
+      console.log({ foundUser });
+      return foundUser;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  //VERIFICA ESISTENZA UTENTE LOGIN
   async verifyUserLogin(user): Promise<any> {
     console.log({ user });
     try {
@@ -28,31 +43,37 @@ export class UserLoginService {
 
   //BACKOFFICE PER TUTTI I CLIENTI
   async findAllCustomer(): Promise<any> {
-    const usersList = await this.userLoginRepository.findAll({
-      where: { role: 'user' },
-      include: [
-        {
-          model: UserCustomer,
-          required: true,
-        },
-      ],
-    });
-    console.log({ usersList });
-    const userInformation = await usersList.map((data) => {
-      //console.log({data})
-      let userDetail = {
-        email:data.email,
-        id_user_customer:data.user_customer.id_user_customer,
-        phone_number:data.user_customer.phone_number,
-        address:data.user_customer.address,
-        first_name:data.user_customer.first_name,
-        last_name: data.user_customer.last_name,
-        is_active: data.is_active,
-      };
-      return userDetail;
-    });
-    console.log({ userInformation });
-    return userInformation;
+    try{
+      const usersList = await this.userLoginRepository.findAll({
+        where: { role: 'user' },
+        include: [
+          {
+            model: UserCustomer,
+            required: true,
+          },
+        ],
+      });
+      console.log({ usersList });
+      const userInformation = await usersList.map((data) => {
+        //console.log({data})
+        let userDetail = {
+          email:data.email,
+          id:data.id_user_login,
+          phone_number:data.user_customer.phone_number,
+          address:data.user_customer.address,
+          first_name:data.user_customer.first_name,
+          last_name: data.user_customer.last_name,
+          is_active: data.is_active,
+        };
+        return userDetail;
+      });
+      console.log({ userInformation });
+      return userInformation;
+    }
+    catch(err)
+    {
+      throw new Error(err);
+    }
   }
   //FUNZIONE USATA PER IL LOGIN
   async findUserLogin(email, password): Promise<object> {

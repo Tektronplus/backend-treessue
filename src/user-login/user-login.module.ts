@@ -7,11 +7,10 @@ import { UserLoginService } from './user-login.service';
 import { userLoginProvider } from './user-login.providers';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
-import { UserWorkerModule } from '../user-worker/user-worker.module';
 import { UserCustomerModule } from '../user-customer/user-customer.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, UserCustomerModule, UserWorkerModule],
+  imports: [DatabaseModule, AuthModule, UserCustomerModule],
   controllers: [UserLoginController, UserRegisterController],
   providers: [UserLoginService, ...userLoginProvider],
   exports: [UserLoginService],

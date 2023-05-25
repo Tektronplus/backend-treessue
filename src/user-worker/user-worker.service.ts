@@ -35,16 +35,14 @@ export class UserWorkerService {
   async findUserDetail(user): Promise<any> {
     console.log({ user });
     const usersDetail = await this.userWorkerRepository.findOne({
-      where: { id_user_Worker: user.id_user_customer },
+      where: { id_user_worker: user.id_user_worker },
     });
     console.log({ usersDetail });
     const userDetailData = {
-      id: usersDetail.dataValues.id_user_customer,
-      email: user.email,
-      firstName: usersDetail.dataValues.first_name,
-      lastName: usersDetail.dataValues.last_name,
-      role: user.role,
-      type: usersDetail.dataValues.role,
+      id: usersDetail.dataValues.id_user_worker,
+      first_name: usersDetail.dataValues.first_name,
+      last_name: usersDetail.dataValues.last_name,
+      id_role: usersDetail.dataValues.id_user_worker_role,
     };
     console.log({ userDetailData });
     return userDetailData;
