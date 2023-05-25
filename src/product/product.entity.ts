@@ -1,14 +1,5 @@
-import {
-  Table,
-  Column,
-  Model,
-  DataType,
-  ForeignKey,
-  BelongsTo,
-  HasMany,
-} from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
 import { CartDetail } from '../cart-detail/cart-detail.entity';
-import { Discount } from '../discount/discount.entity';
 import { OrderDetail } from '../order-detail/order-detail.entity';
 
 @Table({ tableName: 'products', updatedAt: false, createdAt: false })
@@ -20,13 +11,6 @@ export class Product extends Model {
     unique: true,
   })
   id_product: number;
-
-  @ForeignKey(() => Discount)
-  @Column
-  id_discount: number;
-
-  @BelongsTo(() => Discount)
-  discount: Discount;
 
   @Column
   prod_name: string;
