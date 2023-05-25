@@ -14,7 +14,6 @@ import { UserLoginService } from './user-login.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
 import { UserCustomerService } from '../user-customer/user-customer.service';
-import { UserWorkerService } from 'src/user-worker/user-worker.service';
 
 import * as bcrypt from 'bcrypt';
 import moment from 'moment';
@@ -26,7 +25,6 @@ export class UserLoginController {
   constructor(
     private readonly userLoginService: UserLoginService,
     private authService: AuthService,
-    private userWorkerService: UserWorkerService,
     private userCustomerService: UserCustomerService,
   ) {}
 
@@ -51,7 +49,6 @@ export class UserLoginController {
       email?: string;
       role?: string;
     };
-    let userDetail = {};
     console.log({ req });
     const headersData = headers.authorization.split('Basic ')[1];
     console.log({ headersData });
@@ -62,13 +59,9 @@ export class UserLoginController {
         data.split(':')[0],
         data.split(':')[1],
       );
+
+      const userDetail = await this.userCustomerService.findUserDetail(user);
       //console.log({ user });
-      if (user.role == 'user') {
-        userDetail = await this.userCustomerService.findUserDetail(user);
-      } else {
-        console.log('LAVORATORE');
-        userDetail = await this.userWorkerService.findUserDetail(user);
-      }
       res.status(200).json({
         result: await this.authService.generateUserToken(userDetail),
       });
@@ -184,13 +177,13 @@ export class UserRegisterController {
     );
     if (userCustomerData != null) {
       //USER CUSTOMER ESISTE
-      let result = await this.userCustomerService.updateInfoLogin(
+      const result = await this.userCustomerService.updateInfoLogin(
         userCustomerData.dataValues,
         userCustomerEntity,
       );
       console.log({ result });
       userLoginEntity.userCustomer = result;
-      let userLoginData = await this.userLoginService.verifyUserLogin(
+      const userLoginData = await this.userLoginService.verifyUserLogin(
         userLoginEntity,
       );
       if (userLoginData == null) {
@@ -246,15 +239,14 @@ export class UserRegisterController {
       }
     } else {
       //NON ESISTE ENTITA USER CUSTOMER
-      let userLoginData = await this.userLoginService.verifyUserLogin(
+      const userLoginData = await this.userLoginService.verifyUserLogin(
         userLoginEntity,
       );
       if (userLoginData == null) {
         console.log("USER CUSTOMER NON ESISTE, NON ESISTE L'ENTITA LOGIN");
         //NON ESISTE ENITITA USER LOGIN
-        let newCreatedUserCustomer = await this.userCustomerService.createUser(
-          userCustomerEntity,
-        );
+        const newCreatedUserCustomer =
+          await this.userCustomerService.createUser(userCustomerEntity);
         console.log({ newCreatedUserCustomer });
         userLoginEntity.userCustomer = newCreatedUserCustomer.id_user_customer;
         console.log({ userLoginEntity });

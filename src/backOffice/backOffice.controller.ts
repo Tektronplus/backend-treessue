@@ -13,6 +13,7 @@ import {
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import * as bcrypt from 'bcrypt';
 import { Base64 } from 'js-base64';
+import { AuthService } from 'src/auth/auth.service';
 
 import { UserLoginService } from 'src/user-login/user-login.service';
 import { UserCustomerService } from 'src/user-customer/user-customer.service';
@@ -28,12 +29,44 @@ import { CartDetailService } from 'src/cart-detail/cart-detail.service';
 @Controller('backOffice')
 export class BackOfficeController {
   constructor(
+<<<<<<< HEAD
     private userWorkerService: UserWorkerService,
     private userLoginService: UserLoginService,
   ) {}
 
   @Post('/createWorker')
   async createWorker(@Req() req, @Res() res) {
+=======
+    private userWorkerService:UserWorkerService,
+    private userLoginService:UserLoginService,
+    private userCustomerService:UserCustomerService,
+    private authService:AuthService
+  ) {}
+
+  @Get("/getAllCustomer")
+  async getAllCustomer()
+  {
+    return await this.userLoginService.findAllCustomer()
+  }
+
+  @Get("/customerDetail")
+  async getCustomerDetail(@Body() body)
+  {
+    const user = body
+    const foundUser = await this.userLoginService.verifyUserLogin(user)
+    console.log({foundUser})
+    const detail = await this.userCustomerService.findUserDetail(foundUser.dataValues)
+    console.log({detail})
+    return detail
+  }
+
+
+
+  
+  @Post("/createWorker")
+  async createWorker(@Req() req, @Res() res) 
+  {
+>>>>>>> a9176de38270342b27f6a2bd4e08786053483333
     const newUser = req.body;
     console.log({ newUser });
     const saltOrRounds = 10;
@@ -145,4 +178,36 @@ export class BackOfficeController {
       }
     }
   }
+<<<<<<< HEAD
+=======
+
+  @Post('/login')
+  async login(@Req() req, @Headers() headers, @Res() res) {
+    type User = {
+      email?: string;
+      role?: string;
+    };
+    console.log({ req });
+    const headersData = headers.authorization.split('Basic ')[1];
+    console.log({ headersData });
+    const data = Base64.decode(headersData);
+    console.log({ data });
+    try {
+      const user: User = await this.userWorkerService.findUserWorkerLogin( 
+        data.split(':')[0],
+        data.split(':')[1],
+      );
+
+      const userDetail = await this.userWorkerService.findUserDetail(user);
+      //console.log({ user });
+      res.status(200).json({
+        result: await this.authService.generateUserToken(userDetail),
+      });
+    } catch (err) {
+      console.log({ err });
+      res.status(403).json({ result: 'user not found' });
+    }
+  }
+
+>>>>>>> a9176de38270342b27f6a2bd4e08786053483333
 }
