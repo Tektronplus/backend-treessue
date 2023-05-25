@@ -1,6 +1,15 @@
-import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  HasMany,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
 import { CartDetail } from '../cart-detail/cart-detail.entity';
 import { OrderDetail } from '../order-detail/order-detail.entity';
+import { ProductCategory } from 'src/product-category/product-category.entity';
 
 @Table({ tableName: 'products', updatedAt: false, createdAt: false })
 export class Product extends Model {
@@ -15,8 +24,12 @@ export class Product extends Model {
   @Column
   prod_name: string;
 
-  @Column
-  category: string;
+  @ForeignKey(() => ProductCategory)
+  @Column({ allowNull: false })
+  id_product_category: number;
+
+  @BelongsTo(() => ProductCategory)
+  product_category: ProductCategory;
 
   @Column(DataType.TEXT)
   description: string;

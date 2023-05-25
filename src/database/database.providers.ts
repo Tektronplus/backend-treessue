@@ -10,6 +10,7 @@ import { Order } from '../order/order.entity';
 import { UserWorker } from '../user-worker/user-worker.entity';
 import { UserWorkerLogin } from 'src/user-worker-login/user-worker-login.entity';
 import { UserWorkerRole } from 'src/user-worker-role/user-worker-role.entity';
+import { ProductCategory } from 'src/product-category/product-category.entity';
 
 export const databaseProviders = [
   {
@@ -40,6 +41,7 @@ export const databaseProviders = [
         UserWorker,
         UserWorkerLogin,
         UserWorkerRole,
+        ProductCategory,
       ]);
       await sequelize.sync();
       return sequelize;

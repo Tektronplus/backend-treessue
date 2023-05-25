@@ -12,6 +12,7 @@ import { OrderDetailModule } from './order-detail/order-detail.module';
 import { BackOfficeModule } from './backOffice/backOffice.module';
 import { UserWorkerLoginModule } from './user-worker-login/user-worker-login.module';
 import { UserWorkerRoleModule } from './user-worker-role/user-worker-role.module';
+import { ProductCategoryModule } from './product-category/product-category.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }), // To use dot env globally
@@ -25,6 +26,7 @@ import { UserWorkerRoleModule } from './user-worker-role/user-worker-role.module
     BackOfficeModule,
     UserWorkerLoginModule,
     UserWorkerRoleModule,
+    ProductCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
