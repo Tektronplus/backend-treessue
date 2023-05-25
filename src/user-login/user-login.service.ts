@@ -40,11 +40,12 @@ export class UserLoginService {
     console.log({ usersList });
     const userInformation = await usersList.map((data) => {
       //console.log({data})
-      const userDetail = {
-        email: data.email,
-        id_user_customer: data.user_customer.id_user_customer,
-        phone_number: data.user_customer.phone_number,
-        first_name: data.user_customer.first_name,
+      let userDetail = {
+        email:data.email,
+        id_user_customer:data.user_customer.id_user_customer,
+        phone_number:data.user_customer.phone_number,
+        address:data.user_customer.address,
+        first_name:data.user_customer.first_name,
         last_name: data.user_customer.last_name,
         is_active: data.is_active,
       };
