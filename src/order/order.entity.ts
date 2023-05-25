@@ -9,6 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { UserCustomer } from '../user-customer/user-customer.entity';
 import { OrderDetail } from '../order-detail/order-detail.entity';
+import { UserWorker } from '../user-worker/user-worker.entity';
 
 @Table({ tableName: 'order', updatedAt: false, createdAt: false })
 export class Order extends Model {
@@ -27,8 +28,12 @@ export class Order extends Model {
   @BelongsTo(() => UserCustomer)
   user_customer: UserCustomer;
 
-  @Column({ allowNull: false })
-  id_user_worker: string;
+  @ForeignKey(() => UserWorker)
+  @Column
+  id_user_worker: number;
+
+  @BelongsTo(() => UserWorker)
+  user_worker: UserWorker;
 
   @Column({ type: DataType.DATE, allowNull: false })
   order_date: number;

@@ -16,7 +16,9 @@ export class UserLoginService {
   async verifyUserLogin(user): Promise<any> {
     console.log({ user });
     try {
-      const foundUser = await this.userLoginRepository.findOne({where:{email: user.email}});
+      const foundUser = await this.userLoginRepository.findOne({
+        where: { email: user.email },
+      });
       console.log({ foundUser });
       return foundUser;
     } catch (err) {
@@ -26,7 +28,8 @@ export class UserLoginService {
 
   //BACKOFFICE PER TUTTI I CLIENTI
   async findAllCustomer(): Promise<any> {
-    const usersList = await this.userLoginRepository.findAll({where:{role:"user"},
+    const usersList = await this.userLoginRepository.findAll({
+      where: { role: 'user' },
       include: [
         {
           model: UserCustomer,
@@ -34,8 +37,8 @@ export class UserLoginService {
         },
       ],
     });
-    console.log({usersList})
-    const userInformation = await usersList.map((data)=>{
+    console.log({ usersList });
+    const userInformation = await usersList.map((data) => {
       //console.log({data})
       let userDetail = {
         email:data.email,
@@ -44,12 +47,12 @@ export class UserLoginService {
         address:data.user_customer.address,
         first_name:data.user_customer.first_name,
         last_name: data.user_customer.last_name,
-        is_active:data.is_active
-      }
-      return userDetail
-    })
-    console.log({userInformation})
-    return userInformation
+        is_active: data.is_active,
+      };
+      return userDetail;
+    });
+    console.log({ userInformation });
+    return userInformation;
   }
   //FUNZIONE USATA PER IL LOGIN
   async findUserLogin(email, password): Promise<object> {
@@ -57,15 +60,18 @@ export class UserLoginService {
     const userList = await this.userLoginRepository.findAll();
     console.log(userList);
     const user = await userList.find((user) => {
-      if ( bcrypt.compareSync(password, user.dataValues.password) && user.dataValues.email == email && user.dataValues.is_active == 1 ) 
-      {
+      if (
+        bcrypt.compareSync(password, user.dataValues.password) &&
+        user.dataValues.email == email &&
+        user.dataValues.is_active == 1
+      ) {
         return user;
       }
     });
-    console.log("IN SERVICE: ",{ user });
-    console.log("============================================")
-    console.log(user.dataValues)
-    console.log("=================================================")
+    console.log('IN SERVICE: ', { user });
+    console.log('============================================');
+    console.log(user.dataValues);
+    console.log('=================================================');
     if (user != null) {
       return user.dataValues;
     } else {
@@ -81,20 +87,23 @@ export class UserLoginService {
         email: user.email,
         password: user.password,
         role: user.role,
-        is_active:user.is_active
+        is_active: user.is_active,
       });
       //console.log({ newUserCustomer });
       return newUserLogin;
     } catch (err) {
-      console.log( err.parent.code );
+      console.log(err.parent.code);
       throw new Error(err.parent.code);
     }
   }
 
-  async updateUser(user,newPassword): Promise<any> {
+  async updateUser(user, newPassword): Promise<any> {
     console.log({ user });
     try {
-      let foundUser = await this.userLoginRepository.update({password:newPassword},{where:{email:user.email}})
+      const foundUser = await this.userLoginRepository.update(
+        { password: newPassword },
+        { where: { email: user.email } },
+      );
       console.log({ foundUser });
       return foundUser;
     } catch (err) {
@@ -106,7 +115,10 @@ export class UserLoginService {
   async deleteUser(user): Promise<any> {
     console.log({ user });
     try {
-      let foundUser = await this.userLoginRepository.update({is_active:0},{where:{email:user.email}})
+      const foundUser = await this.userLoginRepository.update(
+        { is_active: 0 },
+        { where: { email: user.email } },
+      );
       console.log({ foundUser });
       return foundUser;
     } catch (err) {
@@ -118,12 +130,14 @@ export class UserLoginService {
   async updateUserStatus(email): Promise<any> {
     console.log({ email });
     try {
-      let foundUser = await this.userLoginRepository.update({is_active:1},{where:{email:email}})
+      const foundUser = await this.userLoginRepository.update(
+        { is_active: 1 },
+        { where: { email: email } },
+      );
       console.log({ foundUser });
       return foundUser;
     } catch (err) {
       throw new Error(err);
     }
   }
-
 }
