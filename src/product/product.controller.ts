@@ -56,7 +56,7 @@ export class ProductController {
 
   //--- DELETE ---
   @Delete('/delete/:idProduct')
-  async deleteProductById(@Param() param): Promise<any> {
-    return this.productService.deleteProductById(param.idProduct);
+  async deleteProductById(@Param() param, @Headers() headers): Promise<any> {
+    return this.productService.deleteProductById(param.idProduct, headers);
   }
 }
