@@ -67,7 +67,7 @@ export class BackOfficeController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'commerciale'
+        dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
           let allCustomerList = await this.userLoginService.findAllCustomer();
@@ -93,7 +93,7 @@ export class BackOfficeController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'commerciale'
+        dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
           let allWorkerList = await this.userWorkerLoginService.findAllWoker();
@@ -124,7 +124,7 @@ export class BackOfficeController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'commerciale'
+        dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
           const id = param.id;
@@ -157,7 +157,7 @@ export class BackOfficeController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'commerciale'
+        dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
           const id = param.id;
@@ -173,7 +173,7 @@ export class BackOfficeController {
             detail.id_role,
           );
           const resultDetail = {
-            id: detail.id,
+            id: foundWorker.id,
             email: foundWorker.dataValues.email,
             first_name: detail.first_name,
             last_name: detail.last_name,
@@ -377,8 +377,10 @@ export class BackOfficeController {
           const result = await this.userWorkerLoginService.deleteWorker(iduser);
           if (result == 1) {
             res.status(200).json({ result: 'delete successful' });
-          } else {
-            res.status(403).json({ result: 'user not found' });
+          } 
+          else 
+          {
+            res.status(404).json({ result: 'user not found' });
           }
         } catch (err) {
           console.log({ err });
@@ -429,6 +431,46 @@ export class BackOfficeController {
         res.status(403).json({ result: 'not authorized' });
       }
     } else {
+      res.status(403).json({ result: 'not authorized' });
+    }
+  }
+
+  @Put('/modifyUserWorkerIsActive/:id')
+  async reactivateUser(@Param() Param, @Headers() headers, @Res() res) 
+  {
+    console.log({ headers });
+    let token = headers.authorization.split("Bearer ")[1]
+    console.log({token})
+    const isTokenValid = await this.authService.validateToken(token);
+    if (isTokenValid) 
+    {
+      const decodedInfo = await this.authService.dechiperUserToken(token);
+      console.log({ decodedInfo });
+      if(decodedInfo.userDetail.role == "admin")
+      {
+
+        const foundWorkerLoginData = await this.userWorkerLoginService.findUserById(Param.id)
+
+        console.log({foundWorkerLoginData})
+
+        try 
+        {
+          await this.userWorkerLoginService.updateUserStatus(foundWorkerLoginData.email)
+          res.status(200).json({ result: 'successful' });
+        } 
+        catch (err) 
+        {
+          console.log({err})
+          res.status(500).json({ result: 'internal server error' });
+        }
+      }
+      else
+      { 
+        res.status(403).json({ result: 'not authorized' });
+      }
+    } 
+    else 
+    {
       res.status(403).json({ result: 'not authorized' });
     }
   }
