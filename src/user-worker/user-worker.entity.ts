@@ -6,6 +6,7 @@ import {
   HasMany,
   ForeignKey,
   BelongsTo,
+  DataType
 } from 'sequelize-typescript';
 import { UserWorkerLogin } from '../user-worker-login/user-worker-login.entity';
 import { Order } from '../order/order.entity';

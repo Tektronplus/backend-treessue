@@ -61,13 +61,23 @@ export class UserWorkerService {
         return user;
       }
     });
-    console.log('============================================');
-    console.log(user.dataValues);
-    console.log('=================================================');
     if (user != null) {
       return user.dataValues;
     } else {
       throw new Error('no user found');
+    }
+  }
+
+  async updateUserRole(userWorker,newRole)
+  {
+    try
+    {
+      await this.userWorkerRepository.update({id_user_worker_role:newRole},{where:{id_user_worker:userWorker.id}})
+      return
+    }
+    catch(err)
+    {
+      throw new Error();
     }
   }
 }

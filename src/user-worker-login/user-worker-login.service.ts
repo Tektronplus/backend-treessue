@@ -72,7 +72,7 @@ export class UserWorkerLoginService {
     });
     //console.log({ usersList });
     const userInformation = await usersList.map((data) => {
-      console.log({ data });
+      //console.log({ data });
       let userDetail = {
         email: data.email,
         id: data.id_user_login_worker,
