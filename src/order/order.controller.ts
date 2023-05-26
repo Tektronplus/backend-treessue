@@ -9,9 +9,10 @@ import {
   Post
 } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { CartDetailService } from 'src/cart-detail/cart-detail.service';
+import { CartDetailService } from '../cart-detail/cart-detail.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
+import moment from 'moment';
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('order')
@@ -38,10 +39,14 @@ export class OrderController {
     const userDetail = await this.authService.dechiperUserToken(headers.authorization.split("Bearer ")[1])
     await this.cartDetailService.deleteCartByIdUserCustomer(userDetail.userDetail.id)
     console.log({customerCart})
+    console.log({userDetail})
     let newOrderEntity = {
       id_user_customer:userDetail.userDetail.id,
       id_user_worker:"",
-      order_date: Date.now()
+      order_date: Date.now(),
+      order_status: "",
+      courier_name:"",
+      tracking_code: userDetail.userDetail.last_name.subString(0,3) + userDetail.userDetail.first_name.subString(0,3) + ":" + userDetail.userDetail.email + "?" + new Date().toISOString() + userDetail.userDetail.country
     }
     console.log({newOrderEntity})
     if(customerCart.length !== 0)

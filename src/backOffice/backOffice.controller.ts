@@ -432,7 +432,7 @@ export class BackOfficeController
           } 
           else 
           {
-            res.status(403).json({ result: 'user not found' });
+            res.status(404).json({ result: 'user not found' });
           }
         } catch (err) 
         {
@@ -487,6 +487,46 @@ export class BackOfficeController
       }
       else
       {
+        res.status(403).json({ result: 'not authorized' });
+      }
+    } 
+    else 
+    {
+      res.status(403).json({ result: 'not authorized' });
+    }
+  }
+
+  @Put('/modifyUserWorkerIsActive/:id')
+  async reactivateUser(@Param() Param, @Headers() headers, @Body() body, @Res() res) 
+  {
+    console.log({ body }, { headers });
+    let token = headers.authorization.split("Bearer ")[1]
+    console.log({token})
+    const isTokenValid = await this.authService.validateToken(token);
+    if (isTokenValid) 
+    {
+      const decodedInfo = await this.authService.dechiperUserToken(token);
+      console.log({ decodedInfo });
+      if(decodedInfo.userDetail.role == "admin")
+      {
+
+        const foundWorkerLoginData = await this.userWorkerLoginService.findUserById(Param.id)
+
+        console.log({foundWorkerLoginData})
+
+        try 
+        {
+          await this.userWorkerLoginService.updateUserStatus(foundWorkerLoginData.email)
+          res.status(200).json({ result: 'successful' });
+        } 
+        catch (err) 
+        {
+          console.log({err})
+          res.status(500).json({ result: 'internal server error' });
+        }
+      }
+      else
+      { 
         res.status(403).json({ result: 'not authorized' });
       }
     } 
