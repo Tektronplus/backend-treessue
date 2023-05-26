@@ -158,6 +158,7 @@ export class BackOfficeController
           console.log({foundUser})
           const detail = await this.userCustomerService.findUserDetail(foundUser.dataValues)
           console.log({detail})
+          Object.assign(detail,{is_active:foundUser.dataValues.is_active})
           res.status(200).json(detail);
         }
         catch(err)
