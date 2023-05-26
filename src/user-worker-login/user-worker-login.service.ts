@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { UserWorkerLogin } from './user-worker-login.entity';
-import { UserWorker } from 'src/user-worker/user-worker.entity';
-import * as bcrypt from "bcrypt"
+import { UserWorker } from '../user-worker/user-worker.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserWorkerLoginService {
@@ -72,11 +72,11 @@ export class UserWorkerLoginService {
     });
     //console.log({ usersList });
     const userInformation = await usersList.map((data) => {
-      console.log({data})
+      console.log({ data });
       let userDetail = {
-        email:data.email,
-        id:data.id_user_login_worker,
-        first_name:data.user_worker.first_name,
+        email: data.email,
+        id: data.id_user_login_worker,
+        first_name: data.user_worker.first_name,
         last_name: data.user_worker.last_name,
         is_active: data.is_active,
       };
@@ -107,7 +107,6 @@ export class UserWorkerLoginService {
   }
   //FUNZIONE USATA PER LA REGISTRAZIONE
 
-
   async updateUser(user, newPassword): Promise<any> {
     console.log({ user });
     try {
@@ -127,7 +126,7 @@ export class UserWorkerLoginService {
     try {
       const foundUser = await this.userWorkerLoginRepository.update(
         { is_active: 0 },
-        { where: { id_user_login_worker:id } },
+        { where: { id_user_login_worker: id } },
       );
       console.log({ foundUser });
       return foundUser;
@@ -151,4 +150,3 @@ export class UserWorkerLoginService {
     }
   }
 }
-  

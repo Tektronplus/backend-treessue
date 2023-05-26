@@ -8,9 +8,9 @@ import { OrderDetail } from '../order-detail/order-detail.entity';
 import { UserCustomer } from '../user-customer/user-customer.entity';
 import { Order } from '../order/order.entity';
 import { UserWorker } from '../user-worker/user-worker.entity';
-import { UserWorkerLogin } from 'src/user-worker-login/user-worker-login.entity';
-import { UserWorkerRole } from 'src/user-worker-role/user-worker-role.entity';
-import { ProductCategory } from 'src/product-category/product-category.entity';
+import { UserWorkerLogin } from '../user-worker-login/user-worker-login.entity';
+import { UserWorkerRole } from '../user-worker-role/user-worker-role.entity';
+import { ProductCategory } from '../product-category/product-category.entity';
 
 export const databaseProviders = [
   {

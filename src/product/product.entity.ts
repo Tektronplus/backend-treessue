@@ -9,7 +9,7 @@ import {
 } from 'sequelize-typescript';
 import { CartDetail } from '../cart-detail/cart-detail.entity';
 import { OrderDetail } from '../order-detail/order-detail.entity';
-import { ProductCategory } from 'src/product-category/product-category.entity';
+import { ProductCategory } from '../product-category/product-category.entity';
 
 @Table({ tableName: 'products', updatedAt: false, createdAt: false })
 export class Product extends Model {
@@ -43,7 +43,7 @@ export class Product extends Model {
   @Column(DataType.BOOLEAN)
   is_available: boolean;
 
-  @Column({ allowNull: true })
+  @Column
   available_quantity: number;
 
   // RELATIONSHIPS

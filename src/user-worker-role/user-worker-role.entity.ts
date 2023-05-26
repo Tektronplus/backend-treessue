@@ -1,5 +1,5 @@
 import { Table, Column, Model, HasMany } from 'sequelize-typescript';
-import { UserWorker } from 'src/user-worker/user-worker.entity';
+import { UserWorker } from '../user-worker/user-worker.entity';
 
 @Table({ tableName: 'user_worker_role', updatedAt: false, createdAt: false })
 export class UserWorkerRole extends Model {
