@@ -14,13 +14,13 @@ import {
 import * as bcrypt from 'bcrypt';
 
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
-import { AuthService } from 'src/auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 
-import { UserLoginService } from 'src/user-login/user-login.service';
-import { UserCustomerService } from 'src/user-customer/user-customer.service';
-import { UserWorkerService } from 'src/user-worker/user-worker.service';
-import { UserWorkerLoginService } from 'src/user-worker-login/user-worker-login.service';
-import { UserWorkerRoleService } from 'src/user-worker-role/user-worker-role.service';
+import { UserLoginService } from '../user-login/user-login.service';
+import { UserCustomerService } from '../user-customer/user-customer.service';
+import { UserWorkerService } from '../user-worker/user-worker.service';
+import { UserWorkerLoginService } from '../user-worker-login/user-worker-login.service';
+import { UserWorkerRoleService } from '../user-worker-role/user-worker-role.service';
 @UseGuards(ApiKeyAuthGuard)
 @Controller('backOffice')
 export class BackOfficeController
