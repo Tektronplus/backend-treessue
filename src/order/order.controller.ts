@@ -19,6 +19,7 @@ export class OrderController {
   constructor(
     private readonly orderService: OrderService,
     private readonly cartDetailService: CartDetailService,
+    private readonly authService: AuthService,
   ) {}
 
   @Get('/')
