@@ -173,7 +173,7 @@ export class BackOfficeController {
             detail.id_role,
           );
           const resultDetail = {
-            id: foundWorker.id,
+            id: detail.id,
             email: foundWorker.dataValues.email,
             first_name: detail.first_name,
             last_name: detail.last_name,
@@ -403,7 +403,7 @@ export class BackOfficeController {
     if (isTokenValid) {
       const decodedInfo = await this.authService.dechiperUserToken(token);
       console.log({ decodedInfo });
-      if (decodedInfo.userDetail.role == 'ufficio') {
+      if (decodedInfo.userDetail.role == 'ufficio' || decodedInfo.userDetail.role == "admin") {
         const existingRecord = await this.userCustomerService.findOneById(
           body.id,
         );
