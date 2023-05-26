@@ -120,6 +120,13 @@ export class ProductService {
       where: { id_product: id_product },
     });
   }
+
+  async updateQuantityProduct(id_product, new_quantity): Promise<any> {
+    return this.productRepository.update(
+      { available_quantity: new_quantity },
+      { where: { id_product: id_product } },
+    );
+  }
 }
 
 class CustomException {
