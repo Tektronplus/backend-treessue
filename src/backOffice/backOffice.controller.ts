@@ -114,6 +114,12 @@ export class BackOfficeController
       {
         try{
           let allWorkerList = await this.userWorkerLoginService.findAllWoker()
+          //console.log({allWorkerList})
+          for(let elm of allWorkerList)
+          {
+            elm.role = await this.workerRoleService.findRoleById(elm.role)
+            elm.role = elm.role.role
+          }
           console.log({allWorkerList})
           res.status(200).json(allWorkerList);
         }

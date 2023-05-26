@@ -1,4 +1,13 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Headers,
+  Res,
+  UseGuards,
+  Put,
+  Body,
+  Post
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 
@@ -14,6 +23,11 @@ export class OrderController {
 
   @Get('/all')
   async getListOrders(): Promise<Array<any>> {
+    return this.orderService.findAll();
+  }
+
+  @Post('/creteOrder')
+  async createNewOrder(): Promise<Array<any>> {
     return this.orderService.findAll();
   }
 }
