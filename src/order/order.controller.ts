@@ -50,7 +50,6 @@ export class OrderController {
   @Post('/create-order')
   async createNewOrder(
     @Headers() headers,
-    @Body() body,
     @Res() res,
   ): Promise<any> {
 
