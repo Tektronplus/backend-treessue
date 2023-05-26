@@ -12,6 +12,17 @@ export class OrderService {
   async findAll(): Promise<Order[]> {
     return this.OrderRepository.findAll();
   }
+
+  async createOrder(order)
+  {
+    try{
+      return await this.OrderRepository.create(order)
+    }
+    catch(err)
+    {
+      throw new Error(err)
+    }
+  }
 }
 
 

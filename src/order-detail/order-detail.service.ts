@@ -11,4 +11,15 @@ export class OrderDetailService {
   async findAll(): Promise<OrderDetail[]> {
     return this.orderDetailRepository.findAll();
   }
+
+  async createOrderDetail(orderDetail)
+  {
+    try{
+      return await this.orderDetailRepository.create(orderDetail)
+    }
+    catch(err)
+    {
+      throw new Error(err)
+    }
+  }
 }
