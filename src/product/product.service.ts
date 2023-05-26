@@ -46,9 +46,15 @@ export class ProductService {
   }
 
   async createNewProduct(headers, body): Promise<any> {
-    console.log(headers);
-    //const userInfo = await this.customMethods.checkAuthentication(headers);
-    //console.log(userInfo);
+    //Check authentication
+    const userInfo = await this.customMethods.checkAuthentication(headers);
+    console.log(userInfo);
+
+    //Check authorization
+    this.customException.checkAuthorization(userInfo.role, [
+      'admin',
+      'ufficio',
+    ]);
 
     const newProduct = {
       prod_name: body.prod_name,
@@ -64,9 +70,15 @@ export class ProductService {
   }
 
   async updateProductById(id_product, headers, body): Promise<any> {
-    console.log(headers);
-    //const userInfo = await this.customMethods.checkAuthentication(headers);
-    //console.log(userInfo);
+    //Check authentication
+    const userInfo = await this.customMethods.checkAuthentication(headers);
+    console.log(userInfo);
+
+    //Check authorization
+    this.customException.checkAuthorization(userInfo.role, [
+      'admin',
+      'ufficio',
+    ]);
 
     await this.customException.checkFindById(
       id_product,
@@ -87,7 +99,18 @@ export class ProductService {
     );
   }
 
-  async deleteProductById(id_product): Promise<any> {
+  async deleteProductById(id_product, headers): Promise<any> {
+    //Check authentication
+    const userInfo = await this.customMethods.checkAuthentication(headers);
+    console.log(userInfo);
+
+    //Check authorization
+    this.customException.checkAuthorization(userInfo.role, [
+      'admin',
+      'ufficio',
+    ]);
+
+    //Check if id is valid
     await this.customException.checkFindById(
       id_product,
       this.productRepository,
@@ -109,6 +132,17 @@ class CustomException {
       throw new NotFoundException('Something bad happened', {
         cause: new Error(),
         description: "This id_product doesn't exist in the DB.",
+      });
+    }
+  }
+
+  checkAuthorization(user_role, permitted_roles) {
+    if (permitted_roles.includes(user_role)) {
+      return true;
+    } else {
+      throw new UnauthorizedException('Something bad happened', {
+        cause: new Error(),
+        description: 'This user is not authorized to perform this operation',
       });
     }
   }
