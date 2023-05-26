@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Headers,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { TowerService } from './tower.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 
@@ -7,28 +17,46 @@ import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 export class TowerController {
   constructor(private readonly towerService: TowerService) {}
 
-  @Post('/add')
-  async addTower(@Body() body): Promise<any> {
-    return this.towerService.addTower(body);
+  //--- CREATE ---
+  @Post('/create')
+  async addTower(@Headers() headers, @Body() body): Promise<any> {
+    return this.towerService.createNewTower(headers, body);
   }
 
+  //--- READ ---
   @Get('/')
   async getHello(): Promise<string> {
     return 'Hello from Tower!';
   }
 
   @Get('/all')
-  async getListTower(): Promise<Array<any>> {
-    return this.towerService.findAllTowers();
+  async getListTower(@Headers() headers): Promise<Array<any>> {
+    return this.towerService.findAllTowers(headers);
   }
 
   @Get('/all/public')
-  async getListPublicTower(): Promise<Array<any>> {
-    return this.towerService.findAllTowersByType(true); // public tower = true
+  async getListPublicTower(@Headers() headers): Promise<Array<any>> {
+    return this.towerService.findAllTowersByType(true, headers); // public tower = true
   }
 
   @Get('/all/private')
-  async getListPrivateTower(): Promise<Array<any>> {
-    return this.towerService.findAllTowersByType(false); // private tower = false
+  async getListPrivateTower(@Headers() headers): Promise<Array<any>> {
+    return this.towerService.findAllTowersByType(false, headers); // private tower = false
+  }
+
+  //--- UPDATE ---
+  @Put('/update/:idTower')
+  async updateProductCategoryById(
+    @Param() param,
+    @Headers() headers,
+    @Body() body,
+  ): Promise<any> {
+    return this.towerService.updateTowerById(param.idTower, headers, body);
+  }
+
+  //--- DELETE ---
+  @Delete('/delete/:idTower')
+  async deleteProductById(@Param() param, @Headers() headers): Promise<any> {
+    return this.towerService.deleteTowerById(param.idTower, headers);
   }
 }
