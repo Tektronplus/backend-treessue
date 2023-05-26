@@ -3,7 +3,7 @@ import { TowerController } from './tower.controller';
 import { TowerService } from './tower.service';
 import { towerProvider } from './tower.providers';
 import { DatabaseModule } from '../database/database.module';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [DatabaseModule, AuthModule],
