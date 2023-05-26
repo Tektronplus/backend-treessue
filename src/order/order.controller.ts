@@ -62,7 +62,6 @@ export class OrderController {
       if (customerCart.length !== 0) 
       {   
         const userDetail = await this.authservice.dechiperUserToken(headers.authorization.split('Bearer ')[1]);
-        await this.cartDetailService.deleteCartByIdUserCustomer(userDetail.userDetail.id );
         console.log({ customerCart });
         //console.log({ userDetail });
         for(let elm of customerCart)
@@ -72,16 +71,18 @@ export class OrderController {
           {
             try
             {
-              await this.productService.updateQuantityProduct(elm.id,productDetail.dataValues.available_quantity - elm.quantity)
+              await this.productService.updateQuantityProduct(elm.idProduct,productDetail.dataValues.available_quantity - elm.quantity)
             }
             catch(err)
             {
-              res.status(500).json({ result: 'internal server error' }); 
+              res.status(500).json({ result: 'internal server error' });
+              return 
             }
           }
           else
           {
-            res.status(418).json({ result: 'not authorized' });
+            res.status(418).json({ result: 'quantity for:' + productDetail.dataValues.prod_name + " too high" });
+            return
           }
         }
 
@@ -125,16 +126,20 @@ export class OrderController {
           }
           await this.orderDetailService.createOrderDetail(orderDetailEntity)
         }
+        await this.cartDetailService.deleteCartByIdUserCustomer(userDetail.userDetail.id );
         res.status(200).json({ result: 'order created' });
+        return
       } 
       else 
       {
         res.status(200).json({ result: 'non ci sono prodotti nel carello' });
+        return
       }
     }
     else
     {
       res.status(403).json({ result: 'not authorized' });
+      return
     }
   }
 }
