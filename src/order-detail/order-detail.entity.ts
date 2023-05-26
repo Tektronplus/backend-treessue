@@ -33,12 +33,6 @@ export class OrderDetail extends Model {
   product: Product;
 
   @Column({ allowNull: false })
-  discount: number;
-
-  @Column({ allowNull: false })
-  original_price: number;
-
-  @Column({ allowNull: false })
   price: number;
 
   @Column({ allowNull: false })

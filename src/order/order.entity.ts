@@ -10,6 +10,7 @@ import {
 import { UserCustomer } from '../user-customer/user-customer.entity';
 import { OrderDetail } from '../order-detail/order-detail.entity';
 import { UserWorker } from '../user-worker/user-worker.entity';
+import { OrderStatus } from 'src/order-status/order-status.entity';
 
 @Table({ tableName: 'order', updatedAt: false, createdAt: false })
 export class Order extends Model {
@@ -35,11 +36,15 @@ export class Order extends Model {
   @BelongsTo(() => UserWorker)
   user_worker: UserWorker;
 
+  @ForeignKey(() => OrderStatus)
+  @Column({ allowNull: false })
+  id_order_status: number;
+
+  @BelongsTo(() => OrderStatus)
+  order_status: OrderStatus;
+
   @Column({ type: DataType.DATE, allowNull: false })
   order_date: number;
-
-  @Column({ allowNull: false })
-  order_status: boolean;
 
   @Column({ allowNull: true })
   courier_name: string;
@@ -55,12 +60,6 @@ export class Order extends Model {
 
   @Column({ type: DataType.DATE, allowNull: true })
   delivery_date: number;
-
-  @Column({ allowNull: false })
-  original_price: number;
-
-  @Column({ allowNull: true })
-  discount: number;
 
   @Column({ allowNull: false })
   price: number;
