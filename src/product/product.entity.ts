@@ -21,7 +21,7 @@ export class Product extends Model {
   })
   id_product: number;
 
-  @Column
+  @Column({ allowNull: false })
   prod_name: string;
 
   @ForeignKey(() => ProductCategory)

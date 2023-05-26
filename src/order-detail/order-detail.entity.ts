@@ -39,5 +39,5 @@ export class OrderDetail extends Model {
   quantity: number;
 
   @Column({ allowNull: false })
-  description: number;
+  description: string;
 }
