@@ -91,6 +91,12 @@ export class CartDetailService {
       { where: { id_cart_detail: body.idCartDetail } },
     );
   }
+
+  async deleteCartByIdUserCustomer(id)
+  {
+    await this.cartDetailRepository.destroy({where:{id_user_customer:id}})
+    return
+  }
 }
 
 class CustomMethods {
