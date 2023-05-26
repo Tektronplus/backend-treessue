@@ -496,7 +496,7 @@ export class BackOfficeController
     }
   }
 
-  @Put('/modifyUserWorkerRole/:id')
+  @Put('/modifyUserWorkerDetail/:id')
   async changeUserWorkerRole(@Param() Param, @Headers() headers, @Body() body, @Res() res) 
   {
     console.log({ body }, { headers });
@@ -509,15 +509,20 @@ export class BackOfficeController
       console.log({ decodedInfo });
       if(decodedInfo.userDetail.role == "admin")
       {
-
+        const updatedUserWorkerDetail = {
+          first_name:body.first_name,
+          last_name:body.last_name,
+          id_user_worker_role:body.role
+        }
         const foundWorkerLoginData = await this.userWorkerLoginService.findUserById(Param.id)
         const foundWorkerDetail = await this.userWorkerService.findUserDetail(foundWorkerLoginData.dataValues)
         console.log({foundWorkerDetail})
-        const roleId = await this.workerRoleService.findRoleId(body.newRole)
+        const roleId = await this.workerRoleService.findRoleId(updatedUserWorkerDetail.id_user_worker_role)
         console.log({roleId})
+        updatedUserWorkerDetail.id_user_worker_role = roleId.dataValues.id_user_worker_role
         try 
         {
-          await this.userWorkerService.updateUserRole(foundWorkerDetail,roleId.dataValues.id_user_worker_role)
+          await this.userWorkerService.updateDetail(foundWorkerDetail,updatedUserWorkerDetail)
           res.status(200).json({ result: 'successful' });
         } 
         catch (err) 

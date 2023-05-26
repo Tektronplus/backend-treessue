@@ -68,6 +68,34 @@ export class UserWorkerService {
     }
   }
 
+  async updateDetail(existingValue, user) {
+    console.log("=========================== USER CUSTOMER SERVICE ==================================")
+    console.log({existingValue})
+    console.log({user}) 
+    try {
+      const updateUser = await this.userWorkerRepository.update(
+        {
+          first_name:
+            existingValue.first_name != user.first_name
+              ? user.first_name
+              : existingValue.first_name,
+          last_name:
+            existingValue.last_name != user.last_name
+              ? user.last_name
+              : existingValue.last_name,
+          id_user_worker_role: existingValue.id_role != user.id_user_worker_role ? user.id_user_worker_role : existingValue.id_role
+        },
+        { where: { id_user_worker: existingValue.id } },
+      );
+
+      return updateUser;
+    } 
+    catch (err) 
+    {
+      throw new Error(err);
+    }
+  }
+
   async updateUserRole(userWorker,newRole)
   {
     try
