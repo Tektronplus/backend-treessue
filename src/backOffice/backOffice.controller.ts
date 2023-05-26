@@ -497,9 +497,9 @@ export class BackOfficeController
   }
 
   @Put('/modifyUserWorkerIsActive/:id')
-  async reactivateUser(@Param() Param, @Headers() headers, @Body() body, @Res() res) 
+  async reactivateUser(@Param() Param, @Headers() headers, @Res() res) 
   {
-    console.log({ body }, { headers });
+    console.log({ headers });
     let token = headers.authorization.split("Bearer ")[1]
     console.log({token})
     const isTokenValid = await this.authService.validateToken(token);
