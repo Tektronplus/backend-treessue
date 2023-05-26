@@ -120,6 +120,13 @@ export class ProductService {
       where: { id_product: id_product },
     });
   }
+
+  async updateQuantityProduct(id_product, new_quantity): Promise<any> {
+    return this.productRepository.update(
+      { available_quantity: new_quantity },
+      { where: { id_product: id_product } },
+    );
+  }
 }
 
 class CustomException {
@@ -157,6 +164,13 @@ class CustomMethods {
       exp?: number;
       iat?: number;
     };
+
+    if (!headers.authorization) {
+      throw new UnauthorizedException('Unauthorized request', {
+        cause: new Error(),
+        description: 'Token is not empty or undefied ',
+      });
+    }
 
     const authorizationToken = headers.authorization.split('Bearer ')[1];
 

@@ -189,6 +189,13 @@ class CustomException {
       iat?: number;
     };
 
+    if (!headers.authorization) {
+      throw new UnauthorizedException('Unauthorized request', {
+        cause: new Error(),
+        description: 'Token is not empty or undefied ',
+      });
+    }
+
     const authorizationToken = headers.authorization.split('Bearer ')[1];
 
     const isTokenValid = await this.authService.validateToken(
