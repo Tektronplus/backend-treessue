@@ -38,12 +38,12 @@ export class UserCustomerController {
     };
 
     console.log({ body }, { headers });
-    const isTokenValid = await this.authService.validateToken(
-      headers.authorization,
-    );
+    let token = headers.authorization.split("Bearer ")[1]
+    console.log({token})
+    const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
       const decodedInfo: decodedToken =
-        await this.authService.dechiperUserToken(headers.authorization);
+        await this.authService.dechiperUserToken(token);
       console.log({ decodedInfo });
       try {
         let detail = {id_user_customer:decodedInfo.userDetail.id}
@@ -66,12 +66,12 @@ export class UserCustomerController {
     };
 
     console.log({ body }, { headers });
-    const isTokenValid = await this.authService.validateToken(
-      headers.authorization,
-    );
+    let token = headers.authorization.split("Bearer ")[1]
+    console.log({token})
+    const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
       const decodedInfo: decodedToken =
-        await this.authService.dechiperUserToken(headers.authorization);
+        await this.authService.dechiperUserToken(token);
       console.log({ decodedInfo });
       try {
         await this.userCustomerService.updateDetail(
