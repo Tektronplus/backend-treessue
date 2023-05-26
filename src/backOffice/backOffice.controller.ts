@@ -67,7 +67,7 @@ export class BackOfficeController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'commerciale'
+        dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
           let allCustomerList = await this.userLoginService.findAllCustomer();
@@ -93,7 +93,7 @@ export class BackOfficeController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'commerciale'
+        dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
           let allWorkerList = await this.userWorkerLoginService.findAllWoker();
@@ -124,7 +124,7 @@ export class BackOfficeController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'commerciale'
+        dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
           const id = param.id;
@@ -157,7 +157,7 @@ export class BackOfficeController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'commerciale'
+        dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
           const id = param.id;

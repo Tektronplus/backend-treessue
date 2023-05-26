@@ -23,6 +23,17 @@ export class OrderController {
     private readonly authservice:AuthService
   ) {}
 
+
+  private randomString(length) {
+    const chars =
+    '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let result = '';
+  for (let i = length; i > 0; --i)
+    result += chars[Math.floor(Math.random() * chars.length)];
+  return result;
+  } 
+
+
   @Get('/')
   async getHello(): Promise<string> {
     return 'Hello from Order!';
@@ -40,13 +51,22 @@ export class OrderController {
     await this.cartDetailService.deleteCartByIdUserCustomer(userDetail.userDetail.id)
     console.log({customerCart})
     console.log({userDetail})
+
+
+
     let newOrderEntity = {
       id_user_customer:userDetail.userDetail.id,
       id_user_worker:"",
       order_date: Date.now(),
       order_status: "",
       courier_name:"",
-      tracking_code: userDetail.userDetail.last_name.subString(0,3) + userDetail.userDetail.first_name.subString(0,3) + ":" + userDetail.userDetail.email + "?" + new Date().toISOString() + userDetail.userDetail.country
+      tracking_code: this.randomString(15),
+      start_shipping_date:null,
+      expected_delivery_date:null,
+      delivery_date:null,
+      original_price: 0,
+      discount:null,
+      price:null
     }
     console.log({newOrderEntity})
     if(customerCart.length !== 0)
