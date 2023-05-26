@@ -173,7 +173,7 @@ export class BackOfficeController {
             detail.id_role,
           );
           const resultDetail = {
-            id: detail.id,
+            id: foundWorker.id,
             email: foundWorker.dataValues.email,
             first_name: detail.first_name,
             last_name: detail.last_name,
