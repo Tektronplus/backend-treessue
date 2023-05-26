@@ -6,7 +6,7 @@ import {
   UseGuards,
   Put,
   Body,
-  Post
+  Post,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CartDetailService } from '../cart-detail/cart-detail.service';
@@ -20,8 +20,8 @@ export class OrderController {
   constructor(
     private readonly orderService: OrderService,
     private readonly cartDetailService: CartDetailService,
-    private readonly authService:AuthService
-    ) {}
+    private readonly authservice:AuthService
+  ) {}
 
   @Get('/')
   async getHello(): Promise<string> {
@@ -36,7 +36,7 @@ export class OrderController {
   @Post('/createOrder')
   async createNewOrder(@Headers() headers, @Body() body, @Res() res): Promise<any> {
     const customerCart = await this.cartDetailService.findCartDetailByUserCustomer(headers)
-    const userDetail = await this.authService.dechiperUserToken(headers.authorization.split("Bearer ")[1])
+    const userDetail = await this.authservice.dechiperUserToken(headers.authorization.split("Bearer ")[1])
     await this.cartDetailService.deleteCartByIdUserCustomer(userDetail.userDetail.id)
     console.log({customerCart})
     console.log({userDetail})
