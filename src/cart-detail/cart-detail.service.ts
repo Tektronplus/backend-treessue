@@ -92,10 +92,11 @@ export class CartDetailService {
     );
   }
 
-  async deleteCartByIdUserCustomer(id)
-  {
-    await this.cartDetailRepository.destroy({where:{id_user_customer:id}})
-    return
+  async deleteCartByIdUserCustomer(id) {
+    await this.cartDetailRepository.destroy({
+      where: { id_user_customer: id },
+    });
+    return;
   }
 }
 
@@ -108,6 +109,13 @@ class CustomMethods {
       exp?: number;
       iat?: number;
     };
+
+    if (!headers.authorization) {
+      throw new UnauthorizedException('Unauthorized request', {
+        cause: new Error(),
+        description: 'Token is not empty or undefied ',
+      });
+    }
 
     const authorizationToken = headers.authorization.split('Bearer ')[1];
 
