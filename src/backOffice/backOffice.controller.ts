@@ -134,6 +134,7 @@ export class BackOfficeController {
           const detail = await this.userCustomerService.findUserDetail(
             foundUser.dataValues,
           );
+          detail.id = id
           console.log({ detail });
           Object.assign(detail, { is_active: foundUser.dataValues.is_active });
           res.status(200).json(detail);
@@ -173,7 +174,7 @@ export class BackOfficeController {
             detail.id_role,
           );
           const resultDetail = {
-            id: detail.id,
+            id: param.id,
             email: foundWorker.dataValues.email,
             first_name: detail.first_name,
             last_name: detail.last_name,
