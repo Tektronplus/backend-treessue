@@ -200,6 +200,7 @@ export class BackOfficeController
             email:foundWorker.dataValues.email,
             first_name:detail.first_name,
             last_name:detail.last_name,
+            is_active:foundWorker.dataValues.is_active,
             role:role.role
           }
           res.status(200).json(resultDetail);
