@@ -89,6 +89,8 @@ export class UserLoginController {
     }
   }
 
+  
+
   @Put('/updateCredentials')
   async updateCredentials(@Body() body, @Headers() headers, @Res() res) {
 
@@ -111,17 +113,18 @@ export class UserLoginController {
 
     console.log({ body }, { headers });
     const isTokenValid = await this.authService.validateToken(
-      headers.authorization,
+      headers.authorization.split("Bearer ")[1],
     );
     if (isTokenValid) {
       const decodedInfo: decodedToken =
-        await this.authService.dechiperUserToken(headers.authorization);
+        await this.authService.dechiperUserToken(headers.authorization.split("Bearer ")[1]);
       console.log({ decodedInfo });
       const saltOrRounds = 10;
       const salt = await bcrypt.genSalt(saltOrRounds);
       const newPassword = await bcrypt.hash(body.newPassword, salt);
       try {
-        await this.userLoginService.updateUser(
+        await this.userLoginService.updateUserEmail(decodedInfo.userDetail,body.email)
+        await this.userLoginService.updateUserPassword(
           decodedInfo.userDetail,
           newPassword,
         );

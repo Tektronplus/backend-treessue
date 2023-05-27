@@ -10,6 +10,7 @@ import {
 import { UserCustomerService } from './user-customer.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
+import { UserLoginService } from 'src/user-login/user-login.service';
 
 @UseGuards(ApiKeyAuthGuard)
 @Controller('user-customer')
@@ -80,6 +81,23 @@ export class UserCustomerController {
     if(headers.authorization.substring(0,7) != "Bearer ")
     {
       res.status(401).json({ result: 'not authorized' });
+      return
+    }
+
+    if(
+      body.email == undefined ||
+      body.first_name == undefined || 
+      body.last_name == undefined || 
+      body.birth_date == undefined ||
+      body.phone_number == undefined ||
+      body.country == undefined ||
+      body.province == undefined ||
+      body.city == undefined ||
+      body.zip_code == undefined ||
+      body.address == undefined
+    )
+    {
+      res.status(404).json({ result: 'bad request' });
       return
     }
 

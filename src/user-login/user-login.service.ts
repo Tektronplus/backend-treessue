@@ -118,12 +118,30 @@ export class UserLoginService {
     }
   }
 
-  async updateUser(user, newPassword): Promise<any> {
+  async updateUserEmail(user, newEmail): Promise<any> {
     console.log({ user });
     try {
       const foundUser = await this.userLoginRepository.update(
-        { password: newPassword },
-        { where: { email: user.email } },
+        { 
+          email: user.email != newEmail ? newEmail : user.email 
+        },
+        { where: { id_user_customer:user.id } },
+      );
+      console.log({ foundUser });
+      return foundUser;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async updateUserPassword(user, newPassword): Promise<any> {
+    console.log({ user });
+    try {
+      const foundUser = await this.userLoginRepository.update(
+        { 
+          password: newPassword 
+        },
+        { where: { id_user_customer:user.id } },
       );
       console.log({ foundUser });
       return foundUser;

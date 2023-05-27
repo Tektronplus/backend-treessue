@@ -334,9 +334,11 @@ import {
             city: existingRecord.dataValues.city,
             zip_code: existingRecord.dataValues.zip_code,
             address: existingRecord.dataValues.address,
+            email:userLoginData.email
           }; 
           try {
-            let result = await this.userCustomerService.updateDetail(existingValue, body);
+            await this.userLoginService.updateUserEmail(existingValue,body.email)
+            await this.userCustomerService.updateDetail(existingValue, body);
             res.status(200).json({ result: 'successful' });
             return
           } catch (err) {
