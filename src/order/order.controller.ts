@@ -48,7 +48,7 @@ export class OrderController {
     return this.orderService.findAll();
   }
 
-  @Get('/all')
+  @Get('/customerOrderList')
   async getCustomerOrdere(@Param() param, @Headers() headers,@Res() res): Promise<Array<any>> {
     if(headers.authorization == undefined)
     {
@@ -66,6 +66,8 @@ export class OrderController {
     {
       const userDetail = await this.authservice.dechiperUserToken(headers.authorization.split('Bearer ')[1]);
       console.log({userDetail})
+      const orderList = await this.orderService.getCustomerOrder(userDetail.userDetail.id)
+      console.log(orderList)
     }
     else
     {
@@ -126,12 +128,20 @@ export class OrderController {
   
         let price = 0
         const date = Date.now()
+
+        for(let elm of customerCart)
+        {
+          let productData = await this.productService.findById(elm.idProduct)
+          price = price + (productData.dataValues.unit_price * elm.quantity)
+          console.log({price})
+        }
   
-        customerCart.map(async (data)=>{
+        /*customerCart.map(async (data)=>{
           //console.log({data})
           let productData = await this.productService.findById(data.idProduct)
           price = price + (productData.dataValues.unit_price * data.quantity)
-        })
+          console.log({price})
+        })*/
   
         let newOrderEntity = {
           id_user_customer: userDetail.userDetail.id,

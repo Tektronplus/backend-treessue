@@ -28,7 +28,10 @@ export class OrderService {
   {
     try{
       let customerOrder = await this.OrderRepository.findAll({where:{id_user_customer:id}})
-      return customerOrder
+      const orderList = await customerOrder.map((data)=>{
+        return data.dataValues
+      })
+      return orderList
     }
     catch(err)
     {
