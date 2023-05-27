@@ -93,15 +93,18 @@ export class OrderController {
         }
         console.log({listOfOrder})
         res.status(200).json({ result: listOfOrder });
+        return
       }
       catch(err)
       {
         res.status(500).json({ result: 'internal server error' });
+        return
       }
     }
     else
     {
       res.status(500).json({ result: 'internal server error' });
+      return
     }
   }
 
