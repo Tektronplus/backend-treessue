@@ -64,10 +64,40 @@ export class OrderController {
     const isTokenValid = await this.authservice.validateToken(headers.authorization.split('Bearer ')[1]);
     if(isTokenValid)
     {
-      const userDetail = await this.authservice.dechiperUserToken(headers.authorization.split('Bearer ')[1]);
-      console.log({userDetail})
-      const orderList = await this.orderService.getCustomerOrder(userDetail.userDetail.id)
-      console.log(orderList)
+      let listOfOrder = []
+      try
+      {
+        const userDetail = await this.authservice.dechiperUserToken(headers.authorization.split('Bearer ')[1]);
+        //console.log({userDetail})
+        const orderList = await this.orderService.getCustomerOrder(userDetail.userDetail.id)
+        //console.log(orderList)
+  
+        for(let elm of orderList)
+        {
+          elm.id_order_status = await this.orderStatusService.findStatusById(elm.id_order_status)
+          console.log(elm.id_order_status.dataValues.status)
+          let orderEntity = {
+            id_order: elm.id_order,
+            id_user_customer: elm.id_user_customer,
+            id_user_worker: elm.id_user_worker,
+            id_order_status: elm.id_order_status.dataValues.status,
+            order_date: elm.order_date,
+            courier_name: elm.courier_name,
+            tracking_code: elm.tracking_code,
+            start_shipping_date: elm.start_shipping_date,
+            expected_delivery_date: elm.expected_delivery_date,
+            delivery_date: elm.delivery_date,
+            price: elm.price
+          }
+          listOfOrder.push(orderEntity)
+        }
+        console.log({listOfOrder})
+        res.status(200).json({ result: listOfOrder });
+      }
+      catch(err)
+      {
+        res.status(500).json({ result: 'internal server error' });
+      }
     }
     else
     {
@@ -135,13 +165,6 @@ export class OrderController {
           price = price + (productData.dataValues.unit_price * elm.quantity)
           console.log({price})
         }
-  
-        /*customerCart.map(async (data)=>{
-          //console.log({data})
-          let productData = await this.productService.findById(data.idProduct)
-          price = price + (productData.dataValues.unit_price * data.quantity)
-          console.log({price})
-        })*/
   
         let newOrderEntity = {
           id_user_customer: userDetail.userDetail.id,
