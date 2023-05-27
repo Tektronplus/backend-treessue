@@ -119,18 +119,30 @@ export class TowerService {
     };
     this.customExceptions.checkTower(towerLocation);
 
-    return this.towerRepository.update(
-      {
-        id_user_customer: body.id_user_customer,
-        is_public: body.is_public,
-        title: body.title,
-        description: body.description,
-        address: body.address,
-        latitude: body.latitude,
-        longitude: body.longitude,
-      },
-      { where: { id_tower: id_tower } },
-    );
+    return this.towerRepository
+      .update(
+        {
+          id_user_customer: body.id_user_customer,
+          is_public: body.is_public,
+          title: body.title,
+          description: body.description,
+          address: body.address,
+          latitude: body.latitude,
+          longitude: body.longitude,
+        },
+        { where: { id_tower: id_tower } },
+      )
+      .then((res) => {
+        if (res[0] == 1) {
+          return { result: 'Query executed successfully' };
+        } else {
+          throw new BadRequestException('Something bad happened', {
+            cause: new Error(),
+            description:
+              'Query error, please check your data. Probably, there is no difference between your data and the data that already exists.',
+          });
+        }
+      });
   }
 
   async deleteTowerById(id_tower, headers): Promise<any> {
@@ -147,9 +159,20 @@ export class TowerService {
     //Check if id is valid
     await this.customExceptions.checkFindById(id_tower, this.towerRepository);
 
-    return this.towerRepository.destroy({
-      where: { id_tower: id_tower },
-    });
+    return this.towerRepository
+      .destroy({
+        where: { id_tower: id_tower },
+      })
+      .then((res) => {
+        if (res == 1) {
+          return { result: 'Query executed successfully' };
+        } else {
+          throw new BadRequestException('Something bad happened', {
+            cause: new Error(),
+            description: 'Query error, please check your data',
+          });
+        }
+      });
   }
 }
 

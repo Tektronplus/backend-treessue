@@ -3,6 +3,7 @@ import {
   Inject,
   NotFoundException,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { Product } from './product.entity';
 import { ProductCategory } from '../product-category/product-category.entity';
@@ -85,18 +86,30 @@ export class ProductService {
       this.productRepository,
     );
 
-    return this.productRepository.update(
-      {
-        prod_name: body.prod_name,
-        id_product_category: body.id_product_category,
-        description: body.description,
-        image: body.image,
-        unit_price: body.unit_price,
-        is_available: body.is_available,
-        available_quantity: body.available_quantity,
-      },
-      { where: { id_product: id_product } },
-    );
+    return this.productRepository
+      .update(
+        {
+          prod_name: body.prod_name,
+          id_product_category: body.id_product_category,
+          description: body.description,
+          image: body.image,
+          unit_price: body.unit_price,
+          is_available: body.is_available,
+          available_quantity: body.available_quantity,
+        },
+        { where: { id_product: id_product } },
+      )
+      .then((res) => {
+        if (res[0] == 1) {
+          return { result: 'Query executed successfully' };
+        } else {
+          throw new BadRequestException('Something bad happened', {
+            cause: new Error(),
+            description:
+              'Query error, please check your data. Probably, there is no difference between your data and the data that already exists.',
+          });
+        }
+      });
   }
 
   async deleteProductById(id_product, headers): Promise<any> {
@@ -116,9 +129,20 @@ export class ProductService {
       this.productRepository,
     );
 
-    return this.productRepository.destroy({
-      where: { id_product: id_product },
-    });
+    return this.productRepository
+      .destroy({
+        where: { id_product: id_product },
+      })
+      .then((res) => {
+        if (res == 1) {
+          return { result: 'Query executed successfully' };
+        } else {
+          throw new BadRequestException('Something bad happened', {
+            cause: new Error(),
+            description: 'Query error, please check your data.',
+          });
+        }
+      });
   }
 
   async updateQuantityProduct(id_product, new_quantity): Promise<any> {

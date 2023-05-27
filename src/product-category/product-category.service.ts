@@ -3,6 +3,7 @@ import {
   Inject,
   NotFoundException,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { ProductCategory } from './product-category.entity';
 import { AuthService } from '../auth/auth.service';
@@ -70,12 +71,24 @@ export class ProductCategoryService {
       this.productCategoryRepository,
     );
 
-    return this.productCategoryRepository.update(
-      {
-        category: body.category,
-      },
-      { where: { id_product_category: id_product_category } },
-    );
+    return this.productCategoryRepository
+      .update(
+        {
+          category: body.category,
+        },
+        { where: { id_product_category: id_product_category } },
+      )
+      .then((res) => {
+        if (res[0] == 1) {
+          return { result: 'Query executed successfully' };
+        } else {
+          throw new BadRequestException('Something bad happened', {
+            cause: new Error(),
+            description:
+              'Query error, please check your data. Probably, there is no difference between your data and the data that already exists.',
+          });
+        }
+      });
   }
 
   async deleteProductCategoryById(id_product_category, headers): Promise<any> {
@@ -95,9 +108,20 @@ export class ProductCategoryService {
       this.productCategoryRepository,
     );
 
-    return this.productCategoryRepository.destroy({
-      where: { id_product_category: id_product_category },
-    });
+    return this.productCategoryRepository
+      .destroy({
+        where: { id_product_category: id_product_category },
+      })
+      .then((res) => {
+        if (res == 1) {
+          return { result: 'Query executed successfully' };
+        } else {
+          throw new BadRequestException('Something bad happened', {
+            cause: new Error(),
+            description: 'Query error, please check your data.',
+          });
+        }
+      });
   }
 }
 

@@ -4,6 +4,7 @@ import {
   Model,
   ForeignKey,
   BelongsTo,
+  DataType,
 } from 'sequelize-typescript';
 import { Order } from '../order/order.entity';
 import { Product } from '../product/product.entity';
@@ -32,7 +33,7 @@ export class OrderDetail extends Model {
   @BelongsTo(() => Product)
   product: Product;
 
-  @Column({ allowNull: false })
+  @Column({ type: DataType.FLOAT, allowNull: false })
   price: number;
 
   @Column({ allowNull: false })

@@ -10,7 +10,7 @@ import {
 import { UserCustomer } from '../user-customer/user-customer.entity';
 import { OrderDetail } from '../order-detail/order-detail.entity';
 import { UserWorker } from '../user-worker/user-worker.entity';
-import { OrderStatus } from 'src/order-status/order-status.entity';
+import { OrderStatus } from '../order-status/order-status.entity';
 
 @Table({ tableName: 'order', updatedAt: false, createdAt: false })
 export class Order extends Model {
@@ -61,7 +61,7 @@ export class Order extends Model {
   @Column({ type: DataType.DATE, allowNull: true })
   delivery_date: number;
 
-  @Column({ allowNull: false })
+  @Column({ type: DataType.FLOAT, allowNull: false })
   price: number;
 
   //Relationships

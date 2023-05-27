@@ -40,16 +40,13 @@ export class UserLoginController {
 
   @Post('/login')
   async login(@Req() req, @Headers() headers, @Res() res) {
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,6) != "Basic ")
-    {
+    if (headers.authorization.substring(0, 6) != 'Basic ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
     type User = {
@@ -66,41 +63,33 @@ export class UserLoginController {
         data.split(':')[0],
         data.split(':')[1],
       );
-      console.log({user})
-      if(user != undefined)
-      {
+      console.log({ user });
+      if (user != undefined) {
         const userDetail = await this.userCustomerService.findUserDetail(user);
         //console.log({ user });
         res.status(200).json({
           result: await this.authService.generateUserToken(userDetail),
         });
-      }
-      else
-      {
+      } else {
         res.status(403).json({ result: 'user not found' });
-        return
+        return;
       }
-    } catch (err) 
-    {
-      console.log( err );
+    } catch (err) {
+      console.log(err);
       res.status(500).json({ result: 'internal server error' });
-      return
-
+      return;
     }
   }
 
   @Put('/updateCredentials')
   async updateCredentials(@Body() body, @Headers() headers, @Res() res) {
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
     type decodedToken = {
@@ -126,29 +115,26 @@ export class UserLoginController {
           newPassword,
         );
         res.status(200).json({ result: 'succesful request' });
-        return
+        return;
       } catch (err) {
         res.status(500).json({ result: 'internal server error' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Delete('/delete')
   async deleteUser(@Req() req, @Headers() headers, @Res() res) {
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
     console.log({ req });
@@ -157,11 +143,9 @@ export class UserLoginController {
       exp?: number;
       iat?: number;
     };
-    const token = headers.authorization.split("Bearer ")[1]
+    const token = headers.authorization.split('Bearer ')[1];
     console.log('============== DELETE REQUEST =================');
-    const isTokenValid = await this.authService.validateToken(
-      token,
-    );
+    const isTokenValid = await this.authService.validateToken(token);
     console.log({ isTokenValid });
     if (isTokenValid) {
       const decodedInfo: decodedToken =
@@ -172,19 +156,19 @@ export class UserLoginController {
         const result = await this.userLoginService.deleteUser(user);
         if (result == 1) {
           res.status(200).json({ result: 'delete successful' });
-          return
+          return;
         } else {
           res.status(403).json({ result: 'user not found' });
-          return
+          return;
         }
       } catch (err) {
         console.log({ err });
         res.status(500).json({ result: 'internal server error' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 }
@@ -199,11 +183,9 @@ export class UserRegisterController {
 
   @Post('/registerCustomer')
   async registerUser(@Req() req, @Body() body, @Res() res) {
-
-
-    if(
-      body.first_name == undefined || 
-      body.last_name == undefined || 
+    if (
+      body.first_name == undefined ||
+      body.last_name == undefined ||
       body.birth_date == undefined ||
       body.phone_number == undefined ||
       body.country == undefined ||
@@ -211,10 +193,9 @@ export class UserRegisterController {
       body.city == undefined ||
       body.zip_code == undefined ||
       body.address == undefined
-    )
-    {
+    ) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
 
     const newUser = req.body;
@@ -263,10 +244,10 @@ export class UserRegisterController {
           );
           console.log({ newCreatedUserLogin });
           res.status(201).json({ result: 'user created successufuly' });
-          return
+          return;
         } catch (err) {
           res.status(500).json({ result: 'internal server error' });
-          return
+          return;
         }
       } else {
         if (userLoginData.is_active == 1) {
@@ -274,7 +255,7 @@ export class UserRegisterController {
           res
             .status(409)
             .json({ result: 'email or phonenumber already in use' });
-            return
+          return;
         } else {
           console.log('USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA');
           try {
@@ -283,7 +264,7 @@ export class UserRegisterController {
             );
             console.log({ newCreatedUserLogin });
             res.status(201).json({ result: 'user created successufuly' });
-            return
+            return;
           } catch (err) {
             console.log(
               '================================ ERRORE  ===============================',
@@ -295,14 +276,14 @@ export class UserRegisterController {
                   userLoginEntity.email,
                 );
                 res.status(201).json({ result: 'user created successufuly' });
-                return
+                return;
               } catch (err) {
                 res.status(500).json({ result: 'internal server error' });
-                return
+                return;
               }
             } else {
               res.status(500).json({ result: 'internal server error' });
-              return
+              return;
             }
           }
         }
@@ -327,21 +308,20 @@ export class UserRegisterController {
           console.log({ newCreatedUserLogin });
           res.status(201).json({ result: 'user created successufuly' });
         } catch (err) {
-          if ((err = 'ER_DUP_ENTRY'))
-          {
-            res.status(422).json({ result: 'duplicate entity, verify the email is correct' });
-            return
-          }
-          else
-          {
+          if ((err = 'ER_DUP_ENTRY')) {
+            res.status(422).json({
+              result: 'duplicate entity, verify the email is correct',
+            });
+            return;
+          } else {
             res.status(500).json({ result: 'internal server error' });
-            return
-          } 
+            return;
+          }
         }
       } else {
         console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ");
         res.status(409).json({ result: 'email or phonenumber already in use' });
-        return
+        return;
       }
     }
   }

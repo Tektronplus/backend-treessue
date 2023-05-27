@@ -36,18 +36,16 @@ export class BackOfficeController {
 
   @Get('getAllRole')
   async getRoleList(@Headers() headers, @Res() res) {
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     //console.log({isTokenValid})
@@ -56,37 +54,35 @@ export class BackOfficeController {
       console.log({ dechiperAuth });
       if (dechiperAuth.userDetail.role == 'admin') {
         try {
-          let roleList = await this.workerRoleService.getListRole();
+          const roleList = await this.workerRoleService.getListRole();
           res.status(200).json(roleList);
-          return
+          return;
         } catch (err) {
           res.status(500).json({ result: 'internal server error' });
-          return
+          return;
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Get('/getAllCustomer')
   async getAllCustomer(@Headers() headers, @Res() res) {
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
@@ -96,38 +92,35 @@ export class BackOfficeController {
         dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
-          let allCustomerList = await this.userLoginService.findAllCustomer();
+          const allCustomerList = await this.userLoginService.findAllCustomer();
           console.log({ allCustomerList });
           res.status(200).json(allCustomerList);
         } catch (err) {
           res.status(500).json({ result: 'internal server error' });
-          return
+          return;
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Get('/getAllWorker')
   async getAllWorker(@Headers() headers, @Res() res) {
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
@@ -137,44 +130,42 @@ export class BackOfficeController {
         dechiperAuth.userDetail.role != 'ufficio'
       ) {
         try {
-          let allWorkerList = await this.userWorkerLoginService.findAllWoker();
+          const allWorkerList =
+            await this.userWorkerLoginService.findAllWoker();
           //console.log({allWorkerList})
-          for (let elm of allWorkerList) {
+          for (const elm of allWorkerList) {
             elm.role = await this.workerRoleService.findRoleById(elm.role);
             elm.role = elm.role.role;
           }
           console.log({ allWorkerList });
           res.status(200).json(allWorkerList);
-          return
+          return;
         } catch (err) {
           res.status(500).json({ result: 'internal server error' });
-          return
+          return;
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Get('/customerDetail/:id')
   async getCustomerDetail(@Param() param, @Headers() headers, @Res() res) {
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
@@ -191,39 +182,36 @@ export class BackOfficeController {
           const detail = await this.userCustomerService.findUserDetail(
             foundUser.dataValues,
           );
-          detail.id = id
+          detail.id = id;
           console.log({ detail });
           Object.assign(detail, { is_active: foundUser.dataValues.is_active });
           res.status(200).json(detail);
-          return
+          return;
         } catch (err) {
           res.status(500).json({ result: 'internal server error' });
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Get('/workerDetail/:id')
   async getWorkerDetail(@Param() param, @Headers() headers, @Res() res) {
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
@@ -254,43 +242,41 @@ export class BackOfficeController {
             role: role.role,
           };
           res.status(200).json(resultDetail);
-          return
+          return;
         } catch (err) {
           res.status(500).json({ result: 'internal server error' });
-          return
+          return;
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Post('/registerCustomer')
-  async registerUser(@Req() req, @Headers() headers, @Res() res) 
-  {
-    if(headers.authorization == undefined)
-    {
+  async registerUser(@Req() req, @Headers() headers, @Res() res) {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
-    if (isTokenValid) 
-    {
+    if (isTokenValid) {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
-      if (dechiperAuth.userDetail.role != 'admin' || dechiperAuth.userDetail.role != 'ufficio')
-      {
+      if (
+        dechiperAuth.userDetail.role != 'admin' ||
+        dechiperAuth.userDetail.role != 'ufficio'
+      ) {
         const newUser = req.body;
         console.log({ newUser });
         const saltOrRounds = 10;
@@ -332,18 +318,15 @@ export class BackOfficeController {
             console.log("USER CUSTOMER ESISTE, NON ESISTE L'ENTITA LOGIN");
             console.log({ userLoginEntity });
             try {
-              const newCreatedUserLogin = await this.userLoginService.createUser(
-                userLoginEntity,
-              );
+              const newCreatedUserLogin =
+                await this.userLoginService.createUser(userLoginEntity);
               console.log({ newCreatedUserLogin });
               res.status(201).json({ result: 'user created successufuly' });
-              return
-            } 
-            catch (err) 
-            {
+              return;
+            } catch (err) {
               console.log({ err });
               res.status(500).json({ result: 'internal server error' });
-              return
+              return;
             }
           } else {
             if (userLoginData.is_active == 1) {
@@ -351,35 +334,36 @@ export class BackOfficeController {
               res
                 .status(409)
                 .json({ result: 'email or phonenumber already in use' });
-                return
+              return;
             } else {
-              console.log('USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA');
+              console.log(
+                'USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA',
+              );
               try {
-                const newCreatedUserLogin = await this.userLoginService.createUser(
-                  userLoginEntity,
-                );
+                const newCreatedUserLogin =
+                  await this.userLoginService.createUser(userLoginEntity);
                 console.log({ newCreatedUserLogin });
                 res.status(201).json({ result: 'user created successufuly' });
-                return
+                return;
               } catch (err) {
-                console.log(
-                );
+                console.log();
                 console.log(err);
-                if ((err = 'ER_DUP_ENTRY')) 
-                {
+                if ((err = 'ER_DUP_ENTRY')) {
                   try {
                     await this.userLoginService.updateUserStatus(
                       userLoginEntity.email,
                     );
-                    res.status(201).json({ result: 'user created successufuly' });
-                    return
+                    res
+                      .status(201)
+                      .json({ result: 'user created successufuly' });
+                    return;
                   } catch (err) {
                     res.status(500).json({ result: 'internal server error' });
-                    return
+                    return;
                   }
                 } else {
                   res.status(500).json({ result: 'internal server error' });
-                  return
+                  return;
                 }
               }
             }
@@ -395,54 +379,49 @@ export class BackOfficeController {
             const newCreatedUserCustomer =
               await this.userCustomerService.createUser(userCustomerEntity);
             console.log({ newCreatedUserCustomer });
-            userLoginEntity.userCustomer = newCreatedUserCustomer.id_user_customer;
+            userLoginEntity.userCustomer =
+              newCreatedUserCustomer.id_user_customer;
             console.log({ userLoginEntity });
             try {
-              const newCreatedUserLogin = await this.userLoginService.createUser(
-                userLoginEntity,
-              );
+              const newCreatedUserLogin =
+                await this.userLoginService.createUser(userLoginEntity);
               console.log({ newCreatedUserLogin });
               res.status(201).json({ result: 'user created successufuly' });
             } catch (err) {
               console.log({ err });
-              res.status(500).json({result:"internal server error"})
-              return
+              res.status(500).json({ result: 'internal server error' });
+              return;
             }
           } else {
             console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ");
-            res.status(409).json({ result: 'email or phonenumber already in use' });
-            return
+            res
+              .status(409)
+              .json({ result: 'email or phonenumber already in use' });
+            return;
           }
         }
-      }
-      else
-      {
+      } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
-    }
-    else
-    {
+    } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Post('/createWorker')
   async createWorker(@Req() req, @Res() res, @Headers() headers) {
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
@@ -459,7 +438,7 @@ export class BackOfficeController {
           password: hash,
           is_active: true,
         };
-        let role = await this.workerRoleService.findRoleId(newUser.role);
+        const role = await this.workerRoleService.findRoleId(newUser.role);
         console.log({ role });
         const userWorkerEntity = {
           first_name: newUser.first_name,
@@ -473,7 +452,7 @@ export class BackOfficeController {
         console.log({ userWorkerData });
         if (userWorkerData != null) {
           //USER WORKER ESISTE
-          let userWorkerLoginData =
+          const userWorkerLoginData =
             await this.userWorkerLoginService.verifyUserWorker(
               userWorkerLoginEntity,
             );
@@ -490,10 +469,10 @@ export class BackOfficeController {
                 );
               console.log({ newCreatedUserWorkerLogin });
               res.status(201).json({ result: 'user created successufuly' });
-              return
+              return;
             } catch (err) {
               console.log({ err });
-              res.status(500).json({result:"internal server error"})
+              res.status(500).json({ result: 'internal server error' });
             }
           } else {
             if (userWorkerLoginData.is_active == 1) {
@@ -501,7 +480,7 @@ export class BackOfficeController {
               res
                 .status(409)
                 .json({ result: 'email already in use for another user' });
-                return
+              return;
             } else {
               console.log('USER WORKER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA');
               try {
@@ -511,7 +490,7 @@ export class BackOfficeController {
                   );
                 console.log({ newCreatedUserWorkerLogin });
                 res.status(201).json({ result: 'user created successufuly' });
-                return
+                return;
               } catch (err) {
                 console.log(err);
                 if ((err = 'ER_DUP_ENTRY')) {
@@ -522,28 +501,28 @@ export class BackOfficeController {
                     res
                       .status(201)
                       .json({ result: 'user created successufuly' });
-                      return
+                    return;
                   } catch (err) {
                     res.status(500).json({ result: 'internal server error' });
-                    return
+                    return;
                   }
                 } else {
                   res.status(500).json({ result: 'internal server error' });
-                  return
+                  return;
                 }
               }
             }
           }
         } else {
           //NON ESISTE ENTITA USER WORKER
-          let userWorkerLoginData =
+          const userWorkerLoginData =
             await this.userWorkerLoginService.verifyUserWorker(
               userWorkerLoginEntity,
             );
           if (userWorkerLoginData == null) {
             console.log("USER WORKER NON ESISTE, NON ESISTE L'ENTITA LOGIN");
             //NON ESISTE ENITITA USER LOGIN
-            let newCreateduserWorker =
+            const newCreateduserWorker =
               await this.userWorkerService.createUserWorker(userWorkerEntity);
             console.log({ newCreateduserWorker });
             userWorkerLoginEntity.id_user_worker =
@@ -556,99 +535,92 @@ export class BackOfficeController {
                 );
               console.log({ newCreatedUserWorkerLogin });
               res.status(201).json({ result: 'user created successufuly' });
-              return
+              return;
             } catch (err) {
-              if ((err = 'ER_DUP_ENTRY'))
-              {
-                res.status(422).json({ result: 'duplicate entity, verify the email is correct' });
-                return
-              }
-              else
-              {
+              if ((err = 'ER_DUP_ENTRY')) {
+                res.status(422).json({
+                  result: 'duplicate entity, verify the email is correct',
+                });
+                return;
+              } else {
                 res.status(500).json({ result: 'internal server error' });
-                return
-              } 
+                return;
+              }
             }
           } else {
             console.log("USER WORKER NON ESISTE, ESISTE L'ENTITA LOGIN ");
             res
               .status(409)
               .json({ result: 'email already in use for another user' });
-              return
+            return;
           }
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Post('newRole')
   async addRole(@Headers() headers, @Body() body, @Res() res) {
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       //console.log({dechiperAuth})
       if (dechiperAuth.userDetail.role == 'admin') {
-        let newRole = body.role;
-        let existingRole = await this.workerRoleService.findRoleId(newRole);
+        const newRole = body.role;
+        const existingRole = await this.workerRoleService.findRoleId(newRole);
         console.log({ existingRole });
         if (existingRole == undefined) {
           try {
             await this.workerRoleService.createRole(body.role);
             res.status(201).json({ result: 'role created successufuly' });
-            return
+            return;
           } catch (err) {
             res.status(500).json({ result: 'internal server error' });
-            return
+            return;
           }
         } else {
           res.status(409).json({ result: 'role exist already' });
-          return
+          return;
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Delete('/deleteWorker/:id')
   async deleteWorker(@Param() param, @Headers() headers, @Res() res) {
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     console.log({ isTokenValid });
@@ -656,19 +628,17 @@ export class BackOfficeController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       //console.log({dechiperAuth})
       if (dechiperAuth.userDetail.role == 'admin') {
-        let iduser = param.id;
+        const iduser = param.id;
         //console.log("user in controller: ",{user})
         console.log({ iduser });
         try {
           const result = await this.userWorkerLoginService.deleteWorker(iduser);
           if (result == 1) {
             res.status(200).json({ result: 'delete successful' });
-            return
-          } 
-          else 
-          {
+            return;
+          } else {
             res.status(404).json({ result: 'user not found' });
-            return
+            return;
           }
         } catch (err) {
           console.log({ err });
@@ -676,43 +646,50 @@ export class BackOfficeController {
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Put('/modifyUserCustomerDetail/:id')
-  async modifyUserInfo(@Headers() headers, @Body() body, @Param() param, @Res() res) {
+  async modifyUserInfo(
+    @Headers() headers,
+    @Body() body,
+    @Param() param,
+    @Res() res,
+  ) {
     console.log({ body }, { headers });
 
-
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
       const decodedInfo = await this.authService.dechiperUserToken(token);
       console.log({ decodedInfo });
-      if (decodedInfo.userDetail.role == 'ufficio' || decodedInfo.userDetail.role == "admin") {
-        const userLoginData = await this.userLoginService.findUserById(param.id)
+      if (
+        decodedInfo.userDetail.role == 'ufficio' ||
+        decodedInfo.userDetail.role == 'admin'
+      ) {
+        const userLoginData = await this.userLoginService.findUserById(
+          param.id,
+        );
         const existingRecord = await this.userCustomerService.findOneById(
           userLoginData.dataValues.id_user_customer,
         );
         console.log({ existingRecord });
-        let existingValue = {
+        const existingValue = {
           id: existingRecord.dataValues.id_user_customer,
           first_name: existingRecord.dataValues.first_name,
           last_name: existingRecord.dataValues.last_name,
@@ -723,86 +700,79 @@ export class BackOfficeController {
           city: existingRecord.dataValues.city,
           zip_code: existingRecord.dataValues.zip_code,
           address: existingRecord.dataValues.address,
-        }; 
+        };
         try {
-          let result = await this.userCustomerService.updateDetail(existingValue, body);
+          const result = await this.userCustomerService.updateDetail(
+            existingValue,
+            body,
+          );
           res.status(200).json({ result: 'successful' });
-          return
+          return;
         } catch (err) {
-          if ((err = 'ER_DUP_ENTRY'))
-          {
-            res.status(422).json({ result: 'duplicate entity, verify one or more of your information are correct' });
-            return
-          }
-          else
-          {
+          if ((err = 'ER_DUP_ENTRY')) {
+            res.status(422).json({
+              result:
+                'duplicate entity, verify one or more of your information are correct',
+            });
+            return;
+          } else {
             res.status(500).json({ result: 'internal server error' });
-            return
-          } 
+            return;
+          }
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
   @Put('/modifyUserWorkerIsActive/:id')
-  async reactivateUser(@Param() Param, @Headers() headers, @Res() res) 
-  {
+  async reactivateUser(@Param() Param, @Headers() headers, @Res() res) {
     console.log({ headers });
 
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split("Bearer ")[1]
-    console.log({token})
+    const token = headers.authorization.split('Bearer ')[1];
+    console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
-    if (isTokenValid) 
-    {
+    if (isTokenValid) {
       const decodedInfo = await this.authService.dechiperUserToken(token);
       console.log({ decodedInfo });
-      if(decodedInfo.userDetail.role == "admin")
-      {
+      if (decodedInfo.userDetail.role == 'admin') {
+        const foundWorkerLoginData =
+          await this.userWorkerLoginService.findUserById(Param.id);
 
-        const foundWorkerLoginData = await this.userWorkerLoginService.findUserById(Param.id)
+        console.log({ foundWorkerLoginData });
 
-        console.log({foundWorkerLoginData})
-
-        try 
-        {
-          await this.userWorkerLoginService.updateUserStatus(foundWorkerLoginData.email)
+        try {
+          await this.userWorkerLoginService.updateUserStatus(
+            foundWorkerLoginData.email,
+          );
           res.status(200).json({ result: 'successful' });
-          return
-        } 
-        catch (err) 
-        {
-          console.log({err})
+          return;
+        } catch (err) {
+          console.log({ err });
           res.status(500).json({ result: 'internal server error' });
-          return
+          return;
         }
-      }
-      else
-      { 
+      } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
-    } 
-    else 
-    {
+    } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 
@@ -815,18 +785,16 @@ export class BackOfficeController {
   ) {
     console.log({ body }, { headers });
 
-    if(headers.authorization == undefined)
-    {
+    if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
-      return
+      return;
     }
-    if(headers.authorization.substring(0,7) != "Bearer ")
-    {
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
       res.status(401).json({ result: 'not authorized' });
-      return
+      return;
     }
 
-    let token = headers.authorization.split('Bearer ')[1];
+    const token = headers.authorization.split('Bearer ')[1];
     console.log({ token });
     const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
@@ -856,19 +824,19 @@ export class BackOfficeController {
             updatedUserWorkerDetail,
           );
           res.status(200).json({ result: 'successful' });
-          return
+          return;
         } catch (err) {
           console.log({ err });
           res.status(500).json({ result: 'internal server error' });
-          return
+          return;
         }
       } else {
         res.status(403).json({ result: 'not authorized' });
-        return
+        return;
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
-      return
+      return;
     }
   }
 }

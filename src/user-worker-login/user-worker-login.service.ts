@@ -73,12 +73,12 @@ export class UserWorkerLoginService {
     //console.log({ usersList });
     const userInformation = await usersList.map((data) => {
       //console.log({ data });
-      let userDetail = {
+      const userDetail = {
         email: data.email,
         id: data.id_user_login_worker,
         first_name: data.user_worker.first_name,
         last_name: data.user_worker.last_name,
-        role:data.user_worker.id_user_worker_role,
+        role: data.user_worker.id_user_worker_role,
         is_active: data.is_active,
       };
       return userDetail;
