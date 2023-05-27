@@ -74,16 +74,27 @@ export class UserCustomerController {
         await this.authService.dechiperUserToken(token);
       console.log({ decodedInfo });
       try {
-        await this.userCustomerService.updateDetail(
+        let result = await this.userCustomerService.updateDetail(
           decodedInfo.userDetail,
           body,
         );
+        console.log({result})
         res.status(200).json({ result: 'successful' });
       } catch (err) {
-        res.status(500).json({ result: 'internal server error' });
+        if ((err = 'ER_DUP_ENTRY'))
+        {
+          res.status(422).json({ result: 'duplicate entity, verify one or more of your information are correct' });
+          return
+        }
+        else
+        {
+          res.status(500).json({ result: 'internal server error' });
+          return
+        } 
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
+      return
     }
   }
 }

@@ -116,14 +116,15 @@ export class UserLoginController {
       exp?: number;
       iat?: number;
     };
+    const token = headers.authorization.split("Bearer ")[1]
     console.log('============== DELETE REQUEST =================');
     const isTokenValid = await this.authService.validateToken(
-      headers.authorization,
+      token,
     );
     console.log({ isTokenValid });
     if (isTokenValid) {
       const decodedInfo: decodedToken =
-        await this.authService.dechiperUserToken(headers.authorization);
+        await this.authService.dechiperUserToken(token);
       const user = decodedInfo.userDetail;
       //console.log("user in controller: ",{user})
       try {
@@ -225,7 +226,6 @@ export class UserRegisterController {
             );
             console.log(err);
             if ((err = 'ER_DUP_ENTRY')) {
-              console.log('ciao');
               try {
                 await this.userLoginService.updateUserStatus(
                   userLoginEntity.email,
@@ -260,10 +260,16 @@ export class UserRegisterController {
           console.log({ newCreatedUserLogin });
           res.status(201).json({ result: 'user created successufuly' });
         } catch (err) {
-          console.log(
-            '================================ ERRORE  ===============================',
-          );
-          console.log({ err });
+          if ((err = 'ER_DUP_ENTRY'))
+          {
+            res.status(422).json({ result: 'duplicate entity, verify the email is correct' });
+            return
+          }
+          else
+          {
+            res.status(500).json({ result: 'internal server error' });
+            return
+          } 
         }
       } else {
         console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ");

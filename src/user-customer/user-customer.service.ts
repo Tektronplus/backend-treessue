@@ -52,7 +52,8 @@ export class UserCustomerService {
       console.log({ newUserCustomer });
       return newUserCustomer;
     } catch (err) {
-      throw new Error(err);
+      console.log(err.parent.code);
+      throw new Error(err.parent.code);
     }
   }
 
@@ -72,7 +73,7 @@ export class UserCustomerService {
       country: usersDetail.dataValues.country,
       province: usersDetail.dataValues.province,
       city: usersDetail.dataValues.city,
-      zipCode: usersDetail.dataValues.zip_code,
+      zip_code: usersDetail.dataValues.zip_code,
       address: usersDetail.dataValues.address,
     };
     console.log({ userDetailData });
@@ -175,7 +176,8 @@ export class UserCustomerService {
     } 
     catch (err) 
     {
-      throw new Error(err);
+      console.log(err.parent.code);
+      throw new Error(err.parent.code);
     }
   }
 }
