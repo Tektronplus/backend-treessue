@@ -8,6 +8,7 @@ import {
   Put,
   Body,
   Post,
+  Param,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CartDetailService } from '../cart-detail/cart-detail.service';
@@ -47,6 +48,31 @@ export class OrderController {
     return this.orderService.findAll();
   }
 
+  @Get('/all')
+  async getCustomerOrdere(@Param() param, @Headers() headers,@Res() res): Promise<Array<any>> {
+    if(headers.authorization == undefined)
+    {
+      res.status(404).json({ result: 'bad request' });
+      return
+    }
+    if(headers.authorization.substring(0,7) != "Bearer ")
+    {
+      res.status(401).json({ result: 'not authorized' });
+      return
+    }
+
+    const isTokenValid = await this.authservice.validateToken(headers.authorization.split('Bearer ')[1]);
+    if(isTokenValid)
+    {
+      const userDetail = await this.authservice.dechiperUserToken(headers.authorization.split('Bearer ')[1]);
+      console.log({userDetail})
+    }
+    else
+    {
+      res.status(500).json({ result: 'internal server error' });
+    }
+  }
+
   @Post('/createOrder')
   async createNewOrder(
     @Headers() headers,
@@ -64,7 +90,7 @@ export class OrderController {
       return
     }
 
-    const isTokenValid = await this.authservice.dechiperUserToken(headers.authorization.split('Bearer ')[1]);
+    const isTokenValid = await this.authservice.validateToken(headers.authorization.split('Bearer ')[1]);
     if(isTokenValid)
     {
       const customerCart = await this.cartDetailService.findCartDetailByUserCustomer(headers);
@@ -72,7 +98,7 @@ export class OrderController {
       if (customerCart.length !== 0) 
       {   
         const userDetail = await this.authservice.dechiperUserToken(headers.authorization.split('Bearer ')[1]);
-        console.log({ customerCart });
+        //console.log({ customerCart });
         //console.log({ userDetail });
         for(let elm of customerCart)
         {

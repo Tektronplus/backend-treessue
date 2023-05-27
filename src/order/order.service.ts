@@ -23,6 +23,18 @@ export class OrderService {
       throw new Error(err)
     }
   }
+
+  async getCustomerOrder(id)
+  {
+    try{
+      let customerOrder = await this.OrderRepository.findAll({where:{id_user_customer:id}})
+      return customerOrder
+    }
+    catch(err)
+    {
+      throw new Error(err)
+    }
+  }
 }
 
 
