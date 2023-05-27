@@ -120,7 +120,7 @@ import {
     }
   
     @Post('/registerCustomer')
-    async registerUser(@Req() req, @Headers() headers, @Res() res) 
+    async registerUser(@Req() req, @Headers() headers, @Body() body, @Res() res) 
     {
       if(headers.authorization == undefined)
       {
@@ -130,6 +130,22 @@ import {
       if(headers.authorization.substring(0,7) != "Bearer ")
       {
         res.status(401).json({ result: 'not authorized' });
+        return
+      }
+
+      if(
+        body.first_name == undefined || 
+        body.last_name == undefined || 
+        body.birth_date == undefined ||
+        body.phone_number == undefined ||
+        body.country == undefined ||
+        body.province == undefined ||
+        body.city == undefined ||
+        body.zip_code == undefined ||
+        body.address == undefined
+      )
+      {
+        res.status(404).json({ result: 'bad request' });
         return
       }
   

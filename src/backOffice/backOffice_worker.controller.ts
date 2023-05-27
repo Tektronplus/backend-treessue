@@ -139,7 +139,7 @@ import {
     }
   
     @Post('/createWorker')
-    async createWorker(@Req() req, @Res() res, @Headers() headers) {
+    async createWorker(@Req() req, @Res() res, @Body() body, @Headers() headers) {
   
       if(headers.authorization == undefined)
       {
@@ -149,6 +149,16 @@ import {
       if(headers.authorization.substring(0,7) != "Bearer ")
       {
         res.status(401).json({ result: 'not authorized' });
+        return
+      }
+
+      if(
+        body.first_name == undefined || 
+        body.last_name == undefined  ||
+        body.role == undefined
+      )
+      {
+        res.status(404).json({ result: 'bad request' });
         return
       }
   
@@ -348,7 +358,7 @@ import {
     }
   
     @Put('/modifyUserWorkerIsActive/:id')
-    async reactivateUser(@Param() Param, @Headers() headers, @Res() res) 
+    async reactivateUser(@Param() Param, @Body() body, @Headers() headers, @Res() res) 
     {
       console.log({ headers });
   
@@ -420,6 +430,17 @@ import {
       if(headers.authorization.substring(0,7) != "Bearer ")
       {
         res.status(401).json({ result: 'not authorized' });
+        return
+      }
+
+      
+      if(
+        body.first_name == undefined || 
+        body.last_name == undefined  ||
+        body.role == undefined
+      )
+      {
+        res.status(404).json({ result: 'bad request' });
         return
       }
   

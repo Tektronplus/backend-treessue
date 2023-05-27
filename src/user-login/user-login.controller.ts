@@ -198,7 +198,25 @@ export class UserRegisterController {
   ) {}
 
   @Post('/registerCustomer')
-  async registerUser(@Req() req, @Res() res) {
+  async registerUser(@Req() req, @Body() body, @Res() res) {
+
+
+    if(
+      body.first_name == undefined || 
+      body.last_name == undefined || 
+      body.birth_date == undefined ||
+      body.phone_number == undefined ||
+      body.country == undefined ||
+      body.province == undefined ||
+      body.city == undefined ||
+      body.zip_code == undefined ||
+      body.address == undefined
+    )
+    {
+      res.status(404).json({ result: 'bad request' });
+      return
+    }
+
     const newUser = req.body;
     console.log({ newUser });
     const saltOrRounds = 10;
@@ -247,10 +265,8 @@ export class UserRegisterController {
           res.status(201).json({ result: 'user created successufuly' });
           return
         } catch (err) {
-          console.log(
-            '================================ ERRORE  ===============================',
-          );
-          console.log({ err });
+          res.status(500).json({ result: 'internal server error' });
+          return
         }
       } else {
         if (userLoginData.is_active == 1) {

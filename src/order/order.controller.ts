@@ -47,11 +47,22 @@ export class OrderController {
     return this.orderService.findAll();
   }
 
-  @Post('/create-order')
+  @Post('/createOrder')
   async createNewOrder(
     @Headers() headers,
     @Res() res,
   ): Promise<any> {
+
+    if(headers.authorization == undefined)
+    {
+      res.status(404).json({ result: 'bad request' });
+      return
+    }
+    if(headers.authorization.substring(0,7) != "Bearer ")
+    {
+      res.status(401).json({ result: 'not authorized' });
+      return
+    }
 
     const isTokenValid = await this.authservice.dechiperUserToken(headers.authorization.split('Bearer ')[1]);
     if(isTokenValid)
