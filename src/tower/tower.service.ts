@@ -32,6 +32,29 @@ export class TowerService {
     return this.towerRepository.findAll();
   }
 
+  async findTowerById(id_tower, headers): Promise<any> {
+    // Check if the tower exists
+    await this.customExceptions.checkFindById(id_tower, this.towerRepository);
+
+    const towerInfo = await this.towerRepository.findOne({
+      where: { id_tower: id_tower },
+    });
+
+    if (!towerInfo.is_public) {
+      //Check authentication
+      const userInfo = await this.customExceptions.checkAuthentication(headers);
+      console.log(userInfo);
+
+      //Check authorization
+      this.customExceptions.checkAuthorization(userInfo.role, [
+        'admin',
+        'torrista',
+      ]);
+    }
+
+    return towerInfo;
+  }
+
   async findAllTowersByType(is_public, headers): Promise<Tower[]> {
     if (!is_public) {
       //Check authentication

@@ -44,6 +44,11 @@ export class TowerController {
     return this.towerService.findAllTowersByType(false, headers); // private tower = false
   }
 
+  @Get('/id/:idTower')
+  async getTowerById(@Headers() headers, @Param() param): Promise<any> {
+    return this.towerService.findTowerById(param.idTower, headers);
+  }
+
   //--- UPDATE ---
   @Put('/update/:idTower')
   async updateProductCategoryById(
