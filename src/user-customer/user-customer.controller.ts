@@ -31,6 +31,18 @@ export class UserCustomerController {
 
   @Get('/getUserDetail')
   async getUserDetail(@Headers() headers, @Body() body, @Res() res) {
+
+    if(headers.authorization == undefined)
+    {
+      res.status(404).json({ result: 'bad request' });
+      return
+    }
+    if(headers.authorization.substring(0,7) != "Bearer ")
+    {
+      res.status(401).json({ result: 'not authorized' });
+      return
+    }
+
     type decodedToken = {
       userDetail?: {id?:number};
       exp?: number;
@@ -59,6 +71,18 @@ export class UserCustomerController {
 
   @Put('/modifyUserDetail')
   async modifyUserInfo(@Headers() headers, @Body() body, @Res() res) {
+
+    if(headers.authorization == undefined)
+    {
+      res.status(404).json({ result: 'bad request' });
+      return
+    }
+    if(headers.authorization.substring(0,7) != "Bearer ")
+    {
+      res.status(401).json({ result: 'not authorized' });
+      return
+    }
+
     type decodedToken = {
       userDetail?: object;
       exp?: number;

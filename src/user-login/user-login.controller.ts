@@ -40,6 +40,18 @@ export class UserLoginController {
 
   @Post('/login')
   async login(@Req() req, @Headers() headers, @Res() res) {
+
+    if(headers.authorization == undefined)
+    {
+      res.status(404).json({ result: 'bad request' });
+      return
+    }
+    if(headers.authorization.substring(0,6) != "Basic ")
+    {
+      res.status(401).json({ result: 'not authorized' });
+      return
+    }
+
     type User = {
       email?: string;
       role?: string;
@@ -66,17 +78,31 @@ export class UserLoginController {
       else
       {
         res.status(403).json({ result: 'user not found' });
+        return
       }
     } catch (err) 
     {
       console.log( err );
       res.status(500).json({ result: 'internal server error' });
+      return
 
     }
   }
 
   @Put('/updateCredentials')
   async updateCredentials(@Body() body, @Headers() headers, @Res() res) {
+
+    if(headers.authorization == undefined)
+    {
+      res.status(404).json({ result: 'bad request' });
+      return
+    }
+    if(headers.authorization.substring(0,7) != "Bearer ")
+    {
+      res.status(401).json({ result: 'not authorized' });
+      return
+    }
+
     type decodedToken = {
       userDetail?: object;
       exp?: number;
@@ -100,16 +126,31 @@ export class UserLoginController {
           newPassword,
         );
         res.status(200).json({ result: 'succesful request' });
+        return
       } catch (err) {
         res.status(500).json({ result: 'internal server error' });
+        return
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
+      return
     }
   }
 
   @Delete('/delete')
   async deleteUser(@Req() req, @Headers() headers, @Res() res) {
+
+    if(headers.authorization == undefined)
+    {
+      res.status(404).json({ result: 'bad request' });
+      return
+    }
+    if(headers.authorization.substring(0,7) != "Bearer ")
+    {
+      res.status(401).json({ result: 'not authorized' });
+      return
+    }
+
     console.log({ req });
     type decodedToken = {
       userDetail?: object;
@@ -131,15 +172,19 @@ export class UserLoginController {
         const result = await this.userLoginService.deleteUser(user);
         if (result == 1) {
           res.status(200).json({ result: 'delete successful' });
+          return
         } else {
           res.status(403).json({ result: 'user not found' });
+          return
         }
       } catch (err) {
         console.log({ err });
         res.status(500).json({ result: 'internal server error' });
+        return
       }
     } else {
       res.status(403).json({ result: 'not authorized' });
+      return
     }
   }
 }
@@ -200,6 +245,7 @@ export class UserRegisterController {
           );
           console.log({ newCreatedUserLogin });
           res.status(201).json({ result: 'user created successufuly' });
+          return
         } catch (err) {
           console.log(
             '================================ ERRORE  ===============================',
@@ -212,6 +258,7 @@ export class UserRegisterController {
           res
             .status(409)
             .json({ result: 'email or phonenumber already in use' });
+            return
         } else {
           console.log('USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA');
           try {
@@ -220,6 +267,7 @@ export class UserRegisterController {
             );
             console.log({ newCreatedUserLogin });
             res.status(201).json({ result: 'user created successufuly' });
+            return
           } catch (err) {
             console.log(
               '================================ ERRORE  ===============================',
@@ -231,11 +279,14 @@ export class UserRegisterController {
                   userLoginEntity.email,
                 );
                 res.status(201).json({ result: 'user created successufuly' });
+                return
               } catch (err) {
                 res.status(500).json({ result: 'internal server error' });
+                return
               }
             } else {
               res.status(500).json({ result: 'internal server error' });
+              return
             }
           }
         }
@@ -274,6 +325,7 @@ export class UserRegisterController {
       } else {
         console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ");
         res.status(409).json({ result: 'email or phonenumber already in use' });
+        return
       }
     }
   }

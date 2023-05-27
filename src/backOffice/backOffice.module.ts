@@ -3,6 +3,10 @@ import { BackOfficeController } from './backOffice.controller';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
 
+import { BackOfficeCustomerController } from './backOffice_customer.controller';
+import { BackOfficeWorkerController } from './backOffice_worker.controller';
+import { BackOfficRoleController } from './backOffice_role.controller';
+
 import { UserLoginModule } from '../user-login/user-login.module';
 import { UserCustomerModule } from '../user-customer/user-customer.module';
 import { UserWorkerModule } from '../user-worker/user-worker.module';
@@ -31,7 +35,7 @@ import { ProductCategoryModule } from '../product-category/product-category.modu
     UserWorkerRoleModule,
     ProductCategoryModule,
   ],
-  controllers: [BackOfficeController],
+  controllers: [BackOfficeController, BackOfficeCustomerController, BackOfficeWorkerController,BackOfficRoleController],
   providers: [],
   exports: [],
 })
