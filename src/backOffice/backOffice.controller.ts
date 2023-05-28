@@ -260,7 +260,7 @@ export class BackOfficeController {
   @Post('/registerCustomer')
   async registerUser(@Req() req, @Headers() headers, @Res() res) {
     if (headers.authorization == undefined) {
-      res.status(404).json({ result: 'bad request' });
+      res.status(400).json({ result: 'bad request at registerCustomer', headers:headers });
       return;
     }
     if (headers.authorization.substring(0, 7) != 'Bearer ') {
