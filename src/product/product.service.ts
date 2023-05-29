@@ -46,6 +46,14 @@ export class ProductService {
     return this.productRepository.findByPk(id_product);
   }
 
+  async getAllProductsIds(): Promise<any> {
+    const arrayIdProducts = await this.productRepository
+      .findAll({ attributes: ['id_product'] })
+      .then((res) => res.flatMap((prod) => prod['id_product']));
+
+    return arrayIdProducts;
+  }
+
   async createNewProduct(headers, body): Promise<any> {
     //Check authentication
     const userInfo = await this.customMethods.checkAuthentication(headers);

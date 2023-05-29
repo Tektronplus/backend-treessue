@@ -19,12 +19,17 @@ export class CartDetailController {
 
   //--- CREATE ---
   @Post('/add')
-  async getToken(@Body() body, @Headers() headers): Promise<any> {
+  async addCartDetailItem(@Body() body, @Headers() headers): Promise<any> {
     return this.cartDetailService.addItemToCart(
       headers,
       body.idProduct,
       body.quantity,
     );
+  }
+
+  @Post('/add-offline-cart')
+  async addOffileCartDetail(@Body() body, @Headers() headers): Promise<any> {
+    return this.cartDetailService.addOfflineItemsToCart(headers, body);
   }
 
   //--- READ ---
