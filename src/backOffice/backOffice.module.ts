@@ -17,6 +17,8 @@ import { CartDetailModule } from '../cart-detail/cart-detail.module';
 import { UserWorkerLoginModule } from '../user-worker-login/user-worker-login.module';
 import { UserWorkerRoleModule } from '../user-worker-role/user-worker-role.module';
 import { ProductCategoryModule } from '../product-category/product-category.module';
+import { BackOfficeOrderController } from './backOffice_order.controller';
+import { OrderStatusModule } from 'src/order-status/order-status.module';
 
 @Module({
   imports: [
@@ -33,8 +35,9 @@ import { ProductCategoryModule } from '../product-category/product-category.modu
     UserWorkerLoginModule,
     UserWorkerRoleModule,
     ProductCategoryModule,
+    OrderStatusModule
   ],
-  controllers: [BackOfficeCustomerController, BackOfficeWorkerController,BackOfficRoleController],
+  controllers: [BackOfficeCustomerController, BackOfficeWorkerController,BackOfficRoleController,BackOfficeOrderController],
   providers: [],
   exports: [],
 })

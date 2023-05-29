@@ -47,8 +47,8 @@ export class BackOfficeWorkerController {
     if (isTokenValid) {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
-        dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'ufficio'
+        dechiperAuth.userDetail.role == 'admin' ||
+        dechiperAuth.userDetail.role == 'ufficio'
       ) {
         try {
           const allWorkerList =
@@ -92,8 +92,8 @@ export class BackOfficeWorkerController {
     if (isTokenValid) {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
-        dechiperAuth.userDetail.role != 'admin' ||
-        dechiperAuth.userDetail.role != 'ufficio'
+        dechiperAuth.userDetail.role == 'admin' ||
+        dechiperAuth.userDetail.role == 'ufficio'
       ) {
         try {
           const id = param.id;

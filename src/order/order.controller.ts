@@ -46,7 +46,7 @@ export class OrderController {
   }
 
   @Get('/customerOrderList')
-  async getCustomerOrdere(
+  async getCustomerOrder(
     @Param() param,
     @Headers() headers,
     @Res() res,

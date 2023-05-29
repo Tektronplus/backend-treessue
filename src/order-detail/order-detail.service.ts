@@ -22,4 +22,16 @@ export class OrderDetailService {
       throw new Error(err)
     }
   }
+
+  async findOrderDetail(id): Promise<any>
+  {
+    try
+    {
+      return await this.orderDetailRepository.findAll({where:{id_order:id}})
+    }
+    catch(err)
+    {
+      throw new Error(err)
+    }
+  }
 }

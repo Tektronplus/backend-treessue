@@ -1,9 +1,6 @@
 import {
     Controller,
-    Get,
     UseGuards,
-    Post,
-    Req,
     Headers,
     Res,
     Put,
@@ -11,17 +8,14 @@ import {
     Body,
     Param,
   } from '@nestjs/common';
-  import * as bcrypt from 'bcrypt';
-  import moment from 'moment';
+
   
   import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
   import { AuthService } from '../auth/auth.service';
   
   import { UserLoginService } from '../user-login/user-login.service';
   import { UserCustomerService } from '../user-customer/user-customer.service';
-  import { UserWorkerService } from '../user-worker/user-worker.service';
-  import { UserWorkerLoginService } from '../user-worker-login/user-worker-login.service';
-  import { UserWorkerRoleService } from '../user-worker-role/user-worker-role.service';
+
   @UseGuards(ApiKeyAuthGuard)
   @Controller('backOfficeLogin')
   export class BackOfficeUserLoginController {

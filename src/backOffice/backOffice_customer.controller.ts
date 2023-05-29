@@ -6,7 +6,6 @@ import {
     Req,
     Headers,
     Res,
-    Put,
     Body,
     Param,
   } from '@nestjs/common';
@@ -49,8 +48,8 @@ import {
       if (isTokenValid) {
         const dechiperAuth = await this.authService.dechiperUserToken(token);
         if (
-          dechiperAuth.userDetail.role != 'admin' ||
-          dechiperAuth.userDetail.role != 'ufficio'
+          dechiperAuth.userDetail.role == 'admin' ||
+          dechiperAuth.userDetail.role == 'ufficio'
         ) {
           try {
             let allCustomerList = await this.userLoginService.findAllCustomer();
@@ -90,8 +89,8 @@ import {
       if (isTokenValid) {
         const dechiperAuth = await this.authService.dechiperUserToken(token);
         if (
-          dechiperAuth.userDetail.role != 'admin' ||
-          dechiperAuth.userDetail.role != 'ufficio'
+          dechiperAuth.userDetail.role == 'admin' ||
+          dechiperAuth.userDetail.role == 'ufficio'
         ) {
           try {
             const id = param.id;
@@ -155,7 +154,7 @@ import {
       if (isTokenValid) 
       {
         const dechiperAuth = await this.authService.dechiperUserToken(token);
-        if (dechiperAuth.userDetail.role != 'admin' || dechiperAuth.userDetail.role != 'ufficio')
+        if (dechiperAuth.userDetail.role == 'admin' || dechiperAuth.userDetail.role == 'ufficio')
         {
           const newUser = req.body;
           console.log({ newUser });

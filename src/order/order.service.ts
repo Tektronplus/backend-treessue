@@ -8,8 +8,27 @@ export class OrderService {
     private OrderRepository: typeof Order,
   ) {}
 
-  async findAll(): Promise<Order[]> {
-    return this.OrderRepository.findAll();
+  async findAll(): Promise<any> {
+    const orderList = await this.OrderRepository.findAll();
+    //console.log({orderList})
+    const orderData = await orderList.map((data)=>{
+      const orderData = {
+        id_order:data.dataValues.id_order,
+        user_customer:data.dataValues.id_user_customer,
+        user_worker:data.dataValues.id_user_worker,
+        order_status:data.dataValues.id_order_status,
+        order_date:data.dataValues.order_date,
+        courier_name:data.dataValues.courier_name,
+        tracking_code:data.dataValues.tracking_code,
+        start_shipping_date:data.dataValues.start_shipping_date,
+        expected_delivery_date:data.dataValues.expected_delivery_date,
+        delivery_date:data.dataValues.delivery_date,
+        price:data.dataValues.price
+      }
+      return orderData
+    })
+    //console.log({orderData})
+    return orderData
   }
 
   async createOrder(order) {
