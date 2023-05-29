@@ -66,17 +66,17 @@ export class CartDetailService {
     }
   }
 
-  async deleteCartDetailItemById(headers, body): Promise<any> {
+  async deleteCartDetailItemById(headers, id_cart_detail): Promise<any> {
     const userInfo = await this.customMethods.checkAuthentication(headers);
     const customerCart = await this.cartDetailRepository.findAll({
       where: { id_user_customer: userInfo.id },
     });
 
-    this.customExceptions.checkCustomerHasItem(customerCart, body.idCartDetail);
+    this.customExceptions.checkCustomerHasItem(customerCart, id_cart_detail);
 
     return this.cartDetailRepository
       .destroy({
-        where: { id_cart_detail: body.idCartDetail },
+        where: { id_cart_detail: id_cart_detail },
       })
       .then((res) => {
         if (res == 1) {
@@ -167,7 +167,7 @@ class CustomExceptions {
       (item) => item.dataValues.id_cart_detail,
     );
 
-    if (arrayOfCartDetailId.includes(idCartDetail)) {
+    if (arrayOfCartDetailId.includes(Number(idCartDetail))) {
       return true;
     } else {
       throw new ForbiddenException('Unauthorized request', {

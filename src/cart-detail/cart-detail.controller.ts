@@ -7,6 +7,7 @@ import {
   Body,
   Delete,
   Put,
+  Param,
 } from '@nestjs/common';
 import { CartDetailService } from './cart-detail.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
@@ -52,8 +53,11 @@ export class CartDetailController {
   }
 
   //--- DELETE ---
-  @Delete('/delete-item')
-  async deleteItemFromCart(@Headers() headers, @Body() body): Promise<any> {
-    return this.cartDetailService.deleteCartDetailItemById(headers, body);
+  @Delete('/delete-item/:idCartDetail')
+  async deleteItemFromCart(@Headers() headers, @Param() param): Promise<any> {
+    return this.cartDetailService.deleteCartDetailItemById(
+      headers,
+      param.idCartDetail,
+    );
   }
 }
