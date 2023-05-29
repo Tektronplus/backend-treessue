@@ -81,6 +81,60 @@ export class UserLoginController {
     }
   }
 
+  @Put('/modifyUserDetail')
+  async modifyUserInfo(@Headers() headers, @Body() body, @Res() res) {
+    if (headers.authorization == undefined) {
+      res.status(404).json({ result: 'bad request' });
+      return;
+    }
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
+      res.status(401).json({ result: 'not authorized' });
+      return;
+    }
+
+    type decodedToken = {
+      userDetail?: object;
+      exp?: number;
+      iat?: number;
+    };
+
+    console.log({ body }, { headers });
+    const token = headers.authorization.split('Bearer ')[1];
+    console.log({ token });
+    const isTokenValid = await this.authService.validateToken(token);
+    if (isTokenValid) {
+      const decodedInfo: decodedToken =
+        await this.authService.dechiperUserToken(token);
+      console.log({ decodedInfo });
+      try {
+        const result = await this.userCustomerService.updateDetail(
+          decodedInfo.userDetail,
+          body,
+        );
+        await this.userLoginService.updateUserEmail(
+          decodedInfo.userDetail,
+          body.email,
+        );
+        console.log({ result });
+        res.status(200).json({ result: 'successful' });
+      } catch (err) {
+        if ((err = 'ER_DUP_ENTRY')) {
+          res.status(422).json({
+            result:
+              'duplicate entity, verify one or more of your information are correct',
+          });
+          return;
+        } else {
+          res.status(500).json({ result: 'internal server error' });
+          return;
+        }
+      }
+    } else {
+      res.status(403).json({ result: 'not authorized' });
+      return;
+    }
+  }
+
   @Put('/updateCredentials')
   async updateCredentials(@Body() body, @Headers() headers, @Res() res) {
     if (headers.authorization == undefined) {
@@ -112,16 +166,22 @@ export class UserLoginController {
       const salt = await bcrypt.genSalt(saltOrRounds);
       const newPassword = await bcrypt.hash(body.newPassword, salt);
       try {
-        await this.userLoginService.updateUserEmail(
-          decodedInfo.userDetail,
-          body.email,
-        );
-        await this.userLoginService.updateUserPassword(
-          decodedInfo.userDetail,
-          newPassword,
-        );
-        res.status(200).json({ result: 'succesful request' });
-        return;
+        let user = await this.userLoginService.findUserByIdUserCustomer(decodedInfo.userDetail)
+        if(bcrypt.compareSync(body.oldPassword,user.dataValues.password))
+        {
+          await this.userLoginService.updateUserPassword(
+            decodedInfo.userDetail,
+            newPassword,
+          );
+          res.status(200).json({ result: 'succesful request' });
+          return;
+        }
+        else
+        {
+          res.status(403).json({ result: 'actual password wrong' });
+          return; 
+        }
+
       } catch (err) {
         res.status(500).json({ result: 'internal server error' });
         return;
