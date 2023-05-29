@@ -195,7 +195,7 @@ export class UserRegisterController {
       body.email == undefined ||
       body.password == undefined
     ) {
-      res.status(404).json({ result: 'bad request' });
+      res.status(400).json({ result: 'bad request' });
       return;
     }
     /*
