@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { BackOfficeController } from './backOffice.controller';
 import { DatabaseModule } from '../database/database.module';
 import { AuthModule } from '../auth/auth.module';
 
@@ -35,7 +34,7 @@ import { ProductCategoryModule } from '../product-category/product-category.modu
     UserWorkerRoleModule,
     ProductCategoryModule,
   ],
-  controllers: [BackOfficeController, BackOfficeCustomerController, BackOfficeWorkerController,BackOfficRoleController],
+  controllers: [BackOfficeCustomerController, BackOfficeWorkerController,BackOfficRoleController],
   providers: [],
   exports: [],
 })
