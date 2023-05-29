@@ -219,7 +219,6 @@ import { ProductService } from '../product/product.service';
                         //console.log({data})
                         const orderDetail = {
                             id_order_detail: data.dataValues.id_order_detail,
-                            id_order: data.dataValues.id_order,
                             product: data.dataValues.id_product,
                             price: data.dataValues.price,
                             quantity: data.dataValues.quantity,
