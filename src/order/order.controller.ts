@@ -130,19 +130,19 @@ export class OrderController {
         const userDetail = await this.authservice.dechiperUserToken(
           headers.authorization.split('Bearer ')[1],
         );
-        //console.log({ customerCart });
-        //console.log({ userDetail });
-        for (const elm of customerCart) {
-          const productDetail = await this.productService.findById(
-            elm.idProduct,
-          );
+        console.log({ customerCart });
+        console.log({ userDetail });
+        for (let elm of customerCart) 
+        {
+          const productDetail = await this.productService.findById(elm.idProduct);
+          console.log({productDetail})
           if (productDetail.dataValues.available_quantity >= elm.quantity) {
-            try {
-              await this.productService.updateQuantityProduct(
-                elm.idProduct,
-                productDetail.dataValues.available_quantity - elm.quantity,
-              );
-            } catch (err) {
+            try 
+            {
+              await this.productService.updateQuantityProduct(elm.idProduct,productDetail.dataValues.available_quantity - elm.quantity);
+            } 
+            catch (err) 
+            {
               res.status(500).json({ result: 'internal server error' });
               return;
             }
@@ -151,7 +151,7 @@ export class OrderController {
               result:
                 'quantity for:' +
                 productDetail.dataValues.prod_name +
-                ' too high',
+                ' too high, avaible quantity:' + productDetail.dataValues.available_quantity, 
             });
             return;
           }
