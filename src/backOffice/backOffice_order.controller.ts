@@ -14,8 +14,8 @@ import {
 import { OrderService } from '../order/order.service';
 import { ApiKeyAuthGuard } from '../auth/guard/apikey-auth.guard';
 import { AuthService } from '../auth/auth.service';
-import { OrderStatusService } from 'src/order-status/order-status.service';
-import { UserCustomerService } from 'src/user-customer/user-customer.service';
+import { OrderStatusService } from '../order-status/order-status.service';
+import { UserCustomerService } from '../user-customer/user-customer.service';
 import { OrderDetailService } from '../order-detail/order-detail.service';
 import { ProductService } from '../product/product.service';
 
