@@ -150,6 +150,17 @@ export class UserLoginService {
     }
   }
 
+  async findUserByIdUserCustomer(user): Promise<any> {
+    console.log({ user });
+    try {
+      const foundUser = await this.userLoginRepository.findOne({ where: { id_user_customer:user.id }});
+      console.log({ foundUser });
+      return foundUser;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
   //FUNZIONE USATA PER LA DELETE DELL'UTENTE
   async deleteUser(user): Promise<any> {
     console.log({ user });

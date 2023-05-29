@@ -157,7 +157,8 @@ export class BackOfficeWorkerController {
     const isTokenValid = await this.authService.validateToken(token);
     if (isTokenValid) {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
-      if (dechiperAuth.userDetail.role == 'admin') {
+      if (dechiperAuth.userDetail.role == 'admin')
+      {
         const newUser = req.body;
         console.log({ newUser });
         const saltOrRounds = 10;
@@ -177,120 +178,45 @@ export class BackOfficeWorkerController {
           id_user_worker_role: role.id_user_worker_role,
         };
 
-        const userWorkerData = await this.userWorkerService.verifyUserWorker(
-          userWorkerEntity,
-        );
-        console.log({ userWorkerData });
-        if (userWorkerData != null) {
-          //USER WORKER ESISTE
-          const userWorkerLoginData =
-            await this.userWorkerLoginService.verifyUserWorker(
-              userWorkerLoginEntity,
-            );
-          if (userWorkerLoginData == null) {
-            //NON ESISTONO INFORMAZIONI DELLA LOGIN
-            console.log("USER WORKER ESISTE, NON ESISTE L'ENTITA LOGIN");
-            console.log({ userWorkerEntity });
-            userWorkerLoginEntity.id_user_worker =
-              userWorkerData.id_user_worker;
-            try {
-              const newCreatedUserWorkerLogin =
-                await this.userWorkerLoginService.createUserWorker(
-                  userWorkerLoginEntity,
-                );
-              console.log({ newCreatedUserWorkerLogin });
-              res.status(201).json({ result: 'user created successufuly' });
-              return;
-            } catch (err) {
-              console.log({ err });
-              res.status(500).json({ result: 'internal server error' });
-            }
-          } else {
-            if (userWorkerLoginData.is_active == 1) {
-              console.log("USER WORKER ESISTE, ESISTE L'ENTITA LOGIN ATTIVA");
-              res
-                .status(409)
-                .json({ result: 'email already in use for another user' });
-              return;
-            } else {
-              console.log('USER WORKER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA');
-              try {
-                const newCreatedUserWorkerLogin =
-                  await this.userWorkerLoginService.createUserWorker(
-                    userWorkerEntity,
-                  );
-                console.log({ newCreatedUserWorkerLogin });
-                res.status(201).json({ result: 'user created successufuly' });
-                return;
-              } catch (err) {
-                console.log(err);
-                if ((err = 'ER_DUP_ENTRY')) {
-                  try {
-                    await this.userWorkerLoginService.updateUserStatus(
-                      userWorkerLoginEntity.email,
-                    );
-                    res
-                      .status(201)
-                      .json({ result: 'user created successufuly' });
+          const userWorkerLoginData = await this.userWorkerLoginService.verifyUserWorker(userWorkerLoginEntity);
+            if (userWorkerLoginData == null)
+            {
+                console.log("USER WORKER NON ESISTE, NON ESISTE L'ENTITA LOGIN");
+                const newCreateduserWorker = await this.userWorkerService.createUserWorker(userWorkerEntity);
+                console.log({ newCreateduserWorker });
+                userWorkerLoginEntity.id_user_worker = newCreateduserWorker.id_user_worker;
+                console.log({ userWorkerLoginEntity });
+                try 
+                {
+                    const newCreatedUserWorkerLogin = await this.userWorkerLoginService.createUserWorker(userWorkerLoginEntity);
+                    console.log({ newCreatedUserWorkerLogin });
+                    res.status(201).json({ result: 'user created successufuly' });
                     return;
-                  } catch (err) {
-                    res.status(500).json({ result: 'internal server error' });
-                    return;
-                  }
-                } else {
-                  res.status(500).json({ result: 'internal server error' });
-                  return;
+                } 
+                catch (err) 
+                {
+                    if ((err = 'ER_DUP_ENTRY')) 
+                    {
+                        res.status(422).json({result: 'duplicate entity, verify the email is correct'});
+                        return;
+                    } 
+                    else 
+                    {
+                        res.status(500).json({ result: 'internal server error' });
+                        return;
+                    }
                 }
-              }
-            }
-          }
-        } else {
-          //NON ESISTE ENTITA USER WORKER
-          const userWorkerLoginData =
-            await this.userWorkerLoginService.verifyUserWorker(
-              userWorkerLoginEntity,
-            );
-          if (userWorkerLoginData == null) {
-            console.log("USER WORKER NON ESISTE, NON ESISTE L'ENTITA LOGIN");
-            //NON ESISTE ENITITA USER LOGIN
-            const newCreateduserWorker =
-              await this.userWorkerService.createUserWorker(userWorkerEntity);
-            console.log({ newCreateduserWorker });
-            userWorkerLoginEntity.id_user_worker =
-              newCreateduserWorker.id_user_worker;
-            console.log({ userWorkerLoginEntity });
-            try {
-              const newCreatedUserWorkerLogin =
-                await this.userWorkerLoginService.createUserWorker(
-                  userWorkerLoginEntity,
-                );
-              console.log({ newCreatedUserWorkerLogin });
-              res.status(201).json({ result: 'user created successufuly' });
-              return;
-            } catch (err) {
-              if ((err = 'ER_DUP_ENTRY')) {
-                res.status(422).json({
-                  result: 'duplicate entity, verify the email is correct',
-                });
+            } 
+            else 
+            {
+                console.log("USER WORKER NON ESISTE, ESISTE L'ENTITA LOGIN ");
+                res.status(409).json({ result: 'email already in use for another user' });
                 return;
-              } else {
-                res.status(500).json({ result: 'internal server error' });
-                return;
-              }
             }
-          } else {
-            console.log("USER WORKER NON ESISTE, ESISTE L'ENTITA LOGIN ");
-            res
-              .status(409)
-              .json({ result: 'email already in use for another user' });
-            return;
-          }
         }
-      } else {
-        res.status(403).json({ result: 'not authorized' });
-        return;
-      }
-    } else {
+    } 
+    else 
+    {
       res.status(403).json({ result: 'not authorized' });
       return;
     }
