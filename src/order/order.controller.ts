@@ -107,6 +107,63 @@ export class OrderController {
       return;
     }
   }
+  @Get("/getOrderDetail/:id")
+    async getOrderDetail(@Param() param, @Headers() headers, @Res() res)
+    {
+
+        if(headers.authorization == undefined)
+        {
+          res.status(404).json({ result: 'bad request' });
+          return
+        }
+        if(headers.authorization.substring(0,7) != "Bearer ")
+        {
+          res.status(401).json({ result: 'not authorized' });
+          return
+        }
+    
+        let token = headers.authorization.split('Bearer ')[1];
+        console.log({ token });
+        const isTokenValid = await this.authservice.validateToken(token);
+        if(isTokenValid)
+        {
+          const decodedInfo = await this.authservice.dechiperUserToken(token);
+          console.log({ decodedInfo });
+          try
+          {
+            let orderDetail = await this.orderDetailService.findOrderDetail(param.id)
+            orderDetail = orderDetail.map((data)=>{      
+              const orderDetail = {
+                id_order_detail: data.dataValues.id_order_detail,
+                id_order: data.dataValues.id_order,
+                product: data.dataValues.id_product,
+                price: data.dataValues.price,
+                quantity: data.dataValues.quantity,
+                description: data.dataValues.description
+              }
+              return orderDetail
+            })
+            for(let elm of orderDetail)
+            {
+              elm.product = await this.productService.findById(elm.product)
+              elm.product = elm.product.dataValues.prod_name   
+            }
+            console.log({orderDetail})
+            return orderDetail
+          }
+          catch(err)
+          {
+            res.status(500).json({ result: 'internal server error' });
+            return
+          }
+
+        }
+        else
+        {
+            res.status(403).json({ result: 'not authorized' });
+            return
+        }
+    }
 
   @Post('/createOrder')
   async createNewOrder(@Headers() headers, @Res() res): Promise<any> {

@@ -82,6 +82,19 @@ export class OrderService {
       }
     });
   }
+  async getOrderById(id) {
+    try {
+      const customerOrder = await this.OrderRepository.findAll({
+        where: { id_order: id },
+      });
+      const orderList = await customerOrder.map((data) => {
+        return data.dataValues;
+      });
+      return orderList;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 }
 
 class CustomException {
