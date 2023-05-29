@@ -81,8 +81,6 @@ export class UserLoginController {
     }
   }
 
-  
-
   @Put('/updateCredentials')
   async updateCredentials(@Body() body, @Headers() headers, @Res() res) {
     if (headers.authorization == undefined) {
@@ -102,17 +100,22 @@ export class UserLoginController {
 
     console.log({ body }, { headers });
     const isTokenValid = await this.authService.validateToken(
-      headers.authorization.split("Bearer ")[1],
+      headers.authorization.split('Bearer ')[1],
     );
     if (isTokenValid) {
       const decodedInfo: decodedToken =
-        await this.authService.dechiperUserToken(headers.authorization.split("Bearer ")[1]);
+        await this.authService.dechiperUserToken(
+          headers.authorization.split('Bearer ')[1],
+        );
       console.log({ decodedInfo });
       const saltOrRounds = 10;
       const salt = await bcrypt.genSalt(saltOrRounds);
       const newPassword = await bcrypt.hash(body.newPassword, salt);
       try {
-        await this.userLoginService.updateUserEmail(decodedInfo.userDetail,body.email)
+        await this.userLoginService.updateUserEmail(
+          decodedInfo.userDetail,
+          body.email,
+        );
         await this.userLoginService.updateUserPassword(
           decodedInfo.userDetail,
           newPassword,
@@ -189,6 +192,16 @@ export class UserRegisterController {
     if (
       body.first_name == undefined ||
       body.last_name == undefined ||
+      body.email == undefined ||
+      body.password == undefined
+    ) {
+      res.status(404).json({ result: 'bad request' });
+      return;
+    }
+    /*
+    if (
+      body.first_name == undefined ||
+      body.last_name == undefined ||
       body.birth_date == undefined ||
       body.phone_number == undefined ||
       body.country == undefined ||
@@ -200,6 +213,7 @@ export class UserRegisterController {
       res.status(404).json({ result: 'bad request' });
       return;
     }
+    */
 
     const newUser = req.body;
     console.log({ newUser });
