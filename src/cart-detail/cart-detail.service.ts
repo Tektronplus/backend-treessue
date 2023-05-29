@@ -4,9 +4,11 @@ import {
   UnauthorizedException,
   ForbiddenException,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CartDetail } from './cart-detail.entity';
 import { AuthService } from '../auth/auth.service';
+import { ProductService } from 'src/product/product.service';
 
 @Injectable()
 export class CartDetailService {
@@ -14,6 +16,7 @@ export class CartDetailService {
     @Inject('CART_DETAIL_REPOSITORY')
     private cartDetailRepository: typeof CartDetail,
     private authService: AuthService,
+    private productService: ProductService,
   ) {}
 
   //Custom classes
@@ -64,6 +67,22 @@ export class CartDetailService {
       };
       return this.cartDetailRepository.create(newCartItem);
     }
+  }
+
+  async addOfflineItemsToCart(headers, body): Promise<any> {
+    const arrayIdProduct = await this.productService.getAllProductsIds();
+    for (const item of body) {
+      if (!arrayIdProduct.includes(item.id_product)) {
+        throw new NotFoundException('Not found exception', {
+          cause: new Error(),
+          description: `The ID= ${item.id_product} is not assigned to any product `,
+        });
+      }
+    }
+    for (const item of body) {
+      await this.addItemToCart(headers, item.id_product, item.quantity);
+    }
+    return { result: 'Query executed successfully' };
   }
 
   async deleteCartDetailItemById(headers, id_cart_detail): Promise<any> {
