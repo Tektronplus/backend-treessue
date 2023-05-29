@@ -189,6 +189,7 @@ export class UserRegisterController {
 
   @Post('/registerCustomer')
   async registerUser(@Req() req, @Body() body, @Res() res) {
+    console.log(body);
     if (
       body.first_name == undefined ||
       body.last_name == undefined ||
@@ -226,15 +227,21 @@ export class UserRegisterController {
       password: hash,
       is_active: true,
     };
+    const userBirthDate = () => {
+      if (newUser.birth_date) {
+        return moment(newUser.birth_date, 'DD-MM-YYYY').toDate();
+      }
+      return null;
+    };
     const userCustomerEntity = {
-      first_name: newUser.firstName,
-      last_name: newUser.lastName,
-      birth_date: moment(newUser.birthDate, 'DD-MM-YYYY').toDate(),
-      phone_number: newUser.phoneNumber,
+      first_name: newUser.first_name,
+      last_name: newUser.last_name,
+      birth_date: userBirthDate(),
+      phone_number: newUser.phone_number,
       country: newUser.country,
       province: newUser.province,
       city: newUser.city,
-      zip_code: newUser.zipCode,
+      zip_code: newUser.zip_code,
       address: newUser.address,
     };
     const userCustomerData = await this.userCustomerService.verifyUserData(
