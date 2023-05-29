@@ -199,22 +199,6 @@ export class UserRegisterController {
       res.status(400).json({ result: 'bad request' });
       return;
     }
-    /*
-    if (
-      body.first_name == undefined ||
-      body.last_name == undefined ||
-      body.birth_date == undefined ||
-      body.phone_number == undefined ||
-      body.country == undefined ||
-      body.province == undefined ||
-      body.city == undefined ||
-      body.zip_code == undefined ||
-      body.address == undefined
-    ) {
-      res.status(404).json({ result: 'bad request' });
-      return;
-    }
-    */
 
     const newUser = req.body;
     console.log({ newUser });

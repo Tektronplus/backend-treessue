@@ -157,7 +157,7 @@ class CustomException {
   async checkFindById(id_product, productRepository) {
     const arrayIdProducts = await productRepository
       .findAll({ attributes: ['id_product'] })
-      .then((res) => res.flatMap((prod) => prod.id_product));
+      .then((res) => res.flatMap((prod) => prod['id_product']));
 
     if (!arrayIdProducts.includes(Number(id_product))) {
       throw new NotFoundException('Something bad happened', {
