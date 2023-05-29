@@ -157,7 +157,7 @@ import { ProductService } from '../product/product.service';
         }
     }
 
-    @Get()
+    @Get("getOrderById/:id")
     async getOrderById(@Param() param, @Headers() headers, @Res() res)
     {
         if(headers.authorization == undefined)
@@ -183,23 +183,40 @@ import { ProductService } from '../product/product.service';
                 try
                 {
                     const order = {
-                        id_order: "",
-                        user_customer: "",
+                        id_order: null,
+                        user_customer: null,
                         user_worker: null,
-                        order_status: "",
-                        order_date: "",
-                        courier_name: "",
-                        tracking_code: "",
+                        order_status: null,
+                        order_date: null,
+                        courier_name: null,
+                        tracking_code: null,
                         start_shipping_date: null,
-                        expected_delivery_date: "",
+                        expected_delivery_date: null,
                         delivery_date: null,
                         orderList:[],
-                        price: ""
+                        price: null
                     }
 
-                    let orderDetail = await this.orderDetailService.findOrderDetail(param.id)
+                    const orderData = await this.orderService.getOrderById(param.id)
+        
+                    order.id_order = orderData[0].id_order
+                    order.user_customer = await this.userCustomerService.findOneById(orderData[0].id_user_customer)
+                    order.user_customer = order.user_customer.dataValues.first_name + " " + order.user_customer.dataValues.last_name
+                    order.user_worker = orderData[0].id_user_worker
+                    order.order_status = await this.orderStatusService.findStatusById(orderData[0].id_order_status)
+                    order.order_status = order.order_status.dataValues.status
+                    order.order_date = orderData[0].order_date
+                    order.courier_name = orderData[0].courier_name
+                    order.tracking_code = orderData[0].tracking_code
+                    order.start_shipping_date = orderData[0].start_shipping_date
+                    order.expected_delivery_date = orderData[0].expected_delivery_date
+                    order.delivery_date = orderData[0].delivery_date
+                    order.price = orderData[0].price
+
+                    let orderDetail = await this.orderDetailService.findOrderDetail(order.id_order)
+
                     orderDetail = orderDetail.map((data)=>{
-                        
+                        //console.log({data})
                         const orderDetail = {
                             id_order_detail: data.dataValues.id_order_detail,
                             id_order: data.dataValues.id_order,
@@ -210,16 +227,19 @@ import { ProductService } from '../product/product.service';
                         }
                         return orderDetail
                     })
+                    //console.log({orderDetail})
                     for(let elm of orderDetail)
                     {
                         elm.product = await this.productService.findById(elm.product)
-                        elm.product = elm.product.dataValues.prod_name   
+                        elm.product = elm.product.dataValues.prod_name
+                        order.orderList.push(elm)   
                     }
-                    console.log({orderDetail})
-                    return orderDetail
+                    res.status(200).json({ result: order });
+                    return
                 }
                 catch(err)
                 {
+                    console.log({err})
                     res.status(500).json({ result: 'internal server error' });
                     return
                 }
