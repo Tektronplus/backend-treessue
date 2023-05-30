@@ -315,7 +315,7 @@ export class BackOfficeOrderController {
         decodedInfo.userDetail.role == 'ufficio'
       ) {
         const response = await this.orderService.createOrderBackoffice(body);
-        res.status(403).json({ result: response });
+        res.status(200).json({ result: response });
         return;
       } else {
         res.status(403).json({ result: 'not authorized' });
