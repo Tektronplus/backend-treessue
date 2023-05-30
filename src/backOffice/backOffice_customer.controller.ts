@@ -253,19 +253,19 @@ import {
             if (userLoginData == null) {
               console.log("USER CUSTOMER NON ESISTE, NON ESISTE L'ENTITA LOGIN");
               //NON ESISTE ENITITA USER LOGIN
-              const newCreatedUserCustomer =
-                await this.userCustomerService.createUser(userCustomerEntity);
-              console.log({ newCreatedUserCustomer });
-              userLoginEntity.userCustomer = newCreatedUserCustomer.id_user_customer;
-              console.log({ userLoginEntity });
-              try {
-                const newCreatedUserLogin = await this.userLoginService.createUser(
-                  userLoginEntity,
-                );
+              try 
+              {
+                const newCreatedUserCustomer =  await this.userCustomerService.createUser(userCustomerEntity);
+                console.log({ newCreatedUserCustomer });
+                userLoginEntity.userCustomer = newCreatedUserCustomer.id_user_customer;
+                console.log({ userLoginEntity });
+                const newCreatedUserLogin = await this.userLoginService.createUser(userLoginEntity);
                 console.log({ newCreatedUserLogin });
                 res.status(201).json({ result: 'user created successufuly' });
                 return
-              } catch (err) {
+              } 
+              catch (err) 
+              {
                 if ((err = 'ER_DUP_ENTRY')) 
                 {
                   try {
