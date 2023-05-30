@@ -137,11 +137,7 @@ import {
         body.last_name == undefined || 
         body.birth_date == undefined ||
         body.phone_number == undefined ||
-        body.country == undefined ||
-        body.province == undefined ||
-        body.city == undefined ||
-        body.zip_code == undefined ||
-        body.address == undefined
+        body.email == undefined 
       )
       {
         res.status(404).json({ result: 'bad request' });
