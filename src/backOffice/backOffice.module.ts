@@ -18,7 +18,8 @@ import { UserWorkerLoginModule } from '../user-worker-login/user-worker-login.mo
 import { UserWorkerRoleModule } from '../user-worker-role/user-worker-role.module';
 import { ProductCategoryModule } from '../product-category/product-category.module';
 import { BackOfficeOrderController } from './backOffice_order.controller';
-import { OrderStatusModule } from 'src/order-status/order-status.module';
+import { OrderStatusModule } from '../order-status/order-status.module';
+import { BackOfficeUserLoginController } from './backOffice_login.controller';
 
 @Module({
   imports: [
@@ -37,7 +38,7 @@ import { OrderStatusModule } from 'src/order-status/order-status.module';
     ProductCategoryModule,
     OrderStatusModule
   ],
-  controllers: [BackOfficeCustomerController, BackOfficeWorkerController,BackOfficRoleController,BackOfficeOrderController],
+  controllers: [BackOfficeCustomerController, BackOfficeWorkerController,BackOfficRoleController,BackOfficeOrderController,BackOfficeUserLoginController],
   providers: [],
   exports: [],
 })
