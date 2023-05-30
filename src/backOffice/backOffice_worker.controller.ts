@@ -267,55 +267,6 @@ export class BackOfficeWorkerController {
     }
   }
 
-  @Put('/modifyUserWorkerIsActive/:id')
-  async reactivateUser(
-    @Param() Param,
-    @Body() body,
-    @Headers() headers,
-    @Res() res,
-  ) {
-    console.log({ headers });
-
-    if (headers.authorization == undefined) {
-      res.status(404).json({ result: 'bad request' });
-      return;
-    }
-    if (headers.authorization.substring(0, 7) != 'Bearer ') {
-      res.status(401).json({ result: 'not authorized' });
-      return;
-    }
-
-    const token = headers.authorization.split('Bearer ')[1];
-    console.log({ token });
-    const isTokenValid = await this.authService.validateToken(token);
-    if (isTokenValid) {
-      const decodedInfo = await this.authService.dechiperUserToken(token);
-      console.log({ decodedInfo });
-      if (decodedInfo.userDetail.role == 'admin') {
-        const foundWorkerLoginData =
-          await this.userWorkerLoginService.findUserById(Param.id);
-
-        console.log({ foundWorkerLoginData });
-
-        try {
-
-          res.status(200).json({ result: 'successful' });
-          return;
-        } catch (err) {
-          console.log({ err });
-          res.status(500).json({ result: 'internal server error' });
-          return;
-        }
-      } else {
-        res.status(403).json({ result: 'not authorized' });
-        return;
-      }
-    } else {
-      res.status(403).json({ result: 'not authorized' });
-      return;
-    }
-  }
-
   @Put('/modifyUserWorkerDetail/:id')
   async changeUserWorkerRole(
     @Param() Param,
