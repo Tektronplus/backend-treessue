@@ -164,10 +164,10 @@ import {
             is_active: true,
           };
           const userCustomerEntity = {
-            first_name: newUser.firstName,
-            last_name: newUser.lastName,
-            birth_date: moment(newUser.birthDate, 'DD-MM-YYYY').toDate(),
-            phone_number: newUser.phoneNumber,
+            first_name: newUser.first_name,
+            last_name: newUser.last_name,
+            birth_date: moment(newUser.birth_date, 'DD-MM-YYYY').toDate(),
+            phone_number: newUser.phone_number,
             country: newUser.country,
             province: newUser.province,
             city: newUser.city,
