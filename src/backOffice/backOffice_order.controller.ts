@@ -140,79 +140,8 @@ export class BackOfficeOrderController {
     }
   }
 
-  @Get()
-  async getOrderById(@Param() param, @Headers() headers, @Res() res) {
-    if (headers.authorization == undefined) {
-      res.status(404).json({ result: 'bad request' });
-      return;
-    }
-    if (headers.authorization.substring(0, 7) != 'Bearer ') {
-      res.status(401).json({ result: 'not authorized' });
-      return;
-    }
-
-    const token = headers.authorization.split('Bearer ')[1];
-    console.log({ token });
-    const isTokenValid = await this.authService.validateToken(token);
-    if (isTokenValid) {
-      const decodedInfo = await this.authService.dechiperUserToken(token);
-      console.log({ decodedInfo });
-      if (
-        decodedInfo.userDetail.role == 'admin' ||
-        decodedInfo.userDetail.role == 'ufficio'
-      ) {
-        try {
-          const order = {
-            id_order: '',
-            user_customer: '',
-            user_worker: null,
-            order_status: '',
-            order_date: '',
-            courier_name: '',
-            tracking_code: '',
-            start_shipping_date: null,
-            expected_delivery_date: '',
-            delivery_date: null,
-            orderList: [],
-            price: '',
-          };
-
-          let orderDetail = await this.orderDetailService.findOrderDetail(
-            param.id,
-          );
-          orderDetail = orderDetail.map((data) => {
-            const orderDetail = {
-              id_order_detail: data.dataValues.id_order_detail,
-              id_order: data.dataValues.id_order,
-              product: data.dataValues.id_product,
-              price: data.dataValues.price,
-              quantity: data.dataValues.quantity,
-              description: data.dataValues.description,
-            };
-            return orderDetail;
-          });
-          for (let elm of orderDetail) {
-            elm.product = await this.productService.findById(elm.product);
-            elm.product = elm.product.dataValues.prod_name;
-          }
-          console.log({ orderDetail });
-          return orderDetail;
-        } catch (err) {
-          res.status(500).json({ result: 'internal server error' });
-          return;
-        }
-      } else {
-        res.status(403).json({ result: 'not authorized' });
-        return;
-      }
-    } else {
-      res.status(403).json({ result: 'not authorized' });
-      return;
-    }
-  }
-
   @Get('getOrderById/:id')
-  async getOrderByIdAlias(@Param() param, @Headers() headers, @Res() res) {
+  async getOrderById(@Param() param, @Headers() headers, @Res() res) {
     if (headers.authorization == undefined) {
       res.status(404).json({ result: 'bad request' });
       return;
