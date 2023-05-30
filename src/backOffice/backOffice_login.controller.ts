@@ -66,11 +66,13 @@ import {
             city: existingRecord.dataValues.city,
             zip_code: existingRecord.dataValues.zip_code,
             address: existingRecord.dataValues.address,
-            email:userLoginData.email
+            email:userLoginData.email,
+            is_active:existingRecord.dataValues.is_active
           }; 
           try {
             await this.userLoginService.updateUserEmail(existingValue,body.email)
             await this.userCustomerService.updateDetail(existingValue, body);
+            await this.userLoginService.reactivateUser(existingValue,body.is_active)
             res.status(200).json({ result: 'successful' });
             return
           } catch (err) {

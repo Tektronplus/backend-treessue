@@ -190,4 +190,21 @@ export class UserLoginService {
       throw new Error(err);
     }
   }
+
+    //FUNZIONE USATA PER LA RIATTIVAZIONE DELL'UTENTE
+    async reactivateUser(user, newStatus): Promise<any> {
+      console.log({ user });
+      try {
+        const foundUser = await this.userLoginRepository.update(
+          { 
+            is_active: user.is_active != newStatus ? newStatus : user.is_active
+          },
+          { where: { id_user_customer:user.id } },
+        );
+        console.log({ foundUser });
+        return foundUser;
+      } catch (err) {
+        throw new Error(err);
+      }
+    }
 }
