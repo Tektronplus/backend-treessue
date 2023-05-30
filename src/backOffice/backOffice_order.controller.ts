@@ -164,7 +164,7 @@ export class BackOfficeOrderController {
         try {
           const order = {
             id_order: null,
-            user_customer: null,
+            id_user_customer: null,
             user_worker: null,
             order_status: null,
             order_date: null,
@@ -180,10 +180,11 @@ export class BackOfficeOrderController {
           const orderData = await this.orderService.getOrderById(param.id);
 
           order.id_order = orderData[0].id_order;
-          order.user_customer = await this.userCustomerService.findOneById(
+          order.id_user_customer = await this.userCustomerService.findOneById(
             orderData[0].id_user_customer
           );
-          order.user_customer = order.user_customer.dataValues.id_user_customer;
+          order.id_user_customer =
+            order.id_user_customer.dataValues.id_user_customer;
           order.user_worker = orderData[0].id_user_worker;
           order.order_status = await this.orderStatusService.findStatusById(
             orderData[0].id_order_status
