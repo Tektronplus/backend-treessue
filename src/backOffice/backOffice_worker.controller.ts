@@ -298,9 +298,7 @@ export class BackOfficeWorkerController {
         console.log({ foundWorkerLoginData });
 
         try {
-          await this.userWorkerLoginService.updateUserStatus(
-            foundWorkerLoginData.email,
-          );
+
           res.status(200).json({ result: 'successful' });
           return;
         } catch (err) {
@@ -359,6 +357,7 @@ export class BackOfficeWorkerController {
         };
         const foundWorkerLoginData =
           await this.userWorkerLoginService.findUserById(Param.id);
+          await this.userWorkerLoginService.updateUserStatus(foundWorkerLoginData,body.is_active);
         const foundWorkerDetail = await this.userWorkerService.findUserDetail(
           foundWorkerLoginData.dataValues,
         );

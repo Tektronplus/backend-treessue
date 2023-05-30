@@ -137,12 +137,12 @@ export class UserWorkerLoginService {
   }
 
   //FUNZIONE USATA PER LA RIATTIVAZIONE DELL'UTENTE
-  async updateUserStatus(email): Promise<any> {
-    console.log({ email });
+  async updateUserStatus(existingValue,newStatus): Promise<any> {
+    console.log({ existingValue });
     try {
       const foundUser = await this.userWorkerLoginRepository.update(
-        { is_active: 1 },
-        { where: { email: email } },
+        { is_active: existingValue.is_active != newStatus ? newStatus : existingValue.is_active }, 
+        { where: { email: existingValue.email } },
       );
       console.log({ foundUser });
       return foundUser;
