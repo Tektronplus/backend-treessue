@@ -266,9 +266,22 @@ import {
                 res.status(201).json({ result: 'user created successufuly' });
                 return
               } catch (err) {
-                console.log({ err });
-                res.status(500).json({result:"internal server error"})
-                return
+                if ((err = 'ER_DUP_ENTRY')) 
+                {
+                  try {
+                    await this.userLoginService.updateUserStatus(
+                      userLoginEntity.email,
+                    );
+                    res.status(201).json({ result: 'user created successufuly' });
+                    return
+                  } catch (err) {
+                    res.status(500).json({ result: 'internal server error' });
+                    return
+                  }
+                } else {
+                  res.status(500).json({ result: 'internal server error' });
+                  return
+                }
               }
             } else {
               console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ");
