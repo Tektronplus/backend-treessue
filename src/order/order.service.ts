@@ -68,6 +68,7 @@ export class OrderService {
       {
         id_user_worker: body.id_user_worker,
         id_order_status: body.id_order_status,
+        courier_name: body.courier_name,
       },
       { where: { id_order: id_order } },
     ).then((res) => {
