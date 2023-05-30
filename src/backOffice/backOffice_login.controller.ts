@@ -122,8 +122,9 @@ import {
                 try
                 {
                     let userInfo = await this.userLoginService.findUserById(param.id)
-                    console.log({userInfo})
                     await this.userLoginService.deleteUser(userInfo.dataValues)
+                    res.status(200).json({ result: 'delete successful' });
+                    return;
                 }
                 catch (err) 
                 {
