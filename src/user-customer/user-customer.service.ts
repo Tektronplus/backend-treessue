@@ -47,7 +47,6 @@ export class UserCustomerService {
         city: user.city,
         zip_code: user.zip_code,
         address: user.address,
-        is_active: 1,
       });
       console.log({ newUserCustomer });
       return newUserCustomer;
