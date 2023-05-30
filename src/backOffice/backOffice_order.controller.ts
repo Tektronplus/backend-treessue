@@ -209,7 +209,7 @@ export class BackOfficeOrderController {
             const orderDetail = {
               id_order_detail: data.dataValues.id_order_detail,
               id_product: data.dataValues.id_product,
-              price: data.dataValues.price,
+              unit_price: data.dataValues.price,
               quantity: data.dataValues.quantity,
               description: data.dataValues.description,
             };
