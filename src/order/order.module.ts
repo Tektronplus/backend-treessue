@@ -20,6 +20,6 @@ import { OrderDetailModule } from '../order-detail/order-detail.module';
   ],
   controllers: [OrderController],
   providers: [OrderService, ...OrderProvider],
-  exports:[OrderService]
+  exports: [OrderService],
 })
 export class OrderModule {}

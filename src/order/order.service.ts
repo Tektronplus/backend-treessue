@@ -5,12 +5,14 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { Order } from './order.entity';
+import { OrderDetailService } from 'src/order-detail/order-detail.service';
 
 @Injectable()
 export class OrderService {
   constructor(
     @Inject('ORDER_REPOSITORY')
     private OrderRepository: typeof Order,
+    private orderDetailService: OrderDetailService,
   ) {}
 
   async findAll(): Promise<any> {
@@ -96,6 +98,44 @@ export class OrderService {
       throw new Error(err);
     }
   }
+
+  customMethods = new CustomMethods();
+  async createOrderBackoffice(body): Promise<any> {
+    //check quantity product
+    this.customException.checkQuantity(body.cart);
+
+    const totalPrice =
+      Math.round(this.customMethods.calcTotalCart(body.cart) * 100) / 100;
+
+    const newOrder = {
+      id_user_customer: body.id_user_customer,
+      id_user_worker: null,
+      order_date: Date.now(),
+      id_order_status: 1,
+      courier_name: body.courier_name,
+      tracking_code: this.customMethods.randomString(15),
+      start_shipping_date: null,
+      expected_delivery_date: Date.now() + 1296000000,
+      delivery_date: null,
+      price: totalPrice,
+    };
+
+    const createdOrder = await this.OrderRepository.create(newOrder);
+
+    for (const cartItem of body.cart) {
+      const newOrderDetail = {
+        id_order: createdOrder.id_order,
+        id_product: cartItem.product.id_product,
+        price: cartItem.product.unit_price,
+        quantity: cartItem.quantity,
+        description: cartItem.product.description,
+      };
+
+      await this.orderDetailService.createOrderDetail(newOrderDetail);
+    }
+
+    return createdOrder;
+  }
 }
 
 class CustomException {
@@ -110,5 +150,36 @@ class CustomException {
         description: "This id_product doesn't exist in the DB.",
       });
     }
+  }
+
+  checkQuantity(cart) {
+    for (const cartItem of cart) {
+      if (cartItem.product.available_quantity < cartItem.quantity) {
+        throw new NotFoundException('Not found exception', {
+          cause: new Error(),
+          description: `There is not enough quantity for the product with id:${cartItem.product.id_product}`,
+        });
+      }
+    }
+    return true;
+  }
+}
+
+class CustomMethods {
+  randomString(length) {
+    const chars =
+      '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let result = '';
+    for (let i = length; i > 0; --i)
+      result += chars[Math.floor(Math.random() * chars.length)];
+    return result;
+  }
+
+  calcTotalCart(cart) {
+    console.log({ cart });
+    return cart.reduce(
+      (acc, cur) => acc + cur.product.unit_price * cur.quantity,
+      0,
+    );
   }
 }
