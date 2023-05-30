@@ -62,8 +62,10 @@ export class BackOfficeOrderController {
             elm.user_customer = await this.userCustomerService.findOneById(
               elm.user_customer
             );
-            elm.id_user_customer =
-              elm.user_customer.dataValues.id_user_customer;
+            elm.user_customer =
+              elm.user_customer.dataValues.first_name +
+              " " +
+              elm.user_customer.dataValues.last_name;
             console.log({ elm });
           }
           res.status(200).json({ result: orderList });
@@ -181,11 +183,7 @@ export class BackOfficeOrderController {
           order.user_customer = await this.userCustomerService.findOneById(
             orderData[0].id_user_customer
           );
-          order.user_customer =
-            order.user_customer.dataValues.first_name +
-            " " +
-            order.user_customer.dataValues.last_name;
-
+          order.user_customer = order.user_customer.dataValues.id_user_customer;
           order.user_worker = orderData[0].id_user_worker;
           order.order_status = await this.orderStatusService.findStatusById(
             orderData[0].id_order_status
