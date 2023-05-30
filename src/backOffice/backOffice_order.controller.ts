@@ -207,11 +207,13 @@ export class BackOfficeOrderController {
           orderDetail = orderDetail.map((data) => {
             //console.log({data})
             const orderDetail = {
-              id_order_detail: data.dataValues.id_order_detail,
-              id_product: data.dataValues.id_product,
-              unit_price: data.dataValues.price,
+              product: {
+                id_order_detail: data.dataValues.id_order_detail,
+                id_product: data.dataValues.id_product,
+                unit_price: data.dataValues.price,
+                description: data.dataValues.description,
+              },
               quantity: data.dataValues.quantity,
-              description: data.dataValues.description,
             };
             return orderDetail;
           });
