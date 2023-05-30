@@ -117,7 +117,7 @@ import {
         {
             const decodedInfo = await this.authService.dechiperUserToken(token);
             console.log({ decodedInfo });
-            if (decodedInfo.userDetail.role == 'admin' || decodedInfo.userDetail.role == "Ufficio")
+            if (decodedInfo.userDetail.role == 'admin' || decodedInfo.userDetail.role == "ufficio")
             {
                 try
                 {
