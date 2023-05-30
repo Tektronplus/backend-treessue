@@ -288,4 +288,42 @@ export class BackOfficeOrderController {
       return;
     }
   }
+
+  @Post('/createOrder')
+  async createBackofficeOrder(
+    @Headers() headers,
+    @Body() body,
+    @Res() res,
+  ): Promise<any> {
+    if (headers.authorization == undefined) {
+      res.status(404).json({ result: 'bad request' });
+      return;
+    }
+    if (headers.authorization.substring(0, 7) != 'Bearer ') {
+      res.status(401).json({ result: 'not authorized' });
+      return;
+    }
+
+    const token = headers.authorization.split('Bearer ')[1];
+    console.log({ token });
+    const isTokenValid = await this.authService.validateToken(token);
+    if (isTokenValid) {
+      const decodedInfo = await this.authService.dechiperUserToken(token);
+      console.log({ decodedInfo });
+      if (
+        decodedInfo.userDetail.role == 'admin' ||
+        decodedInfo.userDetail.role == 'ufficio'
+      ) {
+        const response = await this.orderService.createOrderBackoffice(body);
+        res.status(200).json({ result: response });
+        return;
+      } else {
+        res.status(403).json({ result: 'not authorized' });
+        return;
+      }
+    } else {
+      res.status(403).json({ result: 'not authorized' });
+      return;
+    }
+  }
 }

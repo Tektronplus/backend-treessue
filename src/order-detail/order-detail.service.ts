@@ -12,26 +12,21 @@ export class OrderDetailService {
     return this.orderDetailRepository.findAll();
   }
 
-  async createOrderDetail(orderDetail)
-  {
-    try{
-      return await this.orderDetailRepository.create(orderDetail)
-    }
-    catch(err)
-    {
-      throw new Error(err)
+  async createOrderDetail(orderDetail) {
+    try {
+      return await this.orderDetailRepository.create(orderDetail);
+    } catch (err) {
+      throw new Error(err);
     }
   }
 
-  async findOrderDetail(id): Promise<any>
-  {
-    try
-    {
-      return await this.orderDetailRepository.findAll({where:{id_order:id}})
-    }
-    catch(err)
-    {
-      throw new Error(err)
+  async findOrderDetail(id): Promise<any> {
+    try {
+      return await this.orderDetailRepository.findAll({
+        where: { id_order: id },
+      });
+    } catch (err) {
+      throw new Error(err);
     }
   }
 }
