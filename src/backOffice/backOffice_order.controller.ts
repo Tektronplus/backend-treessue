@@ -166,7 +166,7 @@ export class BackOfficeOrderController {
             id_order: null,
             id_user_customer: null,
             user_worker: null,
-            order_status: null,
+            id_order_status: null,
             order_date: null,
             courier_name: null,
             tracking_code: null,
@@ -186,10 +186,11 @@ export class BackOfficeOrderController {
           order.id_user_customer =
             order.id_user_customer.dataValues.id_user_customer;
           order.user_worker = orderData[0].id_user_worker;
-          order.order_status = await this.orderStatusService.findStatusById(
+          order.id_order_status = await this.orderStatusService.findStatusById(
             orderData[0].id_order_status
           );
-          order.order_status = order.order_status.dataValues.status;
+          order.id_order_status =
+            order.id_order_status.dataValues.id_order_status;
           order.order_date = orderData[0].order_date;
           order.courier_name = orderData[0].courier_name;
           order.tracking_code = orderData[0].tracking_code;
