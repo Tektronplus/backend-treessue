@@ -195,7 +195,7 @@ export class BackOfficeCustomerController {
               res.status(201).json({ result: 'user created successufuly' });
               return;
             } catch (err) {
-              res.status(500).json({ result: 'internal server error' });
+              res.status(500).json({ result: 'internal server error riga 198' });
               return;
             }
           } else {
@@ -227,11 +227,11 @@ export class BackOfficeCustomerController {
                     res.status(201).json({ result: 'user created successufuly' });
                     return;
                   } catch (err) {
-                    res.status(500).json({ result: 'internal server error dopo update user status' });
+                    res.status(500).json({ result: 'internal server error riga 230' });
                     return;
                   }
                 } else {
-                  res.status(500).json({ result: 'internal server error' });
+                  res.status(500).json({ result: 'internal server error riga 234' });
                   return;
                 }
               }
@@ -263,7 +263,7 @@ export class BackOfficeCustomerController {
                 });
                 return;
               } else {
-                res.status(500).json({ result: 'internal server error' });
+                res.status(500).json({ result: 'internal server error riga 266' });
                 return;
               }
             }
