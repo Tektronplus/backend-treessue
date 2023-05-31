@@ -152,15 +152,21 @@ export class BackOfficeCustomerController {
           password: hash,
           is_active: true,
         };
+        const userBirthDate = () => {
+          if (newUser.birth_date) {
+            return moment(newUser.birth_date, 'DD-MM-YYYY').toDate();
+          }
+          return null;
+        };
         const userCustomerEntity = {
           first_name: newUser.first_name,
           last_name: newUser.last_name,
-          birth_date: newUser.birth_date != undefined ? moment(newUser.birth_date, 'DD-MM-YYYY').toDate() : null,
+          birth_date: userBirthDate(),
           phone_number: newUser.phone_number,
           country: newUser.country,
           province: newUser.province,
           city: newUser.city,
-          zip_code: newUser.zipCode,
+          zip_code: newUser.zip_code,
           address: newUser.address,
         };
         const userCustomerData = await this.userCustomerService.verifyUserData(
@@ -182,13 +188,13 @@ export class BackOfficeCustomerController {
             console.log("USER CUSTOMER ESISTE, NON ESISTE L'ENTITA LOGIN");
             console.log({ userLoginEntity });
             try {
-              const newCreatedUserLogin =
-                await this.userLoginService.createUser(userLoginEntity);
+              const newCreatedUserLogin = await this.userLoginService.createUser(
+                userLoginEntity,
+              );
               console.log({ newCreatedUserLogin });
               res.status(201).json({ result: 'user created successufuly' });
               return;
             } catch (err) {
-              console.log({ err });
               res.status(500).json({ result: 'internal server error' });
               return;
             }
@@ -200,22 +206,30 @@ export class BackOfficeCustomerController {
                 .json({ result: 'email or phonenumber already in use' });
               return;
             } else {
-              console.log(
-                'USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA',
-              );
+              console.log('USER CUSTOMER ESISTE, ESISTE ENTITA LOGIN NON ATTIVA');
               try {
-                const newCreatedUserLogin =
-                  await this.userLoginService.createUser(userLoginEntity);
+                const newCreatedUserLogin = await this.userLoginService.createUser(
+                  userLoginEntity,
+                );
                 console.log({ newCreatedUserLogin });
                 res.status(201).json({ result: 'user created successufuly' });
                 return;
               } catch (err) {
-                console.log();
+                console.log(
+                  '================================ ERRORE  ===============================',
+                );
                 console.log(err);
                 if ((err = 'ER_DUP_ENTRY')) {
-                  res
-                  .status(409)
-                  .json({ result: 'duplicate entity' });
+                  try {
+                    await this.userLoginService.updateUserStatus(
+                      userLoginEntity.email,
+                    );
+                    res.status(201).json({ result: 'user created successufuly' });
+                    return;
+                  } catch (err) {
+                    res.status(500).json({ result: 'internal server error' });
+                    return;
+                  }
                 } else {
                   res.status(500).json({ result: 'internal server error' });
                   return;
@@ -231,24 +245,23 @@ export class BackOfficeCustomerController {
           if (userLoginData == null) {
             console.log("USER CUSTOMER NON ESISTE, NON ESISTE L'ENTITA LOGIN");
             //NON ESISTE ENITITA USER LOGIN
+            const newCreatedUserCustomer =
+              await this.userCustomerService.createUser(userCustomerEntity);
+            console.log({ newCreatedUserCustomer });
+            userLoginEntity.userCustomer = newCreatedUserCustomer.id_user_customer;
+            console.log({ userLoginEntity });
             try {
-              const newCreatedUserCustomer =
-                await this.userCustomerService.createUser(userCustomerEntity);
-              console.log({ newCreatedUserCustomer });
-              userLoginEntity.userCustomer =
-                newCreatedUserCustomer.id_user_customer;
-              console.log({ userLoginEntity });
-              const newCreatedUserLogin =
-                await this.userLoginService.createUser(userLoginEntity);
+              const newCreatedUserLogin = await this.userLoginService.createUser(
+                userLoginEntity,
+              );
               console.log({ newCreatedUserLogin });
               res.status(201).json({ result: 'user created successufuly' });
-              return;
             } catch (err) {
               if ((err = 'ER_DUP_ENTRY')) {
-                  res
-                  .status(409)
-                  .json({ result: 'duplicate entity' });
-                
+                res.status(422).json({
+                  result: 'duplicate entity, verify the email is correct',
+                });
+                return;
               } else {
                 res.status(500).json({ result: 'internal server error' });
                 return;
@@ -256,9 +269,7 @@ export class BackOfficeCustomerController {
             }
           } else {
             console.log("USER CUSTOMER NON ESISTE, ESISTE L'ENTITA LOGIN ");
-            res
-              .status(409)
-              .json({ result: 'email or phonenumber already in use' });
+            res.status(409).json({ result: 'email or phonenumber already in use' });
             return;
           }
         }
