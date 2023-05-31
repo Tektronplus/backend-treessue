@@ -266,7 +266,8 @@ export class BackOfficeOrderController {
       console.log({ decodedInfo });
       if (
         decodedInfo.userDetail.role == 'admin' ||
-        decodedInfo.userDetail.role == 'ufficio'
+        decodedInfo.userDetail.role == 'ufficio' ||
+        decodedInfo.userDetail.role == 'magazzino'
       ) {
         try {
           const result = await this.orderService.updateOrderById(
