@@ -155,7 +155,7 @@ export class BackOfficeCustomerController {
         const userCustomerEntity = {
           first_name: newUser.first_name,
           last_name: newUser.last_name,
-          birth_date: moment(newUser.birth_date, 'DD-MM-YYYY').toDate(),
+          birth_date: newUser.birth_date != undefined ? moment(newUser.birth_date, 'DD-MM-YYYY').toDate() : null,
           phone_number: newUser.phone_number,
           country: newUser.country,
           province: newUser.province,
