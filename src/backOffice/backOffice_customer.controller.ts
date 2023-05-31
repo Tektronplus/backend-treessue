@@ -245,11 +245,10 @@ export class BackOfficeCustomerController {
               return;
             } catch (err) {
               if ((err = 'ER_DUP_ENTRY')) {
-                if ((err = 'ER_DUP_ENTRY')) {
                   res
                   .status(409)
                   .json({ result: 'duplicate entity' });
-                }
+                
               } else {
                 res.status(500).json({ result: 'internal server error' });
                 return;
