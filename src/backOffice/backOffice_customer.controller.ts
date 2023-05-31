@@ -213,18 +213,9 @@ export class BackOfficeCustomerController {
                 console.log();
                 console.log(err);
                 if ((err = 'ER_DUP_ENTRY')) {
-                  try {
-                    await this.userLoginService.updateUserStatus(
-                      userLoginEntity.email,
-                    );
-                    res
-                      .status(201)
-                      .json({ result: 'user created successufuly' });
-                    return;
-                  } catch (err) {
-                    res.status(500).json({ result: 'internal server error' });
-                    return;
-                  }
+                  res
+                  .status(409)
+                  .json({ result: 'duplicate entity' });
                 } else {
                   res.status(500).json({ result: 'internal server error' });
                   return;
@@ -254,15 +245,10 @@ export class BackOfficeCustomerController {
               return;
             } catch (err) {
               if ((err = 'ER_DUP_ENTRY')) {
-                try {
-                  await this.userLoginService.updateUserStatus(
-                    userLoginEntity.email,
-                  );
-                  res.status(201).json({ result: 'user created successufuly' });
-                  return;
-                } catch (err) {
-                  res.status(500).json({ result: 'internal server error' });
-                  return;
+                if ((err = 'ER_DUP_ENTRY')) {
+                  res
+                  .status(409)
+                  .json({ result: 'duplicate entity' });
                 }
               } else {
                 res.status(500).json({ result: 'internal server error' });
