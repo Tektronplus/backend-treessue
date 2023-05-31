@@ -156,7 +156,7 @@ export class BackOfficeCustomerController {
           is_active: true,
         };
         const userBirthDate = () => {
-          if (newUser.birth_date && newUser.birth_date != "") {
+          if (newUser.birth_date) {
             return moment(newUser.birth_date, 'YYYY-MM-DD').toDate();
           }
           return null;
