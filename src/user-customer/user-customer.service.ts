@@ -12,9 +12,10 @@ export class UserCustomerService {
     return this.userCustomerRepository.findAll();
   }
 
-  async findOneById(id): Promise<any>
-  {
-    return await this.userCustomerRepository.findOne({where:{id_user_customer:id}})
+  async findOneById(id): Promise<any> {
+    return await this.userCustomerRepository.findOne({
+      where: { id_user_customer: id },
+    });
   }
 
   async verifyUserData(user): Promise<any> {
@@ -127,9 +128,11 @@ export class UserCustomerService {
   }
 
   async updateDetail(existingValue, user) {
-    console.log("=========================== USER CUSTOMER SERVICE ==================================")
-    console.log({existingValue})
-    console.log({user}) 
+    console.log(
+      '=========================== USER CUSTOMER SERVICE ==================================',
+    );
+    console.log({ existingValue });
+    console.log({ user });
     try {
       const updateUser = await this.userCustomerRepository.update(
         {
@@ -172,9 +175,7 @@ export class UserCustomerService {
       );
 
       return updateUser;
-    } 
-    catch (err) 
-    {
+    } catch (err) {
       console.log(err.parent.code);
       throw new Error(err.parent.code);
     }
