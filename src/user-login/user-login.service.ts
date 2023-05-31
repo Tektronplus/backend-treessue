@@ -43,7 +43,7 @@ export class UserLoginService {
 
   //BACKOFFICE PER TUTTI I CLIENTI
   async findAllCustomer(): Promise<any> {
-    try{
+    try {
       const usersList = await this.userLoginRepository.findAll({
         include: [
           {
@@ -55,12 +55,13 @@ export class UserLoginService {
       //console.log({ usersList });
       const userInformation = await usersList.map((data) => {
         //console.log({data})
-        let userDetail = {
-          email:data.dataValues.email,
-          id_user_customer:data.dataValues.id_user_login,
-          phone_number:data.dataValues.user_customer.phone_number,
-          address:data.dataValues.user_customer.address,
-          first_name:data.dataValues.user_customer.first_name,
+        const userDetail = {
+          email: data.dataValues.email,
+          id_user_customer: data.dataValues.user_customer.id_user_customer,
+          id_user_login: data.dataValues.id_user_login,
+          phone_number: data.dataValues.user_customer.phone_number,
+          address: data.dataValues.user_customer.address,
+          first_name: data.dataValues.user_customer.first_name,
           last_name: data.dataValues.user_customer.last_name,
           is_active: data.dataValues.is_active,
         };
@@ -68,16 +69,13 @@ export class UserLoginService {
       });
       //console.log({ userInformation });
       return userInformation;
-    }
-    catch(err)
-    {
+    } catch (err) {
       throw new Error(err);
     }
   }
   //FUNZIONE USATA PER IL LOGIN
   async findUserLogin(email, password): Promise<object> {
-    try
-    {
+    try {
       console.log({ email }, { password });
       const userList = await this.userLoginRepository.findAll();
       console.log(userList);
@@ -90,14 +88,10 @@ export class UserLoginService {
           return user;
         }
       });
-      return user
-    }
-    catch(err)
-    {
+      return user;
+    } catch (err) {
       throw new Error(err);
     }
-
-
   }
   //FUNZIONE USATA PER LA REGISTRAZIONE
   async createUser(user): Promise<any> {
@@ -122,10 +116,10 @@ export class UserLoginService {
     console.log({ user });
     try {
       const foundUser = await this.userLoginRepository.update(
-        { 
-          email: user.email != newEmail ? newEmail : user.email 
+        {
+          email: user.email != newEmail ? newEmail : user.email,
         },
-        { where: { id_user_customer:user.id } },
+        { where: { id_user_customer: user.id } },
       );
       console.log({ foundUser });
       return foundUser;
@@ -138,10 +132,10 @@ export class UserLoginService {
     console.log({ user });
     try {
       const foundUser = await this.userLoginRepository.update(
-        { 
-          password: newPassword 
+        {
+          password: newPassword,
         },
-        { where: { id_user_customer:user.id } },
+        { where: { id_user_customer: user.id } },
       );
       console.log({ foundUser });
       return foundUser;
@@ -153,7 +147,9 @@ export class UserLoginService {
   async findUserByIdUserCustomer(user): Promise<any> {
     console.log({ user });
     try {
-      const foundUser = await this.userLoginRepository.findOne({ where: { id_user_customer:user.id }});
+      const foundUser = await this.userLoginRepository.findOne({
+        where: { id_user_customer: user.id },
+      });
       console.log({ foundUser });
       return foundUser;
     } catch (err) {
@@ -191,20 +187,20 @@ export class UserLoginService {
     }
   }
 
-    //FUNZIONE USATA PER LA RIATTIVAZIONE DELL'UTENTE
-    async reactivateUser(user, newStatus): Promise<any> {
-      console.log({ user });
-      try {
-        const foundUser = await this.userLoginRepository.update(
-          { 
-            is_active: user.is_active != newStatus ? newStatus : user.is_active
-          },
-          { where: { id_user_customer:user.id } },
-        );
-        console.log({ foundUser });
-        return foundUser;
-      } catch (err) {
-        throw new Error(err);
-      }
+  //FUNZIONE USATA PER LA RIATTIVAZIONE DELL'UTENTE
+  async reactivateUser(user, newStatus): Promise<any> {
+    console.log({ user });
+    try {
+      const foundUser = await this.userLoginRepository.update(
+        {
+          is_active: user.is_active != newStatus ? newStatus : user.is_active,
+        },
+        { where: { id_user_customer: user.id } },
+      );
+      console.log({ foundUser });
+      return foundUser;
+    } catch (err) {
+      throw new Error(err);
     }
+  }
 }
