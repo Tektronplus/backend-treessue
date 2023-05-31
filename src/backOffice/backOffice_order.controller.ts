@@ -51,7 +51,7 @@ export class BackOfficeOrderController {
       if (
         decodedInfo.userDetail.role == 'admin' ||
         decodedInfo.userDetail.role == 'ufficio'||
-        decodedInfo.userDetail.role == 'magazziniere'
+        decodedInfo.userDetail.role == 'magazzino'
       ) {
         try {
           const orderList = await this.orderService.findAll();
@@ -104,7 +104,8 @@ export class BackOfficeOrderController {
       console.log({ decodedInfo });
       if (
         decodedInfo.userDetail.role == 'admin' ||
-        decodedInfo.userDetail.role == 'ufficio'
+        decodedInfo.userDetail.role == 'ufficio' ||
+        decodedInfo.userDetail.role == 'magazzino'
       ) {
         try {
           let orderDetail = await this.orderDetailService.findOrderDetail(
@@ -161,7 +162,7 @@ export class BackOfficeOrderController {
       if (
         decodedInfo.userDetail.role == 'admin' ||
         decodedInfo.userDetail.role == 'ufficio' ||
-        decodedInfo.userDetail.role == 'magazziniere'
+        decodedInfo.userDetail.role == 'magazzino'
       ) {
         try {
           const order = {
