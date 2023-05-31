@@ -86,7 +86,8 @@ export class CartDetailService {
       for (const item of cart) {
         await this.addItemToCart(headers, item.id_product, item.quantity);
       }
-      return { result: 'Query executed successfully' };
+      const cartCustomer = await this.findCartDetailByUserCustomer(headers);
+      return { cartCustomer };
     }
     return { result: 'There is not any product to add' };
   }
