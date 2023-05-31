@@ -125,7 +125,8 @@ export class BackOfficeCustomerController {
     if (
       body.first_name == undefined ||
       body.last_name == undefined ||
-      body.email == undefined
+      body.email == undefined ||
+      body.password == undefined
     ) {
       res.status(404).json({ result: 'bad request' });
       return;
