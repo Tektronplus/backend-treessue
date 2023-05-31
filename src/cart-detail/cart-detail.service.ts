@@ -71,10 +71,11 @@ export class CartDetailService {
 
   async addOfflineItemsToCart(headers, body): Promise<any> {
     const arrayIdProduct = await this.productService.getAllProductsIds();
+    const cart = body.cart;
     console.log(arrayIdProduct);
-    console.log(body);
-    if (Array.isArray(body)) {
-      for (const item of body) {
+    console.log(cart);
+    if (Array.isArray(cart)) {
+      for (const item of cart) {
         if (!arrayIdProduct.includes(item.id_product)) {
           throw new NotFoundException('Not found exception', {
             cause: new Error(),
@@ -82,7 +83,7 @@ export class CartDetailService {
           });
         }
       }
-      for (const item of body) {
+      for (const item of cart) {
         await this.addItemToCart(headers, item.id_product, item.quantity);
       }
       return { result: 'Query executed successfully' };
