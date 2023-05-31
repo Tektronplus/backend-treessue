@@ -125,7 +125,6 @@ export class BackOfficeCustomerController {
     if (
       body.first_name == undefined ||
       body.last_name == undefined ||
-      body.birth_date == undefined ||
       body.phone_number == undefined ||
       body.email == undefined
     ) {
