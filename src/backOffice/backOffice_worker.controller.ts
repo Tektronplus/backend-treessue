@@ -168,7 +168,7 @@ export class BackOfficeWorkerController {
           id_user_worker: '',
           email: newUser.email,
           password: hash,
-          is_active: true,
+          is_active: newUser.is_active,
         };
         const role = await this.workerRoleService.findRoleId(newUser.role);
         console.log({ role });
