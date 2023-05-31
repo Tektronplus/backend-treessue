@@ -87,7 +87,13 @@ export class CartDetailService {
         await this.addItemToCart(headers, item.id_product, item.quantity);
       }
       const cartCustomer = await this.findCartDetailByUserCustomer(headers);
-      return { cartCustomer };
+      return cartCustomer.map((item) => {
+        return {
+          id_cart_detail: item.idCartDetail,
+          id_product: item.idProduct,
+          quantity: item.quantity,
+        };
+      });
     }
     return { result: 'There is not any product to add' };
   }
