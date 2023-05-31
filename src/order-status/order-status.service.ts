@@ -45,6 +45,7 @@ export class OrderStatusService {
     this.customException.checkAuthorization(userInfo.role, [
       'admin',
       'ufficio',
+      'magazzino'
     ]);
 
     const newOrderStatus = {
