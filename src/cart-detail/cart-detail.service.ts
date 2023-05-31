@@ -71,18 +71,22 @@ export class CartDetailService {
 
   async addOfflineItemsToCart(headers, body): Promise<any> {
     const arrayIdProduct = await this.productService.getAllProductsIds();
-    for (const item of body) {
-      if (!arrayIdProduct.includes(item.id_product)) {
-        throw new NotFoundException('Not found exception', {
-          cause: new Error(),
-          description: `The ID= ${item.id_product} is not assigned to any product `,
-        });
+    console.log(body);
+    if (Array.isArray(body)) {
+      for (const item of body) {
+        if (!arrayIdProduct.includes(item.id_product)) {
+          throw new NotFoundException('Not found exception', {
+            cause: new Error(),
+            description: `The ID= ${item.id_product} is not assigned to any product `,
+          });
+        }
       }
+      for (const item of body) {
+        await this.addItemToCart(headers, item.id_product, item.quantity);
+      }
+      return { result: 'Query executed successfully' };
     }
-    for (const item of body) {
-      await this.addItemToCart(headers, item.id_product, item.quantity);
-    }
-    return { result: 'Query executed successfully' };
+    return { result: 'There is not any product to add' };
   }
 
   async deleteCartDetailItemById(headers, id_cart_detail): Promise<any> {
