@@ -219,7 +219,7 @@ export class BackOfficeCustomerController {
                   '================================ ERRORE  ===============================',
                 );
                 console.log(err);
-                if ((err = 'ER_DUP_ENTRY')) {
+                if (err = 'ER_DUP_ENTRY') {
                   try {
                     await this.userLoginService.updateUserStatus(
                       userLoginEntity.email,
@@ -227,7 +227,7 @@ export class BackOfficeCustomerController {
                     res.status(201).json({ result: 'user created successufuly' });
                     return;
                   } catch (err) {
-                    res.status(500).json({ result: 'internal server error' });
+                    res.status(500).json({ result: 'internal server error dopo update user status' });
                     return;
                   }
                 } else {
@@ -257,7 +257,7 @@ export class BackOfficeCustomerController {
               console.log({ newCreatedUserLogin });
               res.status(201).json({ result: 'user created successufuly' });
             } catch (err) {
-              if ((err = 'ER_DUP_ENTRY')) {
+              if (err = 'ER_DUP_ENTRY') {
                 res.status(422).json({
                   result: 'duplicate entity, verify the email is correct',
                 });
