@@ -45,7 +45,8 @@ export class BackOfficeCustomerController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role == 'admin' ||
-        dechiperAuth.userDetail.role == 'ufficio'
+        dechiperAuth.userDetail.role == 'ufficio' ||
+        dechiperAuth.userDetail.role == 'magazzino'
       ) {
         try {
           const allCustomerList = await this.userLoginService.findAllCustomer();
@@ -83,7 +84,8 @@ export class BackOfficeCustomerController {
       const dechiperAuth = await this.authService.dechiperUserToken(token);
       if (
         dechiperAuth.userDetail.role == 'admin' ||
-        dechiperAuth.userDetail.role == 'ufficio'
+        dechiperAuth.userDetail.role == 'ufficio' ||
+        dechiperAuth.userDetail.role == 'magazzino'
       ) {
         try {
           const id = param.id;
