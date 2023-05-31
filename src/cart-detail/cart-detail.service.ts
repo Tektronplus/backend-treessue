@@ -71,6 +71,7 @@ export class CartDetailService {
 
   async addOfflineItemsToCart(headers, body): Promise<any> {
     const arrayIdProduct = await this.productService.getAllProductsIds();
+    console.log(arrayIdProduct);
     console.log(body);
     if (Array.isArray(body)) {
       for (const item of body) {
